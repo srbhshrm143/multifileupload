@@ -1,0 +1,45 @@
+<!-- {{ context.params }} -->
+
+
+{% assign upd_id = context.params.owner_id %}
+{% assign upd_fname = context.params.owner_fname %}
+{% assign upd_lname = context.params.owner_lname %}
+{% assign upd_gender = context.params.owner_gender %}
+{% assign upd_mobile = context.params.owner_mobile_no %}
+{% assign upd_email = context.params.owner_email_id %}
+
+
+
+{%liquid
+  graphql upd_gql = 'venue_owner/update', Id: upd_id, Fname: upd_fname, Lname: upd_lname, Gender: upd_gender, Mobile: upd_mobile, Email: upd_email
+  assign fetch_data = upd_gql | fetch: "records"
+  assign fetch_values = fetch_data.results
+%}
+{%- comment -%}
+{%liquid graphql upd_gql = 'venue_owner/update', Id: upd_id, Fname: upd_fname, Lname: upd_lname, Gender: upd_gender, Mobile: upd_mobile, Email: upd_email
+%}
+{%liquid
+
+  graphql updated_gql = 'venue_owner/update', Id: upd_id, Fname: upd_fname, Lname: upd_lname, Gender: upd_gender, Mobile: upd_mobile, Email: upd_email
+  assign updated_res = updated_gql | fetch: "records"
+  assign upd_data = updated_res.results
+  
+%}
+{%- endcomment -%}
+<!-- {{ context }} -->
+
+{{ "id - " }} {{ upd_id }}<br>
+{{ "fname - " }} {{ upd_fname }}<br>
+{{ "lname - " }} {{ upd_lname }}<br>
+{{ "gender - " }} {{ upd_gender }}<br>
+{{ "mobile - " }} {{ upd_mobile }}<br>
+{{ "email - " }} {{ upd_email }}<br>
+<!-- {{ upd_gql }} -->
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue_owner/show";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

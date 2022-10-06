@@ -1,0 +1,14 @@
+{% liquid
+  function data = 'lib/commands/promo_codes/create/build', object: object, profile: profile
+  hash_assign data['code_type'] = 'mpo'
+  if object.is_global
+    hash_assign data['code_type'] = 'global'
+  else
+    hash_assign data['code_type'] = 'mpo'
+  endif
+  if object.mpo_cost_percent
+    hash_assign data['mpo_cost_percent'] = object.mpo_cost_percent | plus: 0
+  endif
+
+  return data
+%}

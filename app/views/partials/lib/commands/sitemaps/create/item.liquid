@@ -1,0 +1,10 @@
+<url>
+  {% function item_url = 'link_to', item: item, lang: 'en' %}
+  <loc>https://{{ context.location.host }}{{ item_url }}</loc>
+  {% for lang in available_languages %}
+    {% function item_url = 'link_to', item: item, lang: lang %}
+    <xhtml:link rel="alternate" hreflang="{{ lang }}" href="https://{{ context.location.host }}{{ item_url }}"/>
+  {%- endfor -%}
+  <lastmod>{{ item.created_at }}</lastmod>
+  <priority>0.80</priority>
+</url>

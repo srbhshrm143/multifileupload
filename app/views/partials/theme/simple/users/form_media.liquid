@@ -1,0 +1,34 @@
+<h2 class="title mt-8">{{ "Menu" }}</h2>
+<div class="card">
+  <fieldset>
+    <label class="block">{{ "Menu Media" }}:</label>
+    <div id="drag-drop-area"></div>
+    {% liquid
+      assign photo_ids = photos | map: 'id' | join: ','
+
+      if v_menu == blank
+        assign v_menu = '{"photos": [], "photo_ids": [] }' | parse_json
+      endif
+    %}
+
+    <script>
+      document.addEventListener('alpine:init', () => {
+        Alpine.store('main_variant', {{ v_menu }});
+      });
+    </script>
+    <input name="v_menu[photo_ids]" type="hidden"
+      x-bind:value="(($store.main_variant && $store.main_variant.photo_ids) || []).join(',')">
+  </fieldset>
+</div>
+
+
+{% render 'theme/simple/photos/uppy_form',
+type: 'menus',
+object_uuid: menus_uuid,
+presigned_url: context.presigned_url,
+user_id: user.id,
+photo_type: 'photo',
+note: 'Images only, up to 3 files, 2MB each',
+max_number_of_files: 3,
+existing_photos: photos
+%}

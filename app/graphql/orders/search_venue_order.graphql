@@ -1,0 +1,23 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $page: Int = 1
+  $sort: RecordsSortInput = { created_at: { order: DESC } }
+
+) {
+  venue_orders: records(
+    page: $page
+    per_page: $limit
+    filter: {
+      id: { value: $id, value_in: $id }
+      table: { value: "venue_orders" }
+    }
+    sort: [$sort]
+  ) {
+    results {
+      id
+      properties
+      created_at
+    }
+  }
+}

@@ -1,0 +1,24 @@
+name: profile
+properties:
+  - name: uuid
+  - name: name
+  - name: user_id
+  - name: anonymous_session_id
+  - name: slug
+  - name: first_name
+  - name: last_name
+  - name: bio
+  - name: default_address_id
+  - name: language
+  - name: otp_configured
+    type: boolean
+  - name: user__mobile
+  - name: permissions
+  - name: user_type
+  - name: referral_code
+  - name: company_name
+  - name: company_phoneNumber
+  - name: above18
+
+  # tokenized downcased names for searching
+  - name: c__names

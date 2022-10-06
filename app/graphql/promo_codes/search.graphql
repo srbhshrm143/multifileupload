@@ -1,0 +1,121 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $page: Int = 1
+  $description: String
+  $campaign_code: String
+  $start_date: String
+  $end_date: String
+  $total_discount: String
+  $upper_limit: String
+  $code: String
+  $max_available: Int
+
+  $code_types: [String!]
+  $creator_ids: [String!]
+
+  $date: String
+  $min_available_quantity: String
+  $lang: String!
+
+  $withAllLangs: Boolean = false
+  $with_organization: Boolean = false
+  $disabled_exists: Boolean
+
+  #search_by_code
+  $s_code_type: String
+  $s_creator_ids: [String!]
+) {
+  promo_codes: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "promo_code" }
+      properties: [
+        { name: "description" value: $description }
+        { name: "campaign_code" value: $campaign_code }
+        { name: "start_date" value: $start_date }
+        { name: "end_date" value: $end_date }
+        { name: "total_discount" value: $total_discount }
+        { name: "upper_limit" value: $upper_limit }
+        { name: "code" value: $code }
+        { name: "max_available" value_int: $max_available }
+        { name: "available_quantity" range: { gte: $min_available_quantity } }
+        { name: "start_date" range: { lte: $date } }
+        { name: "end_date" range: { gte: $date } }
+        { name: "disabled_at" exists: $disabled_exists }
+        { name: "code_type" value_in: $code_types }
+        { name: "creator_id" value_in: $creator_ids }
+      ]
+      or: [
+        { properties: { name: "creator_id" value_in: $s_creator_ids }}
+        { properties: { name: "code_type" value: $s_code_type }}
+      ]
+    }
+    sort: [
+      { created_at: { order: DESC }}
+    ]
+  ){
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      description: property(name: "description")
+      campaign_code: property(name: "campaign_code")
+      start_date: property(name: "start_date")
+      end_date: property(name: "end_date")
+      total_discount: property_int(name: "total_discount")
+      upper_limit: property_int(name: "upper_limit")
+      max_discount_amount_per_user: property_int(name: "max_discount_amount_per_user")
+      max_times_user_can_use: property_int(name: "max_times_user_can_use")
+      code: property(name: "code")
+      max_available: property_int(name: "max_available")
+      available_quantity: property_int(name: "available_quantity")
+      creator_id: property(name: "creator_id")
+      mpo_cost_percent: property_int(name: "mpo_cost_percent")
+      code_type: property(name: "code_type")
+
+      detail: related_record(
+        table: "promo_code_detail"
+        join_on_property: "id"
+        foreign_property: "promo_code_id"
+        filter: { properties: { name: "lang", value: $lang } }
+      ) {
+        id
+        type: table
+        description: property(name: "description")
+        lang: property(name: "lang")
+      }
+
+      details: related_records(
+        table: "promo_code_detail"
+        join_on_property: "id"
+        foreign_property: "promo_code_id"
+      ) @include(if: $withAllLangs) {
+        id
+        type: table
+        description: property(name: "description")
+        lang: property(name: "lang")
+      }
+
+      organization: related_record(
+        table: "organization"
+        join_on_property: "creator_id"
+        foreign_property: "id"
+        ) @include(if: $with_organization) {
+          id
+          type: table
+          name: property(name: "name")
+          first_name: property(name: "first_name")
+          last_name: property(name: "last_name")
+          slug: property(name: "slug")
+      }
+    }
+  }
+}

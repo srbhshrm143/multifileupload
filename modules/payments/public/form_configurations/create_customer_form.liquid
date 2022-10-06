@@ -1,0 +1,58 @@
+---
+name: create_customer_form
+resource: modules/payments/customer
+resource_owner: anyone
+fields:
+  properties:
+    email:
+    default_source:
+    description:
+      property_options:
+        virtual: true
+    gateway_id:
+      validation:
+        presence: true
+    external_id:
+    source:
+      property_options:
+        virtual: true
+    skip_credit_card_creation:
+      property_options:
+        virtual: true
+    card_brand:
+    card_exp_month:
+    card_exp_year:
+    card_last4:
+callback_actions: >
+  {% log form, type:"form" %}
+  {% if form.properties.default_source != blank %}
+    {% if form.properties.skip_credit_card_creation != "true" %}
+      {% comment %}  TODO move to Stripe module  {% endcomment %}
+      {% parse_json 'data' %}
+        {
+          "properties": [
+            { "name": "customer_id", "value": "{{ form.id }}" },
+            { "name": "external_id", "value": "{{ form.properties.external_id }}" },
+            { "name": "gateway_id", "value": "{{  form.properties.default_source }}" },
+            { "name": "gateway_customer_id", "value": "{{  form.properties.gateway_id }}" },
+            { "name": "email", "value": "{{ form.properties.email }}" },
+            { "name": "description", "value": "{{ form.properties.description }}" },
+            { "name": "brand", "value": "{{ form.properties.card_brand }}" },
+            { "name": "exp_month", "value": "{{ form.properties.card_exp_month }}" },
+            { "name": "exp_year", "value": "{{ form.properties.card_exp_year }}" },
+            { "name": "last4", "value": "{{ form.properties.card_last4 }}" },
+            { "name": "skip_credit_card_creation", "value": "false" }
+          ]
+        }
+      {% endparse_json %}
+      {% log data.properties, type:"DATA" %}
+
+      {%- graphql g_card = 'modules/payments/create_customization',
+        data: data, form: 'modules/payments/create_credit_card_form'
+      -%}
+
+      {% log g_card, type: "credit_card" %}
+    {% endif %}
+  {% endif %}
+default_payload: >
+---

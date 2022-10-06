@@ -1,0 +1,22 @@
+mutation create(
+  $venue_id: String!
+  $menu_id: String!
+  $space_features: String!
+  
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_special_features"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "menu_id", value: $menu_id }
+        { name: "space_features", value: $space_features }
+        
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+  
+}

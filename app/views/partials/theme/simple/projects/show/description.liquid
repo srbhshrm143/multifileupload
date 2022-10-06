@@ -1,0 +1,34 @@
+{% if project.video_urls != blank %}
+  <div class="p-8 bg-panel-highlight">
+    <h2 class="subtitle !mb-4 uppercase">{{ 'app.projects.videos' | t }}</h2>
+    <div class="{% if project.video_urls.size > 1 %} grid grid-cols-1 md:grid-cols-2 {% endif %} gap-4">
+      {% for url in project.video_urls %}
+        {% assign video = url | video_params %}
+        <iframe class="w-full max-w-xl mx-auto" width="560" height="315" src="{{ video.embed_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% if project.description != blank %}
+  <div class="p-8 {% if project.terms_and_conditions != blank %} pb-0 {% endif %} prose !max-w-none">
+    {{ project.description | default: '' | markdown }}
+  </div>
+{% endif %}
+{% if project.terms_and_conditions != blank %}
+  <button
+    x-on:click="terms = !terms"
+    class="button button-secondary !flex mx-auto relative top-5"
+  >
+    {{ 'app.projects.form.terms_and_conditions' | t }}
+    <span x-bind:class="{ 'rotate-180': terms }" class="leading-none transform transition-all">
+      {% render 'theme/simple/ui/icon', icon: 'dashDown' %}
+    </span>
+  </button>
+  <div
+    x-show="terms"
+    x-cloak
+    class="p-8 pt-10 prose !max-w-none border-t"
+  >
+    {{ project.terms_and_conditions | markdown }}
+  </div>
+{% endif %}

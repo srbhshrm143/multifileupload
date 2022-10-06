@@ -1,0 +1,9 @@
+{% liquid
+  assign lang = lang | default: context.language
+  function query = 'lib/queries/index/search/build', limit: limit, owner: owner, params: params, withStatuses: withStatuses, status: status, statuses: statuses, lang: lang, main_variant: main_variant, promoted: promoted, withAllVariants: withAllVariants, ids: ids, sort: sort, not_ids: not_ids, category: category, withAllLangs: withAllLangs
+  function items = 'lib/queries/index/search/execute', query: query
+
+  hash_assign items['query'] = query
+
+  return items
+%}

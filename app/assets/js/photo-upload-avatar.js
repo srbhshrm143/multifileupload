@@ -1,0 +1,1 @@
+(self.webpackChunkmarketplace_template_poc=self.webpackChunkmarketplace_template_poc||[]).push([[692],{4417:function(){const a=function(){const t=this;t.init=()=>{document.addEventListener("photos-added",t.updateAvatar)},t.updateAvatar=e=>{const o=e.detail.preview;document.querySelectorAll("[data-avatar]").forEach(p=>{p.src=o})},t.init()};api.photoUploadAvatar=new a}}]);

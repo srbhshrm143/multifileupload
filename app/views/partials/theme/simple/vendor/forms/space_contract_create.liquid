@@ -1,0 +1,88 @@
+{%- comment -%}
+  {{ object }}<br>
+  {{ contract_image }}
+{%- endcomment -%}
+<div class="overflow-x-auto relative">
+  {%liquid
+    assign contract_uuid = '' | uuid
+  %}
+  <form class="" action="/venue/venue_contract/{{action}}" method="POST">
+    <input type="hidden" name="contract_information[venue_id]" id="venue__id" value="{{ context.params.venue_id }}">
+    <input type="hidden" name="contract_information[uuid]" id="" value="{{ contract_uuid }}">
+    <div class="border border-borderColor sm:px-3 sm:py-4 md:px-7 md:py-8 rounded-md">
+      <div class="sm:text-lg md:text-xl xl:text-2xl font-semibold font-Work md:pb-2 xl:pb-3">
+        {{ "Contract Information" }}
+      </div>
+      <p class="sm:text-xs md:text-base font-normal font-Work text-black">
+        {{ "If you require guests to sign a
+        contract upon booking, please copy and paste it below. Guests are unable to book without accepting
+        your terms and conditions. Please ensure you are familiar with the EventHounds Terms and Conditions
+        (link to open our terms and conditions in the next tab), in the event of a discrepancy between our
+        terms and conditions and yours, the EventHounds Terms and Conditions will override yours." }}
+      </p>
+
+      <div class="sm;block md:flex gap-x-8 sm:my-2 md:my-4">
+        <div class="sm:w-full md:w-1/2 sm:mb-2">
+          <input id="upload-input" name="contract_information[contract_name1]" type="text" autocomplete="upload" 
+            class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+            placeholder="Contract Name"
+            value="{{ object.venue_contract1 | raw_escape_string }}">
+        </div>
+        <div class="sm:w-full md:w-1/2 sm:mb-2">
+          <input id="upload-input" name="contract_information[contract_name2]" type="text" autocomplete="upload" 
+            class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+            placeholder="Contract Name"
+            value="{{ object.venue_contract2 | raw_escape_string }}" required>
+        </div>
+      </div>
+      {%- comment -%} Contract Media {%- endcomment -%}
+      {% for contract_media in contract_image %}
+        {% if contract_media.media.extension == "jpg" or contract_media.media.extension == "png" or contract_media.media.extension == "webp"   %}
+          <img src="{{ contract_media.media.url }}" alt="contract_img" width="200" height="100">
+        {% endif %}
+      {% endfor %}
+      {%- comment -%}
+        <div class="sm;block md:flex gap-x-8 sm:mb-3 md:mb-7 mt-3">
+          <div class="sm:w-full md:w-1/2 ">
+            <label for="dropzone-file"
+              class="flex flex-col justify-center items-center mt-2 py-4  bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 mr-2">
+              <div class="flex flex-col justify-center items-center pt-2 pb-3 text-center">
+                <img src="./images/upload-img.png" />
+                <p class="text-xs text-gray-500 dark:text-gray-400 pt-2">Drop your files here</p>
+                <p class="font-semibold text-xs text-gray-500 dark:text-gray-400">(Format PDF)</p>
+              </div>
+              <input id="dropzone-file" type="file" class="hidden" />
+            </label>
+          </div>
+          <div class="sm:w-full md:w-1/2">
+            <label for="dropzone-file"
+              class="flex flex-col justify-center items-center mt-2 py-4 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 mr-2">
+              <div class="flex flex-col justify-center items-center pt-2 pb-3 text-center">
+                <img src="./images/upload-img.png" />
+                <p class="text-xs text-gray-500 dark:text-gray-400 pt-2">Drop your files here</p>
+                <p class="font-semibold text-xs text-gray-500 dark:text-gray-400">(Format PDF)</p>
+              </div>
+              <input id="dropzone-file" type="file" class="hidden" />
+            </label>
+          </div>
+        </div>
+        
+              <div>
+                {% render 'theme/simple/forms/upload_media_field' %}
+              </div>
+      {%- endcomment -%}
+
+      <div class="w-full md:text-right mt-2">
+        <button type="button"
+          class="text-themeBlue rounded-3xl bg-white border border-themeBlue uppercase hover:themeBlue-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mt-2 focus:outline-none">previous</button>
+        <button type="submit"
+          class="text-white rounded-3xl bg-themeBlue uppercase hover:themeBlue-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mt-2 focus:outline-none">
+          {{ "save and continue" }}
+        </button>
+      </div>
+    </div>
+  </form>
+  {%- comment -%}
+    {% render 'theme/simple/forms/upload_presigned_url', photo__type: 'contract', max__files: '2', uuid: contract_uuid %}
+  {%- endcomment -%}
+</div>

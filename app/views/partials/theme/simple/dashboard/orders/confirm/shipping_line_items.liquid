@@ -1,0 +1,19 @@
+{% for line_item in order.line_items %}
+  {% function item_url = 'link_to', item: line_item.item %}
+  <div class="mb-5 last:mb-0 md:flex items-center">
+    <a href="{{ item_url }}">
+      {% render 'theme/simple/items/cover', item: line_item.item %}
+    </a>
+    <div>
+      <a href="{{ item_url }}">
+        {% render 'theme/simple/items/show/variant_name', item: line_item.item %}
+      </a>
+
+      {% if line_item.quantity > 1 %}
+        <small class="sidenote block">
+          ({{ line_item.quantity }} {{ 'app.orders.checkout.pieces' | t }})
+        </small>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}

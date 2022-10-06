@@ -1,0 +1,17 @@
+{{ 'app.emails.orders.return.reject.buyer.greeting' | t: name: data.line_item_return.order.buyer.name }}<br/>
+<br/>
+{{ 'app.emails.orders.return.reject.buyer.info' | t: seller_name: data.line_item_return.order.seller.name }}<br/>
+<br/>
+{{ data.line_item_return.reject_reason }}<br/>
+<br/>
+<a href="{{ data.line_item_return.return_url }}">{{ 'app.emails.orders.return.reject.buyer.return_link' | t }}</a>
+
+<h2>{{ 'app.emails.orders.return.reject.buyer.details' | t }}</h2>
+<i>{{ data.line_item_return.line_item.item.item_detail.name }}</i> qty: {{ data.line_item_return.quantity }}, {% render 'theme/simple/price', amount_cents: data.line_item_return.amount, currency: data.line_item_return.line_item.currency %}<br/>
+
+{{ 'app.emails.orders.return.reject.buyer.reason' | t }} {{ data.line_item_return.reason}}<br/>
+{{ 'app.emails.orders.return.reject.buyer.reason_details' | t }} {{ data.line_item_return.reason_details }}<br/>
+
+<h2>{{ 'app.emails.orders.return.reject.buyer.delivery' | t }}</h2>
+<i>{{ 'app.models.line_item_returns.form.shipping_type_' | append: data.line_item_return.shipping_type | t }}</i><br/>
+{% render 'theme/simple/emails/delivery', shipping_address: data.line_item_return.shipping_address, pickup_point: data.line_item_return.shipping_pickup_point %}

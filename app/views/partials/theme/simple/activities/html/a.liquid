@@ -1,0 +1,18 @@
+{% liquid
+  function path = 'link_to', object: object, namespace: namespace, role: role, type: type
+  assign type = object.type | t: scope: 'app.activities.tables'
+
+  if object.name
+    assign name = name | default: object.name
+  elsif object.name == blank and object.object.body
+    assign name = name | default: object.object.body | truncate: 50, '...'
+  else
+    assign name = name | default: type | append: '#' | append: object.id
+  endif
+
+  if object.type == 'process'
+    assign name = name | t: scope: 'app.activities.processes'
+  endif
+%}
+{% capture text %}<a href="{{path}}" class="{{class}}">{{name}}</a>{% endcapture %}
+{% return text %}

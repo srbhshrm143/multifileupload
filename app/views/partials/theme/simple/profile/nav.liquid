@@ -1,0 +1,52 @@
+{% liquid
+  assign active_class = 'text-interaction-hover font-medium'
+  assign class = 'mb-4 inline-flex justify-between items-center text-content'
+%}
+
+<div class="lg:w-1/5 md:w-1/4">
+  <nav>
+    <ul class="w-full flex gap-6 md:block overflow-x-auto whitespace-nowrap md:whitespace-normal">
+      <li>
+        <a href="/{{path}}feed" class="{{class}} {% if tab == 'feed' %}{{ active_class }}{% endif %}">
+          {{ 'app.profiles.nav.activity' | t }}
+        </a>
+      </li>
+      <li>
+        <a href="/{{path}}groups" class="{{class}} {% if tab == 'groups' %}{{ active_class }}{% endif %}">
+          {{ 'app.profiles.nav.groups' | t }}
+        </a>
+      </li>
+      <li>
+        <a href="/{{path}}projects" class="{{class}} {% if tab == 'projects' %}{{ active_class }}{% endif %}">
+          {{ 'app.profiles.nav.projects' | t }}
+        </a>
+      </li>
+      <li>
+        <a href="/{{path}}following" class="{{class}} {% if tab == 'following' %}{{ active_class }}{% endif %}">
+          {{ 'app.profiles.nav.following' | t }}
+        </a>
+      </li>
+      <li>
+        <a href="/{{path}}followers" class="{{class}} {% if tab == 'followers' %}{{ active_class }}{% endif %}">
+          {{ 'app.profiles.nav.followers' | t }}
+        </a>
+      </li>
+      <li>
+        <a href="/{{path}}products" class="{{class}} {% if tab == 'products' %}{{ active_class }}{% endif %}">
+          {{ 'app.profiles.nav.products' | t }}
+        </a>
+      </li>
+      {% if context.tags %}
+        <li class="block md:hidden">
+          <a href="/{{path}}tags" class="{{class}} {% if tab == 'tags' %}{{ active_class }}{% endif %}">
+            {{ 'app.profiles.nav.tags' | t }}
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="hidden md:block">
+    {% render 'theme/simple/tags/nav_box', tags: context.tags %}
+  </div>
+</div>

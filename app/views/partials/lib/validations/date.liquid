@@ -1,0 +1,51 @@
+{% comment %}
+  params: @object
+          @field_name
+          @c
+          @date
+          @can_be_past
+{% endcomment %}
+{% liquid
+  assign date = date | default: object[field_name]
+
+  assign date = date | to_date
+
+  assign is_past =  date | is_date_in_past
+  assign now = 'now' | to_date
+
+  if date > now
+    assign is_future = true
+  else
+    assign is_future = false
+  endif
+
+  if can_be_past == false and is_past
+    assign message = message_can_be_past | default: 'app.errors.date.can_be_past' | t: count: can_be_past, value: date
+    include 'lib/register_error', contract: c, field_name: field_name, message: message
+  endif
+
+  if can_be_future == false and is_future
+    assign message = message_can_be_future | default: 'app.errors.date.can_be_future' | t: count: can_be_future, value: date
+    include 'lib/register_error', contract: c, field_name: field_name, message: message
+  endif
+
+  if less_than != null
+    assign less_than = less_than | to_date
+    if date >= less_than
+      assign localized_date = less_than | l
+      assign message = message_less_than | default: 'app.errors.date.less_than' | t: date: localized_date, value: date
+      function c = 'lib/register_error', contract: c, field_name: field_name, message: message
+    endif
+  endif
+
+  if greater_than != null
+    assign greater_than = greater_than | to_date
+    if date <= greater_than
+      assign localized_date = greater_than | l
+      assign message = message_greater_than | default: 'app.errors.date.greater_than' | t: date: localized_date, value: date
+      function c = 'lib/register_error', contract: c, field_name: field_name, message: message
+    endif
+  endif
+
+  return c
+%}

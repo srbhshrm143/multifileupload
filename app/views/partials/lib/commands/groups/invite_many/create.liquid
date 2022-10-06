@@ -1,0 +1,38 @@
+{%  liquid
+  assign profiles = '[]' | parse_json
+
+  function users = 'lib/queries/users/search', limit: emails.size, emails: emails
+  for email in emails
+    assign profile = users.results | detect: email: email | dig: 'profile'
+
+    unless profile
+      function user = 'lib/commands/users/invites/create', email: email
+      unless user.valid
+        log user, type: 'ERROR: could not create user:'
+      endunless
+      function profile = 'lib/commands/profiles/create', object: user
+      unless profile.valid
+        log profile, type: 'ERROR: could not create profile:'
+      endunless
+
+      function _event = 'lib/commands/events/create', type: 'account_for_invite_created', actor_id: current_profile.id, target_id: group.id, object_id: profile.id
+    endunless
+
+    assign profiles = profiles | add_to_array: profile
+  endfor
+
+  function invites = 'lib/commands/groups/invite_many/create/build', profiles: profiles, group_id: group.id
+  for invite in invites
+    function rel = 'lib/commands/relationships/find_or_create', object: invite
+
+    if rel.created
+      function _event = 'lib/commands/events/create', type: 'group_invite_created', actor_id: current_profile.id, target_id: group.id, object_id: profile.id
+    endif
+
+    unless rel.valid
+      log rel, 'ERROR: something wrong with invite'
+    endunless
+  endfor
+
+  return invites
+%}

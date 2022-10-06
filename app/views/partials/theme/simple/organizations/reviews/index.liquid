@@ -1,0 +1,54 @@
+<section class="container mt-8 pt-8" x-data="{ page: 1, filtersSpinner: false, morePages: true, recommended: true, disadvised: true, ...frames() }" id="reviews">
+
+  <form action="/o/{{ organization.slug }}/reviews_frame" method="GET" id="reviews_form" x-ref="form">
+    <input type="hidden" name="page" x-bind:value="page">
+    <input
+      type="hidden"
+      name="recommend"
+      x-bind:value="if(recommended && disadvised){ return null; } else if(!recommended && disadvised){ return false; } else if (recommended){ return true; } else {	return undefined; }"
+    >
+  </form>
+
+  <header class="md:flex items-center justify-between gap-4">
+    <h3 class="bigtitle">{{ 'app.reviews.organizations.list.title' | t }}</h3>
+    <nav class="md:flex mb-4 md:mb-0 items-center gap-4">
+      <div class="flex items-center gap-1">
+        <input type="checkbox" id="reviews_recommended" x-model="recommended" x-on:change="page = 1; filtersSpinner = true; $nextTick(() => { replace({target: 'list'}); })">
+        <label for="reviews_recommended" class="cursor-pointer">{{ 'app.reviews.recommended' | t }} (<strong>{{ organization.c__recommended_count }}</strong>)</label>
+      </div>
+      <div class="md:ms-4 flex items-center gap-1">
+        <input type="checkbox" id="reviews_disadvised" x-model="disadvised" x-on:change="page = 1; filtersSpinner = true; $nextTick(() => { replace({target: 'list'}); })">
+        <label for="reviews_disadvised" class="cursor-pointer">{{ 'app.reviews.disadvised' | t }} (<strong>{{ organization.c__disadvised_count }}</strong>)</label>
+      </div>
+    </nav>
+  </header>
+
+  <div class="card relative">
+    <div x-frames-target="list" x-on:frame-rendered.window="filtersSpinner = false">
+      {% render 'theme/simple/organizations/reviews/list', reviews: reviews %}
+    </div>
+    <div class="card-overlay" x-show="filtersSpinner" x-cloak>
+      {% render 'theme/simple/ui/spinner', size: 12 %}
+    </div>
+  </div>
+
+  {% if reviews.has_next_page %}
+    <div class="mt-4 text-center">
+      <button
+        form="reviews_form"
+        type="button"
+        x-on:click="++page; $nextTick(() => { insert({where: 'beforeEnd', target: 'list'}); })"
+        x-bind:disabled="spinner"
+        x-show="morePages"
+        class="button button-secondary relative"
+      >
+        <div x-show="spinner" x-cloak class="card-overlay">
+          {% render 'theme/simple/ui/spinner', size: 8 %}
+        </div>
+        {{ 'app.show_more' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'dashDown' %}
+      </button>
+    </div>
+  {% endif %}
+
+</section>

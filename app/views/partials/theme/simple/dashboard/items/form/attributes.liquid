@@ -1,0 +1,176 @@
+<h3 class="subtitle">{{ 'app.items.attributes' | t }}</h3>
+
+{% liquid
+  assign empty_object = '{}' | parse_json
+  assign empty_array = '[]' | parse_json
+
+  comment
+    provide price_formatted & original_price_formatted for the UI
+  endcomment
+  assign original_item = empty_object | hash_merge: item
+  hash_assign item['variants'] = empty_array
+  for variant in original_item.variants
+    assign variant_object = empty_object | hash_merge: variant
+    hash_assign variant_object['price_formatted'] = variant.price | fractional_to_amount: variant_object.currency
+    if variant.original_price != blank
+      hash_assign variant_object['original_price_formatted'] = variant.original_price | fractional_to_amount: variant_object.currency
+    endif
+    hash_assign item['variants'] = item.variants | add_to_array: variant_object
+  endfor
+%}
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('variants', {
+      attributes: {{ item.variants | map: 'attributes_json' | flatten | uniq | group_by: 'name' | default: empty_object }},
+      allAttributes: {{ item_attributes }},
+      variants: {{ item.variants | default: empty_array }}
+    });
+    Alpine.store("keys", Object.keys(Alpine.store('variants').attributes));
+  });
+</script>
+
+
+<div x-data class="mt-4">
+  <template x-for='(name, index) in $store.keys' :key="name">
+    <ul
+      x-data="itemAttributes({selected: name})"
+      x-init="selectedAttribute = name; $store.variants.allAttributes[selectedAttribute]?.map((item) => { item.label = item.value; });"
+      class="mt-4 first:mt-0 flex flex-col md:flex-row gap-2"
+    >
+      <li>
+        <label class="block">{{ 'app.items.attribute' | t }}:</label>
+        <select x-on:change='selectAttribute($event)' data-tc="select-attribute">
+          <option value="" disabled selected></option>
+          <template x-for='[attrName, values] in Object.entries($store.variants.allAttributes)' :key="attrName">
+            <option x-bind:value="attrName" x-text="attrName" x-bind:selected="attrName == selectedAttribute"></option>
+          </template>
+        </select>
+      </li>
+      <li class="w-full">
+        <label class="block">{{ 'app.items.options' | t }}:</label>
+        {% render 'theme/simple/ui/multiselect',
+          list: '$store.variants.allAttributes[selectedAttribute] || []',
+          selected: '$store.variants.attributes[selectedAttribute]?.map(attribute => attribute.value)',
+          onclick: 'selectOptions',
+          name: 'variant',
+          multiline: true,
+          view: 'tiles' %}
+      </li>
+      <li>
+        <button class="button button-compact button-danger mt-6" title="{{ 'app.models.shared.delete' | t }}"
+          x-on:click.prevent="removeAttribute"
+        >
+          {% render 'theme/simple/ui/icon', icon: 'trash' %}
+        </button>
+      </li>
+    </ul>
+  </template>
+
+
+  <fieldset class="mt-4">
+    <button class="button button-secondary"
+      x-on:click.prevent='if (!$store.keys.includes("--blank--")){ $store.keys.push("--blank--") }'
+    >
+      {% render 'theme/simple/ui/icon', icon: 'plus' %}
+      {{ 'app.items.add_attribute' | t }}
+    </button>
+  </fieldset>
+</div>
+
+<div
+  x-show="$store.variants.variants.length > 0"
+>
+  <div class="flex items-center justify-center fixed inset-0 bg-content bg-opacity-80 z-50 hidden" data-variant-photos-modal
+    x-ref="photosModal"
+  >
+    <div class="card my-5 overflow-y-auto w-4/5" style="max-height: calc(100vh - 1rem);"
+    >
+      <div data-variant-photos-modal-content></div>
+      <button class="button"
+        x-on:click.prevent="$refs.photosModal.classList.add('hidden')"
+      >{{'app.items.form.done' | t }}</button>
+    </div>
+
+  </div>
+
+  <h3 class="subtitle mt-8">{{'app.items.variants' | t}}</h3>
+  <div class="table mt-4">
+    <header>
+      <div>{{'app.items.form.variant' | t}}</div>
+      <div>{{'app.items.form.photos' | t}}</div>
+      <div>{{'app.items.form.price' | t}}</div>
+      <div>{{'app.items.form.original_price' | t}}</div>
+      <div>{{'app.items.form.quantity' | t}}</div>
+      <div>{{'app.items.form.sku' | t}}</div>
+    </header>
+
+    <div class="table-content-simple">
+      <template x-for='(variant, index) in $store.variants.variants.filter(variant => variant.attributes_json && variant.attributes_json.length > 0)' :key="index">
+        <ul x-init="errors = variant.errors || {}">
+          <input name="item[variants][][attributes_ids]" type="hidden" x-bind:value="variant.attributes_json.map(attr => attr.id)">
+          <input name="item[variants][][attributes_json]" type="hidden" x-bind:value="JSON.stringify(variant.attributes_json)">
+          <input name="item[variants][][photo_ids]" type="hidden" x-bind:value="(variant.photo_ids || []).join(',')">
+
+          <li>
+            <div class="block lg:hidden">{{ 'app.items.form.variant' | t }}: </div>
+            <span x-text="variant.attributes_json.map(attr => attr.value).join('/')"></span>
+          </li>
+
+          <li>
+            <button class="button button-small button-secondary"
+              x-on:click.prevent='
+                $refs.photosModal.classList.remove("hidden");
+                api.setupPhotoUploadItemVariant("[data-variant-photos-modal-content]", $store.variants.variants[index]);'
+            >
+              {% render 'theme/simple/ui/icon', icon: 'camera' %}
+            </button>
+          </li>
+
+          <li>
+            <div class="block lg:hidden">{{ 'app.items.form.price' | t }}: </div>
+            <div class="flex items-center gap-2">
+              <input type="number" name="item[variants][][price]" step="any" min="0" x-bind:value="variant.price_formatted" class="w-full">
+              {{ currency }}
+            </div>
+            <small class="mt-1 flex text-danger" x-show="errors.price">
+              {% render 'theme/simple/ui/icon', icon: 'warningCloud', class: 'w-5 h-5 me-2 flex-shrink-0' %}
+              <span x-text="errors.price || ''"></span>
+            </small>
+          </li>
+
+          <li>
+            <div class="block lg:hidden">{{ 'app.items.form.original_price' | t }}: </div>
+            <div class="flex items-center gap-2">
+              <input type="number" id="price" name="item[variants][][original_price]" step="any" min="0" x-bind:value="variant.original_price_formatted" class="w-full">
+              {{ currency }}
+            </div>
+            <small class="mt-1 flex text-danger" x-show="errors.original_price">
+              {% render 'theme/simple/ui/icon', icon: 'warningCloud', class: 'w-5 h-5 me-2 flex-shrink-0' %}
+              <span x-text="errors.original_price"></span>
+            </small>
+          </li>
+
+          <li>
+            <div class="block lg:hidden">{{ 'app.items.form.quantity' | t }}: </div>
+            <input type="number" name="item[variants][][quantity]" x-bind:value="variant.quantity" class="w-full">
+            <small class="mt-1 flex text-danger" x-show="errors.quantity">
+              {% render 'theme/simple/ui/icon', icon: 'warningCloud', class: 'w-5 h-5 me-2 flex-shrink-0' %}
+              <span x-text="errors.quantity"></span>
+            </small>
+          </li>
+
+          <li>
+            <div class="block lg:hidden">{{ 'app.items.form.sku' | t }}: </div>
+            <input type="text" name="item[variants][][sku]" x-bind:value="variant.sku" {% if item.id %}disabled{% endif %} class="w-full">
+            <small class="mt-1 flex text-danger" x-show="errors.sku">
+              {% render 'theme/simple/ui/icon', icon: 'warningCloud', class: 'w-5 h-5 me-2 flex-shrink-0' %}
+              <span x-text="errors.sku"></span>
+            </small>
+          </li>
+
+        </ul>
+      </template>
+    </div>
+  </div>
+</div>

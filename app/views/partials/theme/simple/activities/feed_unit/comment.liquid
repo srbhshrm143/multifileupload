@@ -1,0 +1,90 @@
+
+{% liquid
+  assign new_comment = comment | parse_json
+  hash_assign new_comment['type'] = 'comment'
+
+  function can_edit = "lib/can", actor: current_profile, do: "edit", object: new_comment
+  function can_remove = "lib/can", actor: current_profile, do: "remove", object: new_comment
+
+  if can_edit.valid or can_remove.valid
+    assign show_dropdown = true
+  endif
+
+  assign return_to = context.params.return_to | default: context.location.href
+%}
+
+<li class="mt-4 first:mt-0 flex"
+  {% if index > 2 %} x-show="!hidden" {% endif %}
+>
+  <div class="w-full" x-data='commentEdit()'>
+    <div class="md:flex items-center gap-4">
+      <a href="{% render 'link_to', profile: comment.creator %}" class="flex items-center gap-2 font-semibold text-content">
+        {% render 'theme/simple/ui/avatar', profile: comment.creator, size: 24, class: 'w-6 h-6 text-xs' %}
+        {% if comment.creator.first_name %}
+          {{ comment.creator.first_name }} {{ comment.creator.last_name }}
+        {% else %}
+          {{ comment.creator.name }}
+        {% endif %}
+      </a>
+
+      <date title="{{ comment.created_at | l: 'compact' }}" datetime="{{ comment.created_at }}" class="sidenote text-content-sidenote timeago">
+        {{ comment.created_at | l: 'compact' }}
+      </date>
+
+      {% if show_dropdown %}
+        {% capture 'dropdown_content' %}
+          <ul class="whitespace-nowrap">
+            {% if can_edit %}
+              <li>
+                <button
+                  type="button"
+                  x-on:click="showEdit = true; $nextTick(() => { $refs.commentInput.focus(); });"
+                  class="w-full py-3 px-7 hover:bg-interaction text-content hover:text-content-inverted transition-colors md:rounded-t text-start">
+                  {{ 'app.models.shared.edit' | t }}
+                </button>
+              </li>
+            {% endif %}
+            {% if can_remove %}
+              <li>
+                {% render 'theme/simple/comments/buttons/remove', comment: comment, return_to: context.location.href, context: context, button_class: 'w-full block py-3 px-7 md:rounded-b hover:bg-interaction hover:text-content-inverted transition-color text-start' %}
+            </li>
+            {% endif %}
+          </ul>
+        {% endcapture %}
+
+        {% capture dropdown_label %}
+          {% render 'theme/simple/ui/icon', icon: 'menuHorizontal' %}
+        {% endcapture %}
+
+        {% render 'theme/simple/ui/dropdown', class: 'ms-auto -me-4', toggle_class: 'p-4 text-content-sidenote hover:text-interaction-hover' label: dropdown_label, content: dropdown_content %}
+      {% endif %}
+    </div>
+
+    {% liquid
+      assign comment_body = comment.body
+
+      if comment.removed_at
+        assign comment_body = 'app.models.comments.removed_comment' | t | prepend: '[' | append: ']'
+      endif
+
+      assign comment_body_formatted = comment_body | markdown: '{ "elements": ["b","strong","i","em","a","code", "pre"], "attributes":{ "a": ["href"] } }'
+    %}
+
+    <form action="api/comments" class="flex items-center gap-2" x-on:submit="spinner = true; submit(event);" x-cloak x-show="showEdit">
+      {% render 'authenticity_token', context: context %}
+      <input type="hidden" name="comment[id]" value="{{ comment.id }}">
+
+      <input x-ref="commentInput" type="text" class="w-full" name="comment[body]" value="{{ comment_body_formatted }}">
+      <button type="submit" class="button relative">
+        {{ 'app.save' | t }}
+        <div class="card-overlay" x-cloak x-show="spinner">
+          {% render 'theme/simple/ui/spinner' %}
+        </div>
+      </button>
+    </form>
+
+    <div x-ref="comment" class="ms-8 mt-1" x-show="!showEdit">
+      {{ comment_body_formatted }}
+    </div>
+  </div>
+</li>

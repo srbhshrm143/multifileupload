@@ -1,0 +1,40 @@
+query search(
+  $id: ID
+  $limit: Int = 1000
+  $object_uuid: String
+  # $origin_urls: [String!]
+  $photo_type: String
+) {
+  photos: records(
+    per_page: $limit
+    filter: {
+      id: { value: $id }
+      table: { value: "form_media_testing" }
+      properties: [
+        { name: "media_uuid", value: $object_uuid }
+        # { name: "origin_url", value_in: $origin_urls }
+        { name: "media_type", value: $photo_type }
+      ]
+    },
+    sort: {
+      created_at: {
+        order:  DESC
+      }
+    }
+  ) {
+    results {
+      id
+      media_uuid: property(name: "media_uuid")
+      origin_url: property(name: "origin_url")
+      testing_media: property_upload(name: "testing_media") {
+          # File Url Link
+          url
+          # File Name
+          file_name
+          # File Extension
+          extension
+        }
+      # properties
+    }
+  }
+}

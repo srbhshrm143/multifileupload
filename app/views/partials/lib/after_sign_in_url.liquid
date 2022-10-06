@@ -1,0 +1,17 @@
+{% liquid
+  function profile = 'lib/current_organization_profile', user_id: user_id
+  if profile.type == 'organization'
+    comment
+      assign url = '/dashboard/sell/orders'
+    endcomment
+    assign url = '/admin'
+  else
+    function be_admin = "lib/can", actor: profile, do: "be_admin", object: profile
+    if be_admin.valid
+      assign url = '/admin'
+    else
+      assign url = context.constants.AFTER_LOGIN_REDIRECT | default: '/'
+    endif
+  endif
+  return url
+%}

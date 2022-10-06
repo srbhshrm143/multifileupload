@@ -1,0 +1,160 @@
+query search_for_member(
+  $id: ID,
+  $limit: Int = 20,
+  $page: Int = 1,
+  $member_id: String
+  $meta_visible: String
+  $without_group_type: String
+  $group_type: String
+  $with_offer: Boolean = false
+) {
+  projects: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "project" }
+
+      related_records: {
+        join: { join_on_property: "group_id", foreign_property: "id"}
+        filter: {
+          table: { value: "group" },
+          properties: [
+            { name: "meta_visible", value: $meta_visible }
+            { name: "group_type", not_value: $without_group_type }
+            { name: "group_type", value: $group_type }
+          ]
+          related_records: {
+            join: { join_on_property: "id", foreign_property: "r_id"}
+            filter: {
+              table: { value: "relationship" },
+              properties: [
+                { name: "l_id", value: $member_id }
+                { name: "name", value: "membership" }
+              ]
+            }
+          }
+        }
+      }
+    }
+    sort: [
+      { created_at: { order: DESC }}
+    ]
+  ){
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      uuid: property(name: "uuid")
+      name: property(name: "name")
+      deadline: property(name: "deadline")
+      promoted: property_boolean(name: "promoted")
+      summary: property(name: "summary")
+      award: property(name: "award")
+      tags: property_array(name: "tags")
+      description: property(name: "description")
+      terms_and_conditions: property(name: "terms_and_conditions")
+      offer_info: property(name: "offer_info")
+      commentable: property_boolean(name: "commentable")
+      development_partners: property(name: "development_partners")
+      sent_by: property(name: "sent_by")
+      group_id: property(name: "group_id")
+      video_urls: property_array(name: "video_urls")
+      steps: property_object(name: "steps")
+      c__applications_count: property_int(name: "c__applications_count")
+
+      cover: related_record(
+        table: "photo"
+        join_on_property: "uuid"
+        foreign_property: "object_uuid"
+        filter: { properties: { name: "photo_type", value: "cover" } }
+      ) {
+        id
+        type: table
+        photo_width: property_int(name: "photo_width")
+        photo_height: property_int(name: "photo_height")
+        photo: property_upload(name: "photo") {
+          url
+          versions
+        }
+      }
+      photos: related_records(
+        table: "photo"
+        join_on_property: "uuid"
+        foreign_property: "object_uuid"
+        filter: { properties: { name: "photo_type", value: "image" } }
+      ) {
+        id
+        type: table
+        photo_width: property_int(name: "photo_width")
+        photo_height: property_int(name: "photo_height")
+        photo: property_upload(name: "photo") {
+          url
+          versions
+        }
+      }
+      files: related_records(
+        table: "document"
+        join_on_property: "uuid"
+        foreign_property: "object_uuid"
+        filter: { properties: { name: "document_type", value: "file" } }
+      ) {
+        id
+        type: table
+        file: property_upload(name: "document") {
+          url
+          file_name
+          extension
+        }
+      }
+      group: related_record(
+        table: "group"
+        join_on_property: "group_id"
+        foreign_property: "id"
+      ) {
+        id
+        type: table
+
+        ask_to_join: property(name: "ask_to_join")
+        meta_visible: property(name: "meta_visible")
+        content_visible: property(name: "content_visible")
+        approve_request: property(name: "approve_request")
+        post_content: property(name: "post_content")
+        invite_member: property(name: "invite_member")
+        c__members_count: property_int(name: "c__members_count")
+      }
+
+      status: related_record(
+        join_on_property: "id"
+        foreign_property: "object_id"
+        table: "status"
+        sort: { created_at: { order: ASC } }
+      ) {
+        id
+        type: table
+
+        created_at
+        name: property(name: "name")
+        object_id: property(name: "object_id")
+      }
+
+      project_offers: related_records(
+        join_on_property: "id"
+        foreign_property: "project_id"
+        table: "project_offer"
+        sort: { created_at: { order: ASC } }
+      ) @include(if: $with_offer) {
+        id
+        type: table
+        created_at
+
+        name: property(name: "name")
+      }
+    }
+  }
+}

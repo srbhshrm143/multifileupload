@@ -1,0 +1,39 @@
+mutation create_item_complex(
+  $owner: String!
+  $uuid: String!
+  $max_in_one_order: Int!
+  $c__status: String!
+  $item_type: String = "physical"
+
+  $details_input: [CustomizationImport!]!
+  $variants_input: [CustomizationImport!]!
+) {
+  item_inventory: record_create(
+    record: {
+      table: "item_inventory"
+      properties: [
+        { name: "max_in_one_order", value_int: $max_in_one_order }
+        { name: "owner", value: $owner }
+        { name: "uuid", value: $uuid }
+        { name: "c__status", value: $c__status }
+        { name: "item_type", value: $item_type }
+      ]
+    }
+  ) {
+    id
+  }
+
+  items: import_models(
+    models: $variants_input
+    _index_rebuild: false
+  ) {
+    ids
+  }
+
+  item_details: import_models(
+    models: $details_input
+    _index_rebuild: false
+  ) {
+    ids
+  }
+}

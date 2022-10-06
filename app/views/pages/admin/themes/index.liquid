@@ -1,0 +1,15 @@
+---
+layout: admin
+---
+{% liquid
+
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_admin'
+  include 'lib/constant_must_be', constant_name: 'THEME_EDITOR_ENABLED', constant_value: "true"
+
+
+  function _ = 'lib/extend_context', photo_presign: true
+  function theme_settings = 'lib/queries/theme_settings/load'
+  render 'theme/simple/admin/themes/index', context: context, current_profile: current_profile, theme_settings: theme_settings
+%}

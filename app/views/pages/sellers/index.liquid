@@ -1,0 +1,6 @@
+{% liquid
+  assign sort = '{ "properties": { "name": "name", "order": "ASC"}}' | parse_json
+  function organizations = 'lib/queries/organizations/search', limit: 300, sort: sort
+  include 'theme/simple/sellers/index', organizations: organizations.results
+%}
+

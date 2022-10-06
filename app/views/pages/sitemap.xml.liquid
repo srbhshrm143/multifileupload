@@ -1,0 +1,8 @@
+---
+layout: ''
+---
+{%- liquid
+  function sitemap = 'lib/queries/sitemaps/find', limit: 1
+  include 'lib/present_or_404', property: sitemap.id
+  print sitemap.file.url | download_file
+-%}

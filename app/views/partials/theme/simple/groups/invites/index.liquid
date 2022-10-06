@@ -1,0 +1,26 @@
+{% render 'theme/simple/groups/header_manage', group: group, context: context %}
+
+<div class="container flex flex-col md:flex-row gap-6">
+
+  {% render 'theme/simple/groups/nav', tab: tab, group: group, current_profile: current_profile %}
+
+  <section>
+    <div class="bigtitle">{{ 'app.groups.invites.index.header' | t }}</div>
+    <div class="prose">{{ 'app.groups.invites.index.summary' | t | markdown }}</div>
+
+    {% assign skip_profile_ids = group.relationships | select: name: 'membership' | map: 'l_id' | join: ',' %}
+    <div x-data="invites()" x-init="skip_profile_ids = {{ skip_profile_ids | json }}" class="mt-8">
+      {% render 'theme/simple/invites/widget' %}
+      <form action="{% render 'link_to', object: group, action: 'invites' %}" method="post">
+        {% render 'authenticity_token', context: context %}
+        <input name="email_list" type="hidden" :value="emailList()">
+        <div class="mt-6">
+          <button class="button">{{ 'app.groups.invites.index.send' | t  }}</button>
+          <a href="{% render 'link_to', object: group %}" class="button button-secondary">{{ 'app.groups.invites.index.cancel' | t  }}</a>
+        </div>
+      </form>
+    </div> <!-- endof invites() -->
+
+  </section>
+
+</div>

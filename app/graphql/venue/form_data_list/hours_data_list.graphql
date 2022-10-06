@@ -1,0 +1,35 @@
+query search(
+  $id: ID,
+  $limit: Int = 1,
+  $page: Int = 1,
+  $menu_id: String!,
+  # $uuid: String,
+  ) {
+
+  data: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: {
+        value: "venue_hours"
+      }
+      properties: [
+        { name: "menu_id", value: $menu_id }
+      ]
+    }
+    sort: {
+      created_at: {
+        order:  DESC
+      }
+    }
+  ) {
+    total_entries
+    total_pages
+    results {
+      id
+      properties
+      
+    }
+  }
+}

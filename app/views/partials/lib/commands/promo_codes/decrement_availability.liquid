@@ -1,0 +1,20 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  unless object.promo_id == blank
+    assign input = '{}' | parse_json
+    hash_assign input['id'] = object.promo_id
+    hash_assign input['step'] = 1
+
+    function result = 'lib/commands/call', command: 'promo_codes/decrement_availability', object: input
+
+    if result['valid']
+
+    else
+      hash_assign c['errors'] = result['errors']
+      hash_assign c['valid']  = false
+    endif
+  endunless
+
+  return c
+%}

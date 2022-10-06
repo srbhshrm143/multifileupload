@@ -1,0 +1,27 @@
+{% liquid
+  if path == blank
+    log 'path cannot be blank', type: 'ERROR: '
+  endif
+
+  assign _arr = path | regex_matches: '(.*)___(.*)\[(.*)\]\.(.*)' | first
+
+  if _arr
+    assign item = '{}' | parse_json
+    hash_assign item['product_uuid'] = _arr[0]
+    hash_assign item['sku'] = _arr[1]
+    hash_assign item['column'] = _arr[3]
+
+    return item
+  endif
+
+  assign _arr = path | regex_matches: '(.*)___(.*)' | first
+
+  if _arr
+    assign item = '{}' | parse_json
+    hash_assign item['product_uuid'] = _arr[0]
+    hash_assign item['sku'] = _arr[1]
+    hash_assign item['column'] = _arr[3]
+
+    return item
+  endif
+%}

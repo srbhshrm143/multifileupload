@@ -1,0 +1,30 @@
+<section x-data="{ action: false }">
+
+  <header class="mb-8 md:flex justify-between items-center">
+      <h2 class="bigtitle md:!mb-0">{{ 'app.bulk_operations.title' | t }}</h2>
+
+    <nav class="flex gap-2">
+      <a class="p-2" href="/dashboard/sell/data/instructions" target="_blank">{{ 'app.bulk_operations.instructions.title' | t }}</a>
+      <button x-on:click="action = 'import'" class="button">
+        {{ 'app.bulk_operations.import' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'upload' %}
+      </button>
+      {% render 'theme/simple/bulk_operations/export/form', context: context  %}
+    </nav>
+  </header>
+
+  <div
+    x-cloak
+    x-show="action == 'import'"
+    class="absolute inset-0 flex items-center justify-center bg-content bg-opacity-80"
+  >
+    {% render 'theme/simple/bulk_operations/import/form', context: context  %}
+  </div>
+
+</section>
+
+{% if operations.results.size > 0 %}
+  {% render 'theme/simple/bulk_operations/index', context: context, operations: operations %}
+{% else %}
+  {% render 'theme/simple/bulk_operations/empty', context: context %}
+{% endif %}

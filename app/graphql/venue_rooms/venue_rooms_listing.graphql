@@ -1,0 +1,31 @@
+query search( $Id: ID = 9009
+  ) {
+  records(
+    per_page: 1000
+    filter: {
+      id: {
+        value: $Id
+      },
+      table: {
+        value: "venues"
+      }
+    }
+    sort: {
+      created_at: {
+        order: DESC
+      }
+    }
+  ) {
+    results {
+      id
+      properties
+      # rooms: related_record(table: "venue_rooms" join_on_property: "id" foreign_property: "venue_id") {
+
+      rooms: related_record(table: "venue_rooms" join_on_property: "id" foreign_property: "venue_id"){
+        id
+        properties
+      }
+      
+    }
+  }
+}

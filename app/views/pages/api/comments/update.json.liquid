@@ -1,0 +1,27 @@
+---
+slug: api/comments
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function comment = 'lib/queries/comments/find', id: context.params['comment[id]'], creator_id: current_profile.id
+
+  include 'lib/present_or_404', property:  comment.id
+  include 'lib/can_do_or_unauthorized', object: comment, do: 'edit', actor: current_profile
+
+  hash_assign comment['body'] = context.params['comment[body]']
+
+  function object = 'lib/commands/call', object: comment, command: 'comments/update'
+  
+  assign response = '{}' | parse_json
+
+  if object.valid
+    hash_assign response['comment_body'] = comment.body
+  else
+    hash_assign response['errors'] = object["errors"]
+  endif
+
+  echo response
+%}

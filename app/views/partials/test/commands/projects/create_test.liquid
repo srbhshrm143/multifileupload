@@ -1,0 +1,29 @@
+{% parse_json profile %}
+  {
+    "id": "5"
+  }
+{% endparse_json %}
+{% parse_json params %}
+{
+  "name": "Lorem ipsum dolor sit amet",
+  "summary":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. In gravida eros sapien, in posuere tortor luctus ut. Phasellus venenatis nulla in ornare mollis.",
+  "uuid": "12345",
+  "status": "open",
+  "uuid": "uuid1234",
+  "steps": [
+    { "id": "0", "name": "step1", "from": "2021-01-01", "to": "2021-01-02" },
+    { "id": "1", "name": "step2", "from": "2021-01-03", "to": "2021-01-04" },
+    { "id": "2", "name": "step3", "from": "2021-01-05", "to": "2021-01-06" }
+  ]
+}
+{% endparse_json %}
+
+
+{% liquid
+  function project = 'lib/commands/projects/create', object: params, profile: profile
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: project, field_name: 'project'
+
+  function project = 'lib/queries/projects/find', id: project.id
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'steps', given: project.steps.size, expected: 3
+%}

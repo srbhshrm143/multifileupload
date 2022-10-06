@@ -1,0 +1,17 @@
+{% parse_json object %}
+  {
+    "id":      {{ object.id | json }},
+    "venue_id":          {{ object.venue_id | json }},
+    "menu_id":          {{ object.menu_id | json }},
+    "day_starts":        {{ object.day_time_starts | json }},
+    "day_ends":          {{ object.day_time_ends | json }},
+    "night_starts":      {{ object.night_time_starts | json }},
+    "night_ends":        {{ object.night_time_ends | json }},
+    "all_day_starts":    {{ object.allday_time_starts | json }},
+    "all_day_ends":      {{ object.allday_time_ends | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

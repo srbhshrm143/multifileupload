@@ -1,0 +1,7 @@
+---
+en:
+  app:
+    seo:
+      search:
+        generic: Find products
+        description: "%{seo_description} in MVP Template"

@@ -1,0 +1,16 @@
+{% liquid
+  assign actor = '{"id":"1000", "type": "organization"}' | parse_json
+  assign document = '{"id":"2000", "type":"document", "creator_id": "1000"}' | parse_json
+
+  function result = 'lib/can', actor: actor, do: 'show', object: document
+  function contract = 'test/assertions/valid_object', contract: contract, object: result, field_name: 'valid'
+%}
+
+{% liquid
+  assign actor = '{"id":"1001", "type": "profile"}' | parse_json
+  assign document = '{"id":"2000", "type":"document", "creator_id": "1000"}' | parse_json
+
+  function result = 'lib/can', actor: actor, do: 'show', object: document
+  function contract = 'test/assertions/not_valid_object', contract: contract, object: result, field_name: 'invalid'
+  function contract = 'test/assertions/presence', contract: contract, object: result.errors, field_name: 'permission_denied'
+%}

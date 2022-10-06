@@ -1,0 +1,57 @@
+<h1 class="pagetitle"> {{ 'app.venue.venue_action_type.create' | t }} </h1>
+
+<form action="/venue/created" method="POST" class="card-lg w-full md:w-96 mx-auto">
+  <!-- venue name -->
+  <input type="hidden" name="venue_owner_id" class="venue_owner_id" value="{{ context.current_user.id }}">
+  <div>
+    <label for="{{ 'app.venue.fields.name_id' | t }}"> {{ 'app.venue.fields.name' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.name_id' | t }}" id="{{ 'app.venue.fields.name_id' | t }}" class="venue_name w-full form-input-small">
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.address_id' | t }}">{{ 'app.venue.fields.address' | t }}</label>
+    <textarea name="{{ 'app.venue.fields.address_id' | t }}" id="{{ 'app.venue.fields.address_id' | t }}" cols="30" rows="3" class="venue_address w-full form-input-small"></textarea>
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.contact_id' | t }}"> {{ 'app.venue.fields.contact' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.contact_id' | t }}" id="{{ 'app.venue.fields.contact_id' | t }}" class="venue_contact w-full form-input-small">
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.services_id' | t }}"> {{ 'app.venue.fields.services_offred' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.services_id' | t }}" id="{{ 'app.venue.fields.services_id' | t }}" class="services_offered w-full form-input-small">
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.menu_id' | t }}"> {{ 'app.venue.fields.menu' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.menu_id' | t }}" id="{{ 'app.venue.fields.menu_id' | t }}" class="venue_menu w-full form-input-small">
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.features_id' | t }}"> {{ 'app.venue.fields.features' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.features_id' | t }}" id="{{ 'app.venue.fields.features_id' | t }}" class="venue_features w-full form-input-small">
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.desc_id' | t }}"> {{ 'app.venue.fields.desc' | t }} </label>
+    <textarea type="text" name="{{ 'app.venue.fields.desc_id' | t }}" id="{{ 'app.venue.fields.desc_id' | t }}" cols="30" rows="3" class="w-full form-input-small"></textarea>
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.capacity_id' | t }}"> {{ 'app.venue.fields.capacity' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.capacity_id' | t }}" id="{{ 'app.venue.fields.capacity_id' | t }}" class="w-full form-input-small">
+  </div>
+  <div class="mt-3">
+    <label for="{{ 'app.venue.fields.hours_id' | t }}"> {{ 'app.venue.fields.rental_hours' | t }} </label>
+    <input type="text" name="{{ 'app.venue.fields.hours_id' | t }}" id="{{ 'app.venue.fields.hours_id' | t }}" class="w-full form-input-small">
+  </div>
+  {%- comment -%}
+    <div class="mt-3">
+      <label for="{{ 'app.venue.fields.contract_id' | t }}"> {{ 'app.venue.fields.contract' | t }} </label>
+      <input type="text" name="{{ 'app.venue.fields.contract_id' | t }}" id="{{ 'app.venue.fields.contract_id' | t }}" class="w-full form-input-small">
+    </div>
+    <div class="mt-3">
+      <label for="{{ 'app.venue.fields.media_id' | t }}"> {{ 'app.venue.fields.media_img' | t }} </label>
+      <input type="file" name="{{ 'app.venue.fields.media_id' | t }}" id="{{ 'app.venue.fields.media_id' | t }}" class="w-full form-input-small" accept="image/jpeg">
+      <!-- <input type="file" name="{{ 'app.venue.fields.media_id' | t }}" id="{{ 'app.venue.fields.media_id' | t }}" class="w-full form-input-small" accept="image/*"> -->
+    </div>
+  {%- endcomment -%}
+<button class="button button-small mt-3">{{ 'app.venue.venue_action_type.createv' | t }}</button>
+<a href="/venue/show" class="button button-small mt-3"> {{ 'app.venue.venue_action_type.read' | t }} </a>
+</form>
+
+<!-- {{ context }} -->

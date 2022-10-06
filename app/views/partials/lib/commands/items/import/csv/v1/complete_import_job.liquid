@@ -1,0 +1,7 @@
+{% background 'photo-and-publish', priority: 'low', command: command, object: object, owner: owner, object_uuid: object_uuid, delay: 0.01 %}
+  {% liquid
+    function result = 'lib/commands/items/import/csv/v1/complete_import', command: command, object: object, owner: owner, object_uuid: object_uuid
+  %}
+%}
+{% endbackground %}
+{% return true %}

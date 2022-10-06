@@ -1,0 +1,53 @@
+{% liquid
+  assign photos = object.source_item.variants | map: '_photo_urls' | flatten | uniq | compact
+
+  assign params = '{}' | parse_json
+  hash_assign params['ids'] = object.items.ids
+  function items = 'lib/queries/items/search', limit: params.ids.size, params: params
+  assign items_by_sku = items.results | group_by: 'sku'
+
+  function r = 'lib/queries/photos/search_by_origin', origin_urls: photos, profile_id: owner.id
+  if r == blank
+    log 'incorrect params for search_by_origin', type: 'ERROR'
+    break
+  endif
+
+  assign current_photos = r.results | group_by: 'origin_url'
+  assign import_photos = '[]' | parse_json
+  for url in photos
+    assign photo = '{}' | parse_json
+    hash_assign photo['remote_url'] = url | replace: ' ', '%20'
+    hash_assign photo['photo_type'] = 'photo'
+    hash_assign photo['object_uuid'] =  object_uuid
+    hash_assign photo['id'] = current_photos[url][0].id
+    assign import_photos = import_photos | add_to_array: photo
+  endfor
+
+  for _p in import_photos
+    assign p = _p
+    if p.id == blank
+      function photo = 'lib/commands/photos/create_from_remote', object: p, current_profile: owner
+      hash_assign p['id'] = photo.id
+    endif
+  endfor
+
+  assign imported_photos = import_photos | group_by: 'remote_url'
+  for variant in object.source_item.variants
+    assign update = '{ "photo_ids": [] }' | parse_json
+    hash_assign update['id'] = items_by_sku[variant.sku][0].id
+    for url in variant._photo_urls
+      hash_assign update['photo_ids'] = update['photo_ids'] | add_to_array: imported_photos[url][0].id
+    endfor
+    hash_assign update['photo_ids'] = update['photo_ids'] | compact
+
+    function update_photo_ids = 'lib/commands/items/update', object: update
+  endfor
+
+  assign command = 'lib/commands/' | append: object.command
+  function publish_object = command, object: object, current_profile: owner
+  if publish_object.valid != true
+    log publish_object, type: 'ERROR: v1/import_photos_and_publish publish_object'
+  endif
+
+  return publish_object
+%}

@@ -1,0 +1,14 @@
+---
+slug: api/documents
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile
+
+  function document = 'lib/queries/documents/find', id: context.params.document.id, with_object: true
+  include 'lib/can_do_or_unauthorized', object: document, do: "delete", actor: current_profile, json: true
+
+  function object = 'lib/commands/documents/delete', object: context.params.document, current_profile: current_profile
+  include 'theme/json/shared/show', object: object
+%}

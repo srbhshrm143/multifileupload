@@ -1,0 +1,65 @@
+query search(
+  $id: ID,
+  $limit: Int = 20,
+  $page: Int = 1,
+  $key: String,
+  $uuid: String,
+  # $withAllLangs: Boolean = false
+  ) {
+
+  categories: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "category" }
+      properties: [{ name: "key", value: $key }, { name: "uuid", value: $uuid }]
+    }
+    sort: [{ properties: { name: "key", order: ASC } }]
+  ) {
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      key: property(name: "key")
+      uuid: property(name: "uuid")
+
+      category_details: related_records(
+        table: "category_detail"
+        join_on_property: "id"
+        foreign_property: "category_id"
+        sort: { properties: { name: "lang", order: ASC } }
+      )
+      # @include(if: $withAllLangs)
+      {
+        id
+        type: table
+        name: property(name: "name")
+        lang: property(name: "lang")
+      }
+
+      categoty_image: related_records(
+        table: "form_media_testing"
+        join_on_property: "uuid"
+        foreign_property: "media_uuid"
+        sort: { properties: { name: "lang", order: ASC } }
+      ) {
+        id
+        origin_url: property(name: "origin_url")
+        image_url: property_upload(name: "testing_media") {
+          # File Url Link
+          url
+          # File Name
+          # file_name
+          # File Extension
+          # extension
+        }
+      }
+    }
+  }
+}

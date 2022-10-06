@@ -1,0 +1,31 @@
+mutation update(
+  $Id: ID!,
+  $Vname: String!,
+  $Vaddress: String!,
+  $Vcontact: String!,
+  $Vservices: String!,
+  $Vmenu: String!,
+  $Vfeatures: String!,
+  $Vdesc: String!,
+  $Vcapacity: String!,
+  $Vrental_hours: String!
+){
+  record_update(
+     id: $Id
+     record: {
+      	properties: [
+        { name: "venue_name", value: $Vname }
+        { name: "venue_address", value: $Vaddress }
+        { name: "venue_contact", value: $Vcontact }
+        { name: "venue_services", value: $Vservices }
+        { name: "venue_menu", value: $Vmenu }
+        { name: "venue_features", value: $Vfeatures }
+        { name: "venue_description", value: $Vdesc }
+        { name: "venue_capacity", value: $Vcapacity }
+        { name: "venue_rental_hours", value: $Vrental_hours }
+        ]
+      }
+  ) {
+    id properties
+  }
+}

@@ -1,0 +1,8 @@
+<style>
+:root {
+  {% comment %} color variables {% endcomment %}
+  {% for color in theme_settings.colors %}
+    --{{color.name}}: {{color.value}};
+  {% endfor %}
+}
+</style>

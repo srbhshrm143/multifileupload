@@ -1,0 +1,58 @@
+en:
+  external_account: "External Account:"
+  requirements:
+    individual:
+      address:
+        line1: Address
+        city: City
+        state: State
+        postal_code: Postal Code
+  stripe:
+    fields_needed:
+      external_account: External Account
+      legal_entity:
+        type: Account Type
+        dob:
+          day: "Date of birth - day"
+          month: "Date of birth - month"
+          year: "Date of birth - year"
+        first_name: "First Name"
+        last_name: "Last Name"
+        business_tax_id: "Business Tax ID (Employer Identification Number)"
+        ssn_last_4: "Social Security number - last 4 digits"
+        verification:
+          document: Photo ID
+        address:
+          line1: Address
+          city: City
+          state: State
+          postal_code: Postal Code
+    account:
+      business_name: Company Name
+      phone: Phone Number
+      tax_id:
+        nz: NZBN
+        us: EIN
+        gb: Companies House Registration Number (CRN)
+        au: Company ACN/ABN - TFN
+        ca: Business Number (Tax ID)
+      address: Address
+      city: City
+      state: State
+      zip: Postal Code
+      last_name: Last Name
+      id_number: SSN
+      date_of_birth: Date of Birth
+      country: Country
+      currency: Currency
+      routing_number:
+        us: Routing Number
+        gb: SORT
+        au: BSB
+        ca: Routing Number
+      account_number: Account Number
+      account_holder_name: Account Holder Name
+      first_name: First Name
+
+
+

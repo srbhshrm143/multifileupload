@@ -1,0 +1,16 @@
+{% liquid
+  function operation = 'lib/queries/bulk_operations/find', id: event.object.id
+  function status = 'lib/commands/statuses/create', profile_id: event.actor.id, object_id: operation.id, name: 'app.statuses.bulk_operations.export.started', scope: 'app.statuses.bulk_operations.export'
+
+  function item_inventories = 'lib/queries/item_inventories/search_by_owner', owner: event.actor.id, withAllVariants: true, withAllLangs: true, limit: 1000
+
+  function export = 'lib/commands/items/export/csv/v1/build', item_inventories: item_inventories.results
+  function document = 'lib/commands/items/export/file', content: export.data, object_uuid: operation.uuid, current_profile: event.actor
+
+  if export.valid and document.valid
+    function status = 'lib/commands/statuses/create', profile_id: event.actor.id, object_id: operation.id, name: 'app.statuses.bulk_operations.export.done', scope: 'app.statuses.bulk_operations.export'
+    function _event = 'lib/commands/events/create', type: 'data_export_done', actor_id: event.actor.id, object_id: object.id, delay: 0
+  else
+    function status = 'lib/commands/statuses/create', profile_id: event.actor.id, object_id: operation.id, name: 'app.statuses.bulk_operations.export.failure', scope: 'app.statuses.bulk_operations.export'
+  endif
+%}

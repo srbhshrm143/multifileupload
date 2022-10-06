@@ -1,0 +1,9 @@
+{% liquid
+  assign object = '{}' | parse_json
+  hash_assign object['name'] = 'PROJECT_GROUP'
+  hash_assign object['uuid'] = '' | uuid
+  hash_assign object['content_types'] = 'post' | split: ','
+  hash_assign object['group_type'] = 'project_group'
+
+  return object
+%}

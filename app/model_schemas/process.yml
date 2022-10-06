@@ -1,0 +1,9 @@
+name: process
+properties:
+  - name: payload
+  - name: name
+  - name: command
+  - name: profile_id
+  - name: c__status
+  - name: run_in_background
+    type: boolean

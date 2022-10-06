@@ -1,0 +1,13 @@
+{% liquid
+  assign all_attribute_values = '[]' | parse_json
+
+  for version in item.item_inventory.items
+    for attribute in version.attributes_json
+      assign key = attribute.name | append: '_' | append: attribute.value
+      assign translated_attr = i18n[key]
+      assign all_attribute_values = all_attribute_values | add_to_array: translated_attr
+    endfor
+  endfor
+
+  return all_attribute_values | uniq | compact | join: ' '
+%}

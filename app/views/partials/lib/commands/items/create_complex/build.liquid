@@ -1,0 +1,41 @@
+{% liquid
+  assign data =  '{}' | parse_json
+  hash_assign data['max_in_one_order'] = object.max_in_one_order | plus: 0
+  hash_assign data['_row_ids'] = object._row_ids
+  hash_assign data['currency'] = object.currency
+  hash_assign data['item_type'] = object.item_type
+  hash_assign data['uuid'] = object.uuid
+  hash_assign data['c__status'] = "app.statuses.items.unpublished"
+
+  function base_variant = 'lib/commands/items/create_complex/build_base_variant', object: object, owner: owner
+  hash_assign base_variant['attributes_json'] = '[]' | parse_json
+  hash_assign base_variant['attributes_ids'] = '[]' | parse_json
+  assign data = data | hash_merge: base_variant
+
+  function variants = 'lib/commands/items/create_complex/build_variants', object: object, base_variant: base_variant
+  hash_assign data['variants'] = variants
+
+  hash_assign data['variants_input'] = '[]' | parse_json
+  for variant in data.variants
+    assign variant_input = '{"type_name": "item"}' | parse_json
+    assign properties = '{}' | parse_json
+    hash_assign variant_input['properties'] = properties | hash_merge: variant
+    hash_assign variant_input['properties']['attributes_json'] = variant_input['properties'] | remove_hash_key: 'attributes_json_raw'
+    assign _ = variant_input['properties'] | remove_hash_key: '_row_id'
+    assign _ = variant_input['properties'] | remove_hash_key: '_photo_urls'
+    hash_assign data['variants_input'] = data.variants_input | add_to_array: variant_input
+  endfor
+
+  hash_assign data['details'] = object.details
+  hash_assign data['details_input'] = '[]' | parse_json
+  for detail_lang in data.details
+    assign detail = detail_lang[1]
+    assign detail_object = '{"type_name": "item_detail", "properties": {}}' | parse_json
+    hash_assign detail_object['properties']['lang'] = detail.lang
+    hash_assign detail_object['properties']['name'] = detail.name
+    hash_assign detail_object['properties']['description'] = detail.description
+    hash_assign data['details_input'] = data.details_input | add_to_array: detail_object
+  endfor
+
+  return data
+%}

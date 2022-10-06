@@ -1,0 +1,19 @@
+{% liquid
+   assign can = false
+  if object == blank
+    return false
+  endif
+
+  if object.id or actor.id
+    assign object_room = true
+  else
+    assign object_room = false
+  endif
+
+  case do
+  when 'purchase'
+      return object_room
+  endcase
+
+  return can
+%}

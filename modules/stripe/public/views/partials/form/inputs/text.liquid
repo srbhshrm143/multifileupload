@@ -1,0 +1,23 @@
+{% assign text_parameterized = text | downcase | replace: ' ', '-'  %}
+{% assign text_underscore = text | downcase | replace: ' ', '_'  %}
+{% assign input = input | default: text_parameterized %}
+{% if country_iso %}
+  {% assign country_scope = '.' | append: country_iso | downcase %}
+{% else %}
+  {% assign country_scope = '' %}
+{% endif %}
+
+<div class="form-group">
+  <label for="input-{{ input }}">{{ 'modules/stripe/stripe.account.' | append: text_underscore | append: country_scope | t }} {% if required %}<span class="text-danger">*</span>{% endif %}</label>
+  <input
+    type="text"
+    name="{{ name }}"
+    class="form-control"
+    id="input-{{ input }}"
+    data-{{ input }}
+    value="{{ value }}"
+    placeholder="{{ placeholder }}"
+    {% if required %}required{% endif %}
+    {% if disabled %}disabled{% endif %}
+  >
+</div>

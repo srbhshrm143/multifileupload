@@ -1,0 +1,9 @@
+{% liquid
+  if id == blank
+    return null
+  endif
+
+  graphql r  = 'documents/search', id: id, limit: 1, with_object: with_object, with_creator: with_creator
+
+  return r.documents.results.first
+%}

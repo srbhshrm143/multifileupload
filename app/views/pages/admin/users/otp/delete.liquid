@@ -1,0 +1,23 @@
+---
+slug: admin/users/otp
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_admin'
+
+  function profile = 'lib/queries/profiles/find', id: context.params.id
+  include 'lib/present_or_404', property:  profile.id
+
+  function profile_url = 'link_to', object: profile, namespace: 'admin'
+  assign object = '{}' | parse_json | hash_merge: id: profile.id, otp_configured: false
+  function object = 'lib/commands/profiles/mark_otp', object: object
+  log object, type: 'object'
+
+  if object.valid
+    include 'redirect_to', url: profile_url, notice: 'app.models.shared.deleted'
+  else
+    include 'redirect_to', url: profile_url, error: 'app.models.shared.delete_failed'
+  endif
+%}

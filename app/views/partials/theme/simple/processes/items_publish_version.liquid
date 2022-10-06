@@ -1,0 +1,79 @@
+<!--
+     <a href="{% render 'link_to', item: old_item %}" target="_blank">
+     {{ 'app.admin.processes.show.old' | t }}
+     </a>
+     <a href="{% render 'link_to', item: new_item %}" target="_blank">
+     {{ 'app.admin.processes.show.new' | t }}
+     </a>
+-->
+<div class="table">
+  <header>
+    <div>
+      {{ 'app.admin.processes.show.property' | t }}
+    </div>
+    <div>
+      {{ 'app.admin.processes.show.old' | t }}
+    </div>
+    <div>
+      {{ 'app.admin.processes.show.new' | t }}
+    </div>
+  </header>
+  <div class="table-content">
+    {% liquid
+      assign new_item = process.new_items[0]
+      assign old_item = process.old_items[0]
+      for detail in new_item.item_details
+        assign old_item_detail = old_item.item_details | detect: lang: detail.lang
+        render 'theme/simple/processes/diff', new: detail, old: old_item_detail, name: 'name', key: 'app.items.form.name'
+        render 'theme/simple/processes/diff', new: detail, old: old_item_detail, name: 'description', key: 'app.items.form.description'
+      endfor
+      render 'theme/simple/processes/diff', new: new_item, old: old_item, name: 'category', key: 'app.items.form.category'
+      render 'theme/simple/processes/diff', new: new_item, old: old_item, name: 'return_days', key: 'app.items.form.return_days'
+    %}
+  </div>
+
+  {% for new_item in process.new_items %}
+    <div class="mt-5">
+      {{ 'app.admin.processes.show.item_variant' | t }} {{  new_item.attributes_json | map: 'value' | join: '/' }}
+    </div>
+    <div class="table-content">
+      {% liquid
+        assign old_item = process.old_items[forloop.index0]
+        if new_item.price
+          hash_assign new_item['price'] = new_item.price | fractional_to_amount: new_item.currency
+        endif
+        if old_item.price
+          hash_assign old_item['price'] = old_item.price | fractional_to_amount: old_item.currency
+        endif
+
+        render 'theme/simple/processes/diff', new: new_item, old: old_item, name: 'price', key: 'app.items.form.price'
+        render 'theme/simple/processes/diff', new: new_item, old: old_item, name: 'original_price', key: 'app.items.form.original_price'
+        render 'theme/simple/processes/diff', new: new_item, old: old_item, name: 'quantity', key: 'app.items.form.quantity'
+      %}
+
+      {% if new_item.photo_ids != old_item.photo_ids %}
+        <ul>
+          <li>
+            {{ 'app.items.form.photos' | t }}
+          </li>
+          <li>
+            {% for photo in old_item.photos %}
+              <picture>
+                <source type="image/avif" srcset="{{ photo.photo.versions.m_avif }}, {{ photo.photo.versions.lg_avif }} 2x">
+                <img src="{{ photo.photo.versions.m }}" srcset="{{ photo.photo.versions.lg }} 2x" width="{{ photo.photo_width }}" height="{{ photo.photo_height }}" alt="" class="w-64 p-5">
+              </picture>
+            {% endfor %}
+          </li>
+          <li>
+            {% for photo in new_item.photos %}
+              <picture>
+                <source type="image/avif" srcset="{{ photo.photo.versions.m_avif }}, {{ photo.photo.versions.lg_avif }} 2x">
+                <img src="{{ photo.photo.versions.m }}" srcset="{{ photo.photo.versions.lg }} 2x" width="{{ photo.photo_width }}" height="{{ photo.photo_height }}" alt="" class="w-64 p-5">
+              </picture>
+            {% endfor %}
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>

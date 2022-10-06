@@ -1,0 +1,12 @@
+{% liquid
+  assign date = 'now' | to_time | json
+  assign disabled_exists = disabled_exists | default: false
+  assign s_code_type = "global"
+  if s_creator_ids == blank
+    log 'Something went wrong. You need to pass creator id', type: 'ERROR'
+    return null
+  endif
+
+  graphql r = 'promo_codes/search', limit: limit, page: 1, lang: lang, code: code, disabled_exists: disabled_exists, s_creator_ids: s_creator_ids, s_code_type: s_code_type, date: date
+  return r.promo_codes
+%}

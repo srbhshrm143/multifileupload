@@ -1,0 +1,59 @@
+{% liquid
+  for step in object.steps
+    assign step2 = step
+    if step.from != blank
+      hash_assign step2['from'] = step.from | to_date
+    endif
+    if step.to != blank
+      hash_assign step2['to'] = step.to | to_date
+    endif
+  endfor
+%}
+
+<fieldset>
+  <div class="mb-1">
+    {{ 'app.projects.form.timeline' | t }}
+  </div>
+
+  <div
+    x-data='{"steps": {{ object.steps | default: '[]'}} }'
+  >
+    <div>
+      <template x-for='(step, index) in steps'>
+        <div data-step class="mb-2 flex flex-col md:flex-row md:items-center gap-2">
+          <div class="order-1 font-bold md:font-normal">
+            {{ 'app.projects.form.timeline_step' | t }}
+            <span x-text="index + 1"></span>
+          </div>
+          <input type="text" data-step-name maxlength="25" required placeholder="{{ 'app.projects.form.step_name' | t }}"
+            x-bind:name="`project[steps][][name]`" x-model="step.name" class="md:w-1/2 order-3" data-tc="project-step-input">
+          <input type="text" maxlength="25" placeholder="{{ 'app.projects.form.step_from' | t }}" required
+            onfocus="(this.type='date')" onblur="(this.type='text')"
+            x-bind:name="`project[steps][][from]`" x-model="step.from" class="md:w-1/5 order-3" data-tc="project-step-from">
+          <input type="text" maxlength="25" placeholder="{{ 'app.projects.form.step_to' | t }}"
+            onfocus="(this.type='date')" onblur="(this.type='text')"
+            x-bind:name="`project[steps][][to]`" x-model="step.to" class="md:w-1/5 order-3" data-tc="project-step-to">
+          <button
+            data-step-remove
+            type="button"
+            x-on:click="steps = steps.filter(step => step.id != event.target.dataset.stepId)"
+            class="order-2 md:order-last hover:text-interaction-hover"
+          >
+            {% render 'theme/simple/ui/icon', icon: 'x', class: 'w-4' %}
+          </button>
+        </div>
+        <small class="mt-1 flex text-danger" x-show="Object.values(step.errors || {}).length > 0">
+          {% render 'theme/simple/ui/icon', icon: 'warningCloud', class: 'w-5 h-5 me-2 flex-shrink-0' %}
+          <span x-text="Object.values(step.errors || {})"></span>
+        </small>
+      </template>
+    </div>
+    <button id="form_addStep" type="button" class="mt-4 flex items-center gap-2 cursor-pointer hover:text-interaction-hover"
+      x-on:click='steps.push({"id": steps.length, valid: true})' data-tc="project-add-step"
+    >
+      {% render 'theme/simple/ui/icon', icon: 'plus' %}
+      {{ 'app.projects.form.add_step' | t }}
+    </button>
+  </div>
+  {% render 'theme/simple/field_error', errors: object.steps['0'].errors %}
+</fieldset>

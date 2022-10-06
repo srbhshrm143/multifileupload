@@ -1,0 +1,109 @@
+<h1 class="pagetitle">Venue Created</h1>
+
+<!-- {{ context.params }} -->
+
+{% assign venue_owner_id = context.params.venue_owner_id %}
+{% assign Venue_name = context.params.venue_name %}
+{% assign Venue_address = context.params.venue_address %}
+{% assign Venue_contact = context.params.contact_number %}
+{% assign Venue_services = context.params.venue_services %}
+{% assign Venue_menu = context.params.venue_menu %}
+{% assign venue_features = context.params.venue_features %}
+{% assign Venue_desc = context.params.venue_desc %}
+{% assign Venue_capacity = context.params.venue_capacity %}
+{% assign Venue_hours = context.params.rental_hours %}
+
+{%- comment -%}
+  {% assign Venue_contract = context.params.venue_contract %}
+  {% assign Venues_images = context.params.venue_images %}
+{%- endcomment -%}
+
+<table class="card-lg w-full md:w-96 mx-auto">
+    <tr>
+      <td> Venue Name :  </td>
+      <td> {{ Venue_name }} </td>
+    </tr>
+    <tr>
+      <td> Venue Address :  </td>
+      <td> {{ Venue_address }} </td>
+    </tr>
+    <tr>
+      <td> Venue Contact :  </td>
+      <td> {{ Venue_contact }} </td>
+    </tr>
+    <tr>
+      <td> Venue Services :  </td>
+      <td> {{ Venue_services }} </td>
+    </tr>
+    <tr>
+      <td> Venue Menu :  </td>
+      <td> {{ Venue_menu }} </td>
+    </tr>
+    <tr>
+      <td> Venue Features :  </td>
+      <td> {{ venue_features }} </td>
+    </tr>
+    <tr>
+      <td> Venue Description :  </td>
+      <td> {{ Venue_desc }} </td>
+    </tr>
+    <tr>
+      <td> Venue Capacity :  </td>
+      <td> {{ Venue_capacity }} </td>
+    </tr>
+    <tr>
+      <td> Venue Rental Hours :  </td>
+      <td> {{ Venue_hours }} </td>
+    </tr>
+  {% if Venue_contract != blank %}
+    <!-- <tr>
+      <td> Venue Contract :  </td>
+      <td> {{ Venue_contract }} </td>
+    </tr>
+  {% endif %}
+  {% if Venues_images != blank %}
+    <tr>
+      <td> Venue Image :  </td>
+      <td> {{ Venues_images }} </td>
+    </tr> -->
+  {% endif %}
+</table>
+{%- comment -%}
+{%liquid graphql create_gql = 'venue/new', venue_name: Venue_name, venue_address: Venue_address, venue_contact: Venue_contact, venue_services: Venue_services, venue_menu: Venue_menu, venue_features: venue_features, venue_description: Venue_desc, venue_capacity: Venue_capacity, venue_rental_hours: Venue_hours
+  assign data = create_gql | fetch: "model_create"
+%}
+<!-- {%liquid graphql create_gql = 'venue/new', venue_name: Venue_name,  venue_address: Venue_address,  venue_contact: Venue_contact,  venue_services: Venue_services,  venue_menu: Venue_menu,  venue_features: venue_features,  venue_description: Venue_desc,  venue_capacity: Venue_capacity,  venue_rental_hours: Venue_hours, 
+  assign data = create_gql | fetch: "model_create"
+%} -->
+{%liquid
+  graphql upd_gql = 'venue/new', venue_name: Venue_name, venue_address: Venue_address, venue_contact: Venue_contact, venue_services: Venue_services, venue_menu: Venue_menu, venue_features: venue_features, venue_description: Venue_desc, venue_capacity: Venue_capacity, venue_rental_hours: Venue_hours
+ assign data = upd_gql | fetch: "model_create"
+%}
+  {%- endcomment -%}
+
+{%- comment -%}
+{%liquid
+  graphql gql_new = "venue/new", venue_name: Venue_name
+%}
+{%- endcomment -%}
+
+
+<!-- {{ data }} -->
+
+
+
+{%- comment -%}
+  {%liquid graphql create_gql = 'venue/new', venue_name: Venue_name, venue_address: Venue_address, venue_contact: Venue_contact, venue_services: Venue_services, venue_menu: Venue_menu, venue_features: venue_features, venue_description: Venue_desc, venue_capacity: Venue_capacity, venue_rental_hours: Venue_hours
+    assign data = create_gql | fetch: "model_create"
+  %}
+  {%- endcomment -%}
+  {%liquid graphql create_gql = 'venue/new', venue_owner_Id: venue_owner_id, venue_name: Venue_name, venue_address: Venue_address, venue_contact: Venue_contact, venue_services: Venue_services, venue_menu: Venue_menu, venue_features: venue_features, venue_description: Venue_desc, venue_capacity: Venue_capacity, venue_rental_hours: Venue_hours
+    assign data = create_gql | fetch: "model_create"
+  %}
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue/show";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

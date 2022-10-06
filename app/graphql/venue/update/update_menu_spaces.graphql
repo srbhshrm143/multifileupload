@@ -1,0 +1,30 @@
+mutation update(
+  $Id: ID!,
+  $venue_id: String!
+  $uuid: String!
+  $space_name: String!
+  $category: String!
+  $min_space_capacity: String!
+  $max_space_capacity: String!
+  $space_about_msg: String!
+  $included_amenities: String!
+){
+  record_update(
+     id: $Id
+     record: {
+       table : "venue_event_space"
+      	properties: [
+       { name: "venue_id", value: $venue_id }
+        { name: "media_uuid", value: $uuid }
+        { name: "event_space_name", value: $space_name }
+        { name: "event_type", value: $category }
+        { name: "minimum_event_capacity", value: $min_space_capacity }
+        { name: "maximum_event_capacity", value: $max_space_capacity }
+        { name: "write_about_event-space", value: $space_about_msg }
+        { name: "included_amenities", value: $included_amenities }
+        ]
+      }
+  ) {
+    id properties
+  }
+}

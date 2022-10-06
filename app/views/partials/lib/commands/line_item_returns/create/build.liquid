@@ -1,0 +1,24 @@
+{% parse_json object %}
+  {
+    "id": {{ object.id | json }},
+    "line_item_id": {{ line_item.id | json }},
+    "order_id": {{ line_item.order_id | json }},
+    "quantity": {{ object.quantity | to_positive_integer: 0 | json }},
+    "reason": {{ object.reason | json }},
+    "reason_details": {{ object.reason_details | json }},
+    "shipping_type": {{ object.shipping_type | json }},
+    "shipping_pickup_point": {{ object.shipping_pickup_point | json }},
+    "shipping_address": {{ object.shipping_address | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  hash_assign object['amount'] = object.quantity | times: line_item.price_cents
+  if order.promo_code_discount
+    assign product_ratio = object.amount | plus: 0.0 | divided_by: order.products_price_cents
+    assign price_with_promo = order.products_price_cents | minus: order.promo_code_discount
+    hash_assign object['amount'] = price_with_promo | times: product_ratio | round
+  endif
+
+  return object
+%}

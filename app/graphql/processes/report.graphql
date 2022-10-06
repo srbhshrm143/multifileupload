@@ -1,0 +1,20 @@
+query report(
+  $limit: Int = 999
+  $from: String!
+  $to: String!
+  $status: [String!] = ["app.statuses.processes.requested"]
+) {
+  processes: records(
+    page: 1
+    per_page: $limit
+    filter: {
+      table: { value: "process" }
+      created_at: { lte: $to, gte: $from }
+      properties: [
+        { name: "c__status" value_in: $status }
+      ]
+    }
+  ) {
+    total_entries
+  }
+}

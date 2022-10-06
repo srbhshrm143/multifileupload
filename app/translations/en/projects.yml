@@ -1,0 +1,108 @@
+en:
+  app:
+    projects:
+      subtitle: Build the future with us
+      featured: Featured
+      project: Project
+      projects: projects
+      until: until
+      join: Apply
+      view: View
+      more_info: More Info
+      award: award
+      status:
+        open: Open
+        closed: Closed
+      project_status: Challenge status
+      show_more: Show more challenges
+      subscribe: Subscribe for updates
+      unsubscribe: Unsubscribe
+      description: Description
+      timeline: Timeline
+      resources: Resources
+      comments: Comments
+      add_comment: Add a comment
+      videos: Videos
+      downloads: Downloadables
+      download: Download
+      gallery: Image gallery
+      applications: applications
+      showing: Showing
+      of: of
+      results:
+        one: "result"
+        other: "results"
+      filters:
+        sort_by: Sort by
+        time_asc: Time (Oldest – Newest)
+        time_desc: Time (Newest – Oldest)
+        filter_by_hashtags: Filter by hashtags
+        select: Select
+      new:
+        title: New challenge
+        general: General
+        general_tip: "Tip: A good challenge will gain followers and attention in the ecosystem. We advise you to submit rich & technical descriptions, hashtags, related images/screenshots, video embeds, and other reference links to increase the visibility and discoverability of your challenge."
+        created: Project created
+      edit:
+        title: Edit challenge
+      list:
+        pagetitle: Manage Challenges
+        title: Title
+        id: ID
+        joined: Joined
+        applied: Applied
+        new: New Challenge
+        search_in_challenges: Search in challenges
+        my_project: My projects
+        empty:
+          title: There are no projects to show
+          description: You can create a new project or align the filters to see more.
+          cta: Create a project
+      form:
+        name: Challenge name
+        name_tip: The name should be between 25 and 50 characters
+        featured: Is this a featured challenge?
+        turn_on: 'Yes'
+        onn: 'On'
+        chars: chars
+        summary: Short description
+        summary_tip: Describe in a sentence what this challenge is about. This will appear on the challenge card and in the challenge header. Should be between 140 and 400 characters.
+        award: Award
+        tags: Select topics from the list to categorise your challenge
+        status: Status
+        cover_photo: Cover picture
+        description_title: Description
+        description: Add description
+        description_tip: Describe the purpose, goals and methods of this challenge.
+        terms_and_conditions: Terms and conditions
+        timeline_title: Timeline
+        timeline: Add timeline step description and a related date range
+        timeline_step: Step
+        resources_title: Resources
+        comments_title: Comments
+        commentable: Turn on or off the comment section for this challenge.
+        internal_information_title: Internal Information
+        update: Update
+        submit: Create Challenge
+        submit_draft: Save as Draft
+        videos: Videos
+        url: URL
+        documents: Documents
+        documents_info: Load one or more PDF files to attach to your project.
+        photos: Image gallery
+        photos_info: Load one or more images to create an image gallery for your project.
+        development_partners: Development partners
+        sent_by: Sent by
+        sent_by_tip: The name of who sent the challenge.
+        open_tip: Prosumers can participate and apply with solutions.
+        under_evaluation_tip: Application are closed for posumers. Team evaluate the applications.
+        closed_tip: The challenge is closed, users can only view it.
+        deadline: Select a deadline
+        step_date_range: Select a date range
+        step_name: Name (required)
+        step_from: From (required)
+        step_to: To
+        add_step: Add step
+        choose_files: Choose Files
+        errors:
+          from_before_to: From date should be before To date

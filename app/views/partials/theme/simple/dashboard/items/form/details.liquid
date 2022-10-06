@@ -1,0 +1,43 @@
+<h2 class="title">{{ 'app.items.product_details' | t }}</h2>
+<div class="card"
+  x-data="{ 'activeTab': 0 }">
+  <ul class="-mx-4 mb-8 flex border-b-2 justify-center">
+    {% for lang in lib.available_languages %}
+      <li
+        class="max-w-sm mb-[-2px] pt-2 pb-4 px-4 flex-grow border-b-2 cursor-pointer text-center uppercase transition-colors"
+        :class="activeTab=={{ forloop.index0 }} ? 'text-interaction border-interaction font-semibold' : 'text-content-sidenote hover:text-content hover:border-interaction-disabled'"
+        @click="activeTab = {{forloop.index0}}"
+      >
+        {{ 'languages.' | append: lang | t }}
+        {% if item.details[lang].valid == false %}
+          <span class="sidenote text-danger">
+            ({{ 'app.items.form.invalid' | t }})
+          </span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <div class="flex flex-wrap gap-6 lg:gap-12">
+    <div class="w-full md:w-auto flex-grow">
+      {% for lang in lib.available_languages %}
+        {% assign detail = item.details[lang] %}
+        <input type="hidden" name="item[details][{{lang}}][lang]" value="{{lang}}">
+        <div x-show="activeTab=={{forloop.index0}}">
+          <fieldset>
+            <label class="block" for="name_{{lang}}">{{ 'app.items.form.name' | t }} ({{ 'app.required' | t }}):</label>
+            <input class="w-full lg:w-1/2" type="text" id="name_{{lang}}" name="item[details][{{lang}}][name]" value="{{ detail.name }}" autofocus {% if lang == 'ar' %} dir="rtl" {% endif %}>
+            {% render 'theme/simple/field_error', errors: detail.errors.name %}
+          </fieldset>
+
+          <fieldset class="mt-6">
+            <label class="block" for="description_{{lang}}">{{ 'app.items.form.description' | t }} ({{ 'app.required' | t }}):</label>
+            <textarea class="w-full min-h-[319px]" type="text" id="description_{{lang}}" name="item[details][{{lang}}][description]" rows="12" {% if lang == 'ar' %} dir="rtl" {% endif %}>{{ detail.description }}</textarea>
+
+            {% render 'theme/simple/field_error', errors: detail.errors.description %}
+          </fieldset>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

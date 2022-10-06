@@ -1,0 +1,22 @@
+{% capture language_switch_destination %}{% yield 'language_switch_destination' %}{% endcapture %}
+{% liquid
+  function alternative_lang = 'theme/simple/layout/alternative_language', context: context
+  assign default_switch_destination = context.location.href | url_encode
+  assign language_switch_destination = language_switch_destination | default: default_switch_destination | strip
+  assign language_switch_url = '/language/update/' | append: alternative_lang | append: '?return_to='
+%}
+
+
+<li class="ms-2">
+  <a
+    data-tc="language-switch"
+    x-data="{ url: '{{ language_switch_url }}{{ language_switch_destination }}' }"
+    href="{{ language_switch_url }}{{ language_switch_destination }}"
+    x-bind:href="url"
+    x-on:click.prevent="
+      url = '{{ language_switch_url }}' + encodeURIComponent('{{ language_switch_destination }}') + encodeURIComponent(document.location.search);
+      document.location = url;
+    "
+    class="{{ class }}"
+  >{{ 'lang' | t: locale: alternative_lang }}</a>
+</li>

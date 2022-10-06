@@ -1,0 +1,18 @@
+---
+layout: admin
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_admin'
+
+  assign statuses = 'published,unavailable' | split: ','
+  if context.params.promoted == "true"
+    assign promoted = true
+  endif
+  function items = 'lib/queries/items/search', limit: 50, statuses: statuses, lang: context.language, params: context.params, withAllVariants: true, promoted: promoted, reflect_promoted: reflect_promoted
+  function filters = 'lib/queries/search/filters', query: items.query
+  hash_assign items['total_quantity'] = items.results | map: 'item_inventory' | map: 'items' | flatten | map: 'quantity' | sum_array
+
+  render 'theme/simple/admin/stock/index', items: items, page: context.params.page, filters: filters, params: context.params
+%}

@@ -1,0 +1,65 @@
+{% liquid
+  function langs = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array"
+  assign rows = '[]' | parse_json
+  assign uuid = item.uuid
+
+  unless uuid
+    assign uuid = '' | uuid
+  endunless
+%}
+
+{% for variant in item.variants %}
+  {% assign id = item.id | append: '-' | append: variant.id %}
+  {% assign converted_price = variant.price | fractional_to_amount: item.currency %}
+  {% assign original_price = variant.original_price %}
+  {% if original_price != blank %}
+    {% assign original_price = original_price | fractional_to_amount: item.currency %}
+  {% endif %}
+  {%
+    assign row = '[]' | parse_json |
+      add_to_array: uuid |
+      add_to_array: variant.sku |
+      add_to_array: item.category
+  %}
+
+  {% liquid
+    for lang in langs
+      assign row = row | add_to_array: item.details[lang].name | add_to_array: item.details[lang].description
+    endfor
+
+    if item.status.name == 'app.statuses.items.published'
+      assign published = 'true'
+    else
+      assign published = 'false'
+    endif
+  %}
+  {%
+    assign row = row | add_to_array: converted_price |
+      add_to_array: item.currency |
+      add_to_array: original_price |
+      add_to_array: variant.quantity |
+      add_to_array: item.max_in_one_order |
+      add_to_array: item.return_days |
+      add_to_array: "" |
+      add_to_array: item.item_type |
+      add_to_array: published
+  %}
+
+  {% liquid
+    for i in (0..2)
+      assign attr = variant.attributes_json[i]
+      assign row = row | add_to_array: attr['name'] | add_to_array: attr['value']
+    endfor
+  %}
+
+  {% liquid
+    for i in (0..9)
+      assign p = variant.photos[i]
+      assign row = row | add_to_array: p.origin_url
+    endfor
+  %}
+
+  {% assign rows = rows | add_to_array: row %}
+{% endfor %}
+
+{% return rows %}

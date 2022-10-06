@@ -1,0 +1,15 @@
+<h1 class="pagetitle">{{ 'app.projects.new.title' | t }}</h1>
+
+<div class="container">
+  {% render 'theme/simple/projects/form', object: object, current_profile: current_profile, context: context %}
+  <button class="mt-12 button" name="project[status]" value="open" form="projects" x-data">
+    {% if object.id %}
+      {{ 'app.projects.form.update' | t }}
+    {% else %}
+      {{ 'app.projects.form.submit' | t }}
+    {% endif %}
+  </button>
+  <button class="mt-12 button button-secondary" name="project[status]" value="draft" form="projects">
+    {{ 'app.projects.form.submit_draft' | t }}
+  </button>
+</div>

@@ -1,0 +1,6 @@
+{% liquid
+  assign file = operation.files | select: document_type: 'report' | last
+%}
+
+
+<iframe src="{{ file.file.url }}" frameborder="0" class="w-full" style="height: calc(100vh - 200px)"></iframe>

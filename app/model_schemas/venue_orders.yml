@@ -1,0 +1,26 @@
+name: venue_orders
+properties:
+  - name:  userId
+    type: string
+  - name: item_id
+    type: string
+  - name: guest_count
+    type: string
+  - name: event_date
+    type: string
+  - name: event_time
+    type: string
+  - name: amount_paid
+    type: string
+  - name: total_amount
+    type: string
+  - name: base_price
+    type: string 
+  - name: additonal_features
+    type: string
+  - name: c__status
+    type: string
+  - name: applied_gst
+    type: string
+  - name:  payment_type
+    type: string

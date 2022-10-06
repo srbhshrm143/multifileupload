@@ -1,0 +1,208 @@
+/*
+  checkboxes
+  radios
+  texts
+  small texts
+  selects
+  tags
+*/
+
+
+
+/* checkboxes
+============================================================================ */
+[type="checkbox"] {
+  @apply
+    text-interaction;
+}
+
+[type="checkbox"]:disabled {
+  @apply
+    border-frame
+    text-interaction-disabled;
+}
+
+
+
+/* radios
+============================================================================ */
+[type="radio"] {
+  @apply
+    text-interaction;
+}
+
+[type="radio"]:disabled {
+  @apply
+    border-frame
+    text-interaction-disabled;
+}
+
+
+
+/* texts
+============================================================================ */
+[type="text"],
+[type="email"],
+[type="url"],
+[type="password"],
+[type="number"],
+[type="date"],
+[type="datetime-local"],
+[type="month"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="week"],
+[multiple],
+textarea {
+  padding-top: .55rem;
+  padding-bottom: .55rem;
+
+  @apply
+    border-content
+    transition-colors;
+}
+
+[type="text"]:focus,
+[type="email"]:focus,
+[type="url"]:focus,
+[type="password"]:focus,
+[type="number"]:focus,
+[type="date"]:focus,
+[type="datetime-local"]:focus,
+[type="month"]:focus,
+[type="search"]:focus,
+[type="tel"]:focus,
+[type="time"]:focus,
+[type="week"]:focus,
+[multiple]:focus,
+textarea:focus {
+  @apply
+    border-interaction
+    ring-0;
+}
+
+[type="text"]:disabled,
+[type="email"]:disabled,
+[type="url"]:disabled,
+[type="password"]:disabled,
+[type="number"]:disabled,
+[type="date"]:disabled,
+[type="datetime-local"]:disabled,
+[type="month"]:disabled,
+[type="search"]:disabled,
+[type="tel"]:disabled,
+[type="time"]:disabled,
+[type="week"]:disabled,
+[multiple]:disabled,
+textarea:disabled {
+  @apply
+    border-frame
+    bg-page;
+}
+
+[type="text"]:focus-visible,
+[type="email"]:focus-visible,
+[type="url"]:focus-visible,
+[type="password"]:focus-visible,
+[type="number"]:focus-visible,
+[type="date"]:focus-visible,
+[type="datetime-local"]:focus-visible,
+[type="month"]:focus-visible,
+[type="search"]:focus-visible,
+[type="tel"]:focus-visible,
+[type="time"]:focus-visible,
+[type="week"]:focus-visible,
+[multiple]:focus-visible,
+textarea:focus-visible {
+  @apply
+    ring-1;
+}
+
+
+
+/* small texts
+============================================================================ */
+.form-input-small {
+  @apply
+    pt-1
+    pb-1
+    text-sm;
+}
+
+
+
+/* selects
+============================================================================ */
+select,
+.form-select {
+  padding-top: .55rem;
+  padding-bottom: .55rem;
+
+  @apply
+    border
+    border-content
+    bg-panel;
+}
+
+.form-select {
+  @apply
+    px-3;
+}
+
+select:focus,
+.form-select:focus {
+  @apply
+    border-interaction
+    ring-0;
+}
+
+select:focus-visible,
+.form-select:focus {
+  @apply
+    ring-1;
+}
+
+
+
+/* tags
+============================================================================ */
+.tagify {
+  padding-top: .55rem;
+  padding-bottom: .55rem;
+  border-color: #6b7280 !important;
+
+  @apply
+    bg-panel
+    transition-colors;
+}
+
+tags.tagify.tagify--focus {
+  @apply
+    border-interaction
+    ring-interaction
+    ring-1;
+}
+
+
+
+/* markdown editor
+============================================================================ */
+.EasyMDEContainer .editor-toolbar {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-color: #6b7280;
+}
+
+.EasyMDEContainer .CodeMirror.CodeMirror-wrap {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-color: #6b7280;
+}
+
+.EasyMDEContainer .CodeMirror-focused {
+  @apply
+    border-interaction
+    ring-interaction
+    ring-1 !important;
+}

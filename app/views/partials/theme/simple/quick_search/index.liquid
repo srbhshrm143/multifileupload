@@ -1,0 +1,501 @@
+{%liquid
+      
+   graphql category_gql = 'categories/search', limit: 10
+ %}
+<div class="container mx-auto">
+
+  <!--venue-main-wrapper-->
+  <section class="px-6 md:my-16 sm:my-5 max-sm:px-2">
+
+    <!--mobile-toggle-->
+    <!-- The offcanvas component -->
+      <div x-cloak x-data="sidebar()" class="relative flex items-start bg-white max-md:block  "> <div x-cloak wire:ignore :class="{'w-0': sidebarOpen, 'w-72': !sidebarOpen}" class="fixed top-0 bottom-0 left-0 z-30 block w-56 h-full min-h-screen overflow-y-auto text-gray-400 transition-all duration-300 ease-in-out bg-white shadow-lg overflow-x-hidden">
+        <div class=" h-full">
+          <div class=" w-full">
+
+            <!--sidebar-->
+            <div class="sm:p-3 ">
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between items-center">
+                  <h3 class="font-semibold flex  text-themeBlue text-lg mb-3 max-xxl:text-sm ">
+                    Sort By
+                  </h3>
+                  <div @click="sidebarOpen = !sidebarOpen">
+                    <h3 x-show="!sidebarOpen" class="font-semibold flex  text-black max-xxl:text-lg max-xl:text-md">
+                      <img src="{{ 'images/event-hound/close.svg' | asset_url }}" class="mr-1 w-4">
+                    </h3>
+                  </div>
+
+                </div>
+                <div class="">
+                  <div x-data="{ isOpen: false }" class="mt-1 relative w-full ">
+                    <button @click="isOpen = !isOpen" type="button" class=" border rounded-md py-1 w-full relative   pr-6  text-left cursor-default focus:outline-none sm:text-sm max-xs:pl-0" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+
+                      <span class="ml-3  text-lg max-xs:p-0 max-md:m-0 max-md:pl-0 max-md:text-sm">
+                        <span class="text-primaryBlack font-semibold text-lg max-xxl:text-sm max-md:text-sm">
+                          Recommended
+                        </span>
+                      </span>
+
+                      <span class="ml-1 absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none">
+                        <img src="{{ 'images/event-hound/down.svg' | asset_url }}" class="">
+                      </span>
+                    </button>
+                    <ul x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute z-10 mt-1 p-4 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+                      <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 border-b border-borderColor" id="listbox-option-0" role="option">
+                        <div class="flex items-center  ">
+                          <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                            Highest rated
+                          </span>
+                        </div>
+                        <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                          <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                        </span>
+                      </li>
+                      <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 border-b border-borderColor" id="listbox-option-0" role="option">
+                        <div class="flex items-center  ">
+                          <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                            Price high to low
+                          </span>
+                        </div>
+                        <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                          <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                        </span>
+                      </li>
+                      <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 border-b border-borderColor" id="listbox-option-0" role="option">
+                        <div class="flex items-center  ">
+                          <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                            Price low to high
+                          </span>
+                        </div>
+                        <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                          <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                        </span>
+                      </li>
+                      <li class="text-gray-900 cursor-default select-none relative py-2  pr-9" id="listbox-option-0" role="option">
+                        <div class="flex items-center  ">
+                          <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                            Recommended
+                          </span>
+                        </div>
+                        <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                          <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                        </span>
+                      </li>
+                      <!-- More items... -->
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <h3 class="font-semibold flex  text-black text-lg max-xxl:text-sm max-xl:text-md "><img src="{{ 'images/event-hound/filter.svg' | asset_url }}" class="mr-1 max-xxl:w-4">
+                  Filters</h3>
+              </div>
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+                  <p class=" font-semibold text-lg text-black pb-1 max-xxl:text-sm ">Event Space</p>
+                  <a href="#" class="text-sm underline decoration-1 max-xxl:text-xs">See all</a>
+                </div>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2 max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">
+                  Self Parking On Site
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs ">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Valet Parking On
+                                           Site
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Wheelchair
+                                           Accessible
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Separate
+                                           Pre-Reception
+                                           Area
+                </label>
+              </div>
+
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+                  <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm  ">Food</p>
+                  <a href="#" class="text-sm underline decoration-1 max-xxl:text-xs">See all</a>
+                </div>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2 max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Passed Hors
+                                           D'oeuvres
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Antipasto
+                </label>
+              </div>
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+                  <p class=" font-semibold text-lg text-black pb-1 max-xxl:text-sm ">Bar</p>
+                  <a href="#" class="text-sm underline decoration-1  max-xxl:text-xs">See all</a>
+                </div>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2  max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Alcohol Is Allowed
+                                           On
+                                           Premises
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Sparkling Wine
+                                           Toast
+                </label>
+              </div>
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+                  <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm ">Extras</p>
+                </div>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2  max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Fireworks
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Wifi</label>
+              </div>
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+                  <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm ">Venue Type m</p>
+                  <a href="#" class="text-sm underline decoration-1  max-xxl:text-xs">See all</a>
+                </div>
+                {% for category in category_gql.categories.results limit: 6 %}
+                  {% for category_name in category.category_details %}
+                    {% if category_name.lang == "en" %}
+                      <option value="{{ category_name.name }}">
+                        {{ category_name.name }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+                <label for="check1" class="text-sm text-primaryGrey font-medium  block mt-2max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2   default:ring-2 ...  " name="check">Banquet Hall
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ...  " name="check">Barn</label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ...  " name="check">Boat</label>
+              </div>
+              <div class="shadow-box p-5 rounded-md mb-5 sm:shadow-none sm:border">
+                <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+                  <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm ">Ideal For</p>
+                  <a href="#" class="text-sm underline decoration-1 max-xxl:text-xs">See all</a>
+                </div>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2 max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2   default:ring-2 ...  " name="check">Birthdays
+                </label>
+                <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+                  <input type="checkbox" class="my-2 mr-2  default:ring-2 ... " name="check">Cocktails
+                </label>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!--mobile-toggle-end-->
+      <!--sidebar-->
+      <!-- <div class="md:flex sm:block max-xxl:justify-between max-xxl:w-full"> -->
+        <div class="w-1/5 lg:block sm:hidden sticky top-0  max-md:w-full"> <div class="">
+
+          <div class="shadow-box p-5 rounded-md mb-5 ">
+            <h2 class="font-semibold flex  text-black text-lg mb-4 max-xxl:text-sm ">Sort By</h2>
+            <div class="">
+              <div x-data="{ isOpen: false }" class="mt-1 relative w-full ">
+                <button @click="isOpen = !isOpen" type="button" class=" border rounded-md py-1 w-full relative   pr-6  text-left cursor-default focus:outline-none sm:text-sm max-xs:pl-0" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+
+                  <span class="ml-3  text-lg max-xs:p-0 max-md:m-0 max-md:pl-0 max-md:text-sm">
+                    <span class="text-primaryBlack font-semibold text-lg max-xxl:text-sm max-md:text-sm">
+                      Recommended</span>
+                  </span>
+
+                  <span class="ml-1 absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none">
+                    <img src="{{ 'images/event-hound/down.svg' | asset_url }}" class="">
+                  </span>
+                </button>
+                <ul x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="absolute z-10 mt-1 p-4 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+                  <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 border-b border-borderColor" id="listbox-option-0" role="option">
+                    <div class="flex items-center  ">
+                      <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                        Highest rated
+                      </span>
+                    </div>
+                    <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                      <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                    </span>
+                  </li>
+                  <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 border-b border-borderColor" id="listbox-option-0" role="option">
+                    <div class="flex items-center  ">
+                      <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                        Price high to
+                                                          low
+                      </span>
+                    </div>
+                    <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                      <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                    </span>
+                  </li>
+                  <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 border-b border-borderColor" id="listbox-option-0" role="option">
+                    <div class="flex items-center  ">
+                      <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                        Price low to
+                                                          high
+                      </span>
+                    </div>
+                    <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                      <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                    </span>
+                  </li>
+                  <li class="text-gray-900 cursor-default select-none relative py-2  pr-9" id="listbox-option-0" role="option">
+                    <div class="flex items-center  ">
+                      <span class="block text-base text-primaryBlack font-normal font-Work max-md:text-sm">
+                        Recommended
+                      </span>
+                    </div>
+                    <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                      <img src="{{ 'images/event-hound/check.svg' | asset_url }}" class="">
+                    </span>
+                  </li>
+                  <!-- More items... -->
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <h3 class="font-semibold flex  text-black text-lg max-xxl:text-sm max-xl:text-md "><img src="{{ 'images/event-hound/filter.svg' | asset_url }}" class="mr-1 max-xxl:w-4">
+              Filters</h3>
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+              <p class=" font-semibold text-lg text-black pb-1 max-xxl:text-sm ">Event Space</p>
+              <a href="#" class="text-sm underline decoration-1 max-xxl:text-xs">See all</a>
+            </div>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2 max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Self Parking On Site
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs ">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Valet Parking On Site
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Wheelchair Accessible
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Separate Pre-Reception
+                                 Area
+            </label>
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+              <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm  ">Food</p>
+              <a href="#" class="text-sm underline decoration-1 max-xxl:text-xs">See all</a>
+            </div>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2 max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Passed Hors D'oeuvres
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Antipasto
+            </label>
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+              <p class=" font-semibold text-lg text-black pb-1 max-xxl:text-sm ">Bar</p>
+              <a href="#" class="text-sm underline decoration-1  max-xxl:text-xs">See all</a>
+            </div>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2  max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Alcohol Is Allowed On
+                                 Premises
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Sparkling Wine Toast
+            </label>
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+              <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm ">Extras</p>
+            </div>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2  max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2   default:ring-2 ..." name="check">Fireworks
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block  max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ..." name="check">Wifi</label>
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+              <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm ">Venue Type D</p>
+              <a href="#" class="text-sm underline decoration-1  max-xxl:text-xs">See all</a>
+            </div>
+            {% for category in category_gql.categories.results limit: 6 %}
+              {% for category_name in category.category_details %}
+                {% if category_name.lang == "en" %}
+                  <label for="check_{{forloop.index}}" class="text-sm text-primaryGrey font-medium  block mt-2max-xxl:text-xxs">
+                    <input id="check_{{forloop.index}}" class="event_type_check" type="checkbox" class="my-2 mr-2   default:ring-2 ...  " name="event_type_check" value="{{category_name.name}}"
+                      {% if context.params.event_type == category_name.name %}
+                      checked{% endif %} onclick="getCheckedBoxes('event_type_check')">
+                    {{category_name.name}}
+                  </label>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+            {%- comment -%}
+              <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ...  " name="check">Barn</label>
+              <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ...  " name="check">Boat</label>
+            {%- endcomment -%}
+          </div>
+          <div class="shadow-box p-5 rounded-md mb-5">
+            <div class="flex justify-between text-themeBlue items-center  border-b border-borderColor font-semibold ">
+              <p class=" font-semibold text-lg text-black pb-1   max-xxl:text-sm ">Ideal For</p>
+              <a href="#" class="text-sm underline decoration-1 max-xxl:text-xs">See all</a>
+            </div>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block mt-2 max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2   default:ring-2 ...  " name="check">Birthdays
+            </label>
+            <label for="check" class="text-sm text-primaryGrey font-medium  block max-xxl:text-xxs">
+              <input type="checkbox" class="my-2 mr-2  default:ring-2 ... " name="check">Cocktails
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="w-8/12 max-xxl:w-1/2 max-md:block px-4 flex-1 max-md:w-full">
+        <div class="bg-bgLightBlue px-5 py-4 rounded-md  mb-5 ">
+          <div class="max-md-block flex justify-between items-center">
+            <p class="font-Work font-semibold mb-4 pb-3 border-b text-xl text-black max-xxl:text-lg max-xl:text-md  max-md:text-base">
+              Sponsored Venues
+            </p>
+            <div @click="sidebarOpen = !sidebarOpen" :class="{'hover:bg-gray-300': !sidebarOpen, 'hover:bg-gray-700': sidebarOpen}" class="lg:hidden sm:block">
+              <h3 x-show="sidebarOpen" class="font-semibold flex  text-black max-xxl:text-lg max-xl:text-md sm:block lg:hidden"><img src="{{ 'images/event-hound/filter.svg' | asset_url }}" class="mr-1">
+              </h3>
+            </div>
+          </div>
+          {% if records.total_entries > 0  %}
+            <div class="grid-cols-4 grid max-xxl:grid-cols-2 xl:grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-2 max-md:grid-cols-1  gap-4">
+              {% for peroperty in records.results %}
+                  
+                <!--col-0-->
+                <div class="rounded-md border border-borderColor relative bg-white ">
+
+                  <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+                    {%- comment -%} <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+                                              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                                                30%</span> {%- endcomment -%}
+                    <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                      <span x-data="{ open: false }" class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                        <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab1' }" x-on:click="currentTab= 'tab1'" src="/assets/images/event-hound/heart_fill.svg">
+                        <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab2' }" x-on:click="currentTab= 'tab2'" src="/assets/images/event-hound/heart_unfill.svg">
+                      </span>
+                    </div>
+                  </div>
+                  <a href="/venue_detail?venue_id={{peroperty.venueDetails.id}}">
+                    <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full h-56 max-xxl:h-44 ">
+                    <div class="px-4 py-3">
+                      <div class="flex justify-between items-center max-xs:block">
+                        <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                          {{peroperty.venueDetails.properties.venue_name}}</p>
+                        <span class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img src="/assets/images/event-hound/star.svg" class="mr-1">
+                          5.0</span>
+
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">5 star hotel in Canada</p>
+                        <span class="inline-flex">
+                          <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">1319
+                            <span class="text-primaryLightBlue">Reviews</span>
+                          </p>
+                        </span>
+                      </div>
+                      <p class="pt-1 pb-2">
+                        <span class="text-xl text-primaryBlack font-semibold font-Work py-1.5 max-xxl:text-base line-through">$340.00</span>
+                        <span class="text-xl text-primaryDarkGreen  font-semibold font-Work py-1.5 max-xxl:text-base ml-4">$290.00</span>
+                      </p>
+
+                      <p class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start"><img src="/assets/images/event-hound/bank.svg " class="mr-1 mt-1">{{peroperty.properties.event_type}}</p>
+                      <p class=" text-primaryGrey font-Work text-sm  flex items-start"><img src="/assets/images/event-hound/location1.svg " class="mr-1 mt-1">{{peroperty.venueDetails.properties.venue_address}}</p>
+                    </div>
+                  </a>
+                </div>
+                
+              {% endfor %}   
+             </div>
+          {% else %}
+              <p class="container my-8 text-lg">{{ 'app.search.no_items_found.title' | t }}
+              </p>
+          {% endif %}
+        </div>
+        <!--pagination-->
+      <!-- <div class="flex justify-between items-center border-y border-borderColor  mt-4 max-sm:block ">
+      <p class="text-primaryBlack font-semibold font-Work max-sm:mt-2 ml-2">1 of 24</p>
+      <nav aria-label="Page navigation  ">
+      <ul class="flex list-style-none py-2   border-indigo-500">
+      <li class="page-item disabled"><a
+      class="text-base page-link relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-full text-gray-400 font-medium pointer-events-none focus:shadow-none"
+      href="#" tabindex="-1" aria-disabled="true">Prev</a></li>
+      <li class="page-item"><a
+      class="page-linktext-base  relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-full text-gray-400 font-medium hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
+      href="#">1</a></li>
+      <li class="page-item active"><a
+      class="page-link  text-base relative block py-1.5 px-3 border-0 bg-themeBlue-500 outline-none font-medium transition-all duration-300 rounded-full text-white hover:text-white hover:bg-blue-600 shadow-md focus:shadow-md"
+      href="#">2 </a></li>
+      <li class="page-item"><a
+      class="page-link text-base relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-full text-gray-400 font-medium hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
+      href="#">3</a></li>
+      <li class="page-item"><a
+      class="page-link text-base relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-full text-primaryBlack font-medium hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
+      href="#">Next</a></li>
+      </ul>
+      </nav>
+      </div> -->
+        <!--pagination-end-->
+      </div>
+
+      <div class="w-1/4 max-xxl:w-1/4 max-md:w-full sticky top-0">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3432.2134209217543!2d76.7245890146088!3d30.65611819637309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390f9320783a7095%3A0x58bf1af2e6bc3ef1!2sTrigma%20Solutions!5e0!3m2!1sen!2sin!4v1660719368709!5m2!1sen!2sin" width="100%" height="60%" style="border:0;height:416px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class=""></iframe>
+      </div>
+    </div>
+    <!-- </div> -->
+  </section>
+  <!--venue-main-wrapper-end-->
+
+</div>
+
+<script>
+  function sidebar() {
+    return {
+      sidebarOpen: true,
+      sidebarProductMenuOpen: false,
+      openSidebar() {
+        this.sidebarOpen = true
+      },
+      closeSidebar() {
+        this.sidebarOpen = false
+      },
+      sidebarProductMenu() {
+        if (this.sidebarProductMenuOpen === true) {
+          this.sidebarProductMenuOpen = false
+          window.localStorage.setItem('sidebarProductMenuOpen', 'close');
+        } else {
+          this.sidebarProductMenuOpen = true
+          window.localStorage.setItem('sidebarProductMenuOpen', 'open');
+        }
+      },
+      checkSidebarProductMenu() {
+        if (window.localStorage.getItem('sidebarProductMenuOpen')) {
+          if (window.localStorage.getItem('sidebarProductMenuOpen') === 'open') {
+            this.sidebarProductMenuOpen = true
+          } else {
+            this.sidebarProductMenuOpen = false
+            window.localStorage.setItem('sidebarProductMenuOpen', 'close');
+          }
+        }
+      }
+    }
+  }
+</script>

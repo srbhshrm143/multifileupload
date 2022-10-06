@@ -1,0 +1,21 @@
+query read(
+  $Id: ID
+  ) {
+  models(
+    per_page: 100
+    filter: {
+      model_schema_name: {
+        value: "venue_features_event_space"
+      },
+      id: {
+          value: $Id
+        }
+      }
+    sort: {created_at: {order: DESC}}
+  ) {
+    results {
+      id
+      properties
+    }
+  }
+}

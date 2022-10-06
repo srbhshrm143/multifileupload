@@ -1,0 +1,15 @@
+{% parse_json object %}
+  {
+    "remote_url":  {{ object.remote_url | json }},
+    "origin_url":  {{ object.remote_url | json }},
+    "profile_id":  {{ current_profile.id | json }},
+    "photo_type":  {{ object.photo_type | json }},
+    "photo_height": {{ object.photo_height | json }},
+    "photo_width":  {{ object.photo_width | json }},
+    "object_uuid":   {{ object.object_uuid | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

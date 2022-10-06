@@ -1,0 +1,9 @@
+{% liquid
+  if id == blank
+    return null
+  endif
+
+  graphql r  = 'bulk_operations/search', id: id, limit: 1
+
+  return r.bulk_operations.results.first
+%}

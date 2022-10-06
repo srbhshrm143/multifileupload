@@ -1,0 +1,21 @@
+---
+name: create_webhook_endpoint_form
+resource: modules/payments/webhook_endpoint
+resource_owner: anyone
+flash_notice: "Created successfully!"
+flash_alert: "Create failed!"
+fields:
+  properties:
+    gateway_id:
+      validation:
+        presence: true
+    secret:
+      validation:
+        presence: true
+    url: {}
+    livemode: {}
+default_payload: ''
+callback_actions: ''
+authorization_policies:
+---
+

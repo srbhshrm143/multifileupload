@@ -1,0 +1,11 @@
+{% parse_json object %}
+  {
+    "uuid": {{ object.uuid | json }},
+    "profile_id": {{ object.profile_id | json }},
+    "operation_type": {{ object.operation_type | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

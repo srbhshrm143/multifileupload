@@ -1,0 +1,10 @@
+---
+layout: test
+---
+{% liquid
+  if context.environment == 'staging' or context.environment == 'development'
+    function mails = 'lib/queries/tests/sent_mails/search', limit: 20
+
+    render 'test/sent_mails_list', mails: mails
+  endif
+%}

@@ -1,0 +1,25 @@
+mutation create(
+  $owner_fname: String!
+  $owner_lname: String!
+  $owner_gender:  String!
+  $owner_mobile:  String!
+  $owner_email: String!
+  $owner_password:  String!
+) {
+  model_create(
+    model : {
+      model_schema_name:  "venue_owner"
+      properties: [
+        { name: "owner_fname", value: $owner_fname }
+        { name: "owner_lname", value: $owner_lname }
+        { name: "owner_gender", value: $owner_gender }
+        { name: "owner_mobile", value: $owner_mobile }
+        { name: "owner_email", value: $owner_email }
+        { name: "owner_password", value: $owner_password }
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+}

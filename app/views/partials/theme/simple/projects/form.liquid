@@ -1,0 +1,278 @@
+{% liquid
+  if object.id
+    assign method = 'put'
+  else
+    assign method = 'post'
+  endif
+  assign uuid = '' | uuid
+  assign object_uuid = object.uuid | default: uuid
+%}
+
+<form action="/projects/{{object.id}}" method="post" class="w-full md:w-2/3" data-photo-upload-base id="projects">
+  {% render 'authenticity_token', authenticity_token: context.authenticity_token %}
+  <input type="hidden" name="_method" value="{{method}}">
+  <input type="hidden" name="project[uuid]" value="{{ object_uuid }}">
+  {% if object.id %}
+    <input type="hidden" name="project[id]" value="{{object.id}}">
+  {% endif %}
+
+  <h2 class="title">{{ 'app.projects.new.general' | t }}</h2>
+  <p>
+    {{ 'app.projects.new.general_tip' | t }}
+  </p>
+
+  <fieldset class="mt-6" x-data="charCounter()">
+    <label class="mb-1 cursor-pointer flex justify-between" for="name">
+      {{ 'app.projects.form.name' | t }} ({{ 'app.required' | t }})
+      <span class="text-right"><span x-text="count"></span> {{ 'app.projects.form.chars' | t }}</span>
+    </label>
+    <input class="w-full" type="text" id="name" name="project[name]" value="{{ object.name }}" autofocus required minlength="25" maxlength="50" x-ref="content" x-bind="input">
+    {% render 'theme/simple/field_error', errors: object.errors.name %}
+    {% render 'theme/simple/ui/form-tip', content_key: 'app.projects.form.name_tip' %}
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <label class="mb-1 cursor-pointer flex justify-between" for="promoted">
+      {{ 'app.projects.form.featured' | t }}
+    </label>
+    <input type="checkbox" id="promoted" name="project[promoted]" value="on" {% if object.promoted %}checked{% endif %} class="-mt-px" data-tc="project-featured-checkbox">
+    <label for="promoted" class="cursor-pointer">{{ 'app.projects.form.turn_on' | t }}</label>
+
+    {% render 'theme/simple/field_error', errors: object.errors.promoted %}
+  </fieldset>
+
+  <fieldset class="mt-6" x-data="charCounter()">
+    <label class="mb-1 cursor-pointer flex justify-between" for="summary">
+      {{ 'app.projects.form.summary' | t }} ({{ 'app.required' | t }})
+      <span class="text-right"><span x-text="count"></span> {{ 'app.projects.form.chars' | t }}</span>
+    </label>
+    <textarea class="w-full" id="summary" name="project[summary]" rows="2" required minlength="140" maxlength="400"
+      x-ref="content" x-bind="input"
+      >{{ object.summary }}</textarea>
+    {% render 'theme/simple/field_error', errors: object.errors.summary %}
+    {% render 'theme/simple/ui/form-tip', content_key: 'app.projects.form.summary_tip' %}
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <label class="mb-1 cursor-pointer flex justify-between" for="award">
+      {{ 'app.projects.form.award' | t }}
+    </label>
+    <input class="w-full" type="text" id="award" name="project[award]" value="{{ object.award }}" maxlength="25" />
+    {% render 'theme/simple/field_error', errors: object.errors.award %}
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <label class="mb-1 cursor-pointer" for="tags">{{ 'app.projects.form.tags' | t }}</label>
+    <input class="w-full uppercase" type="text" id="tags" name="project[tags]" value="{{ object.tags | join: ',' }}" data-tags-allowlist-input data-tags-whitelist="{{ context.tag_names | join: ',' }}">
+    {% render 'theme/simple/field_error', errors: object.errors.tags %}
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <label class="mb-1 cursor-pointer flex justify-between" for="name">
+      {{ 'app.projects.form.status' | t }}
+    </label>
+    <div class="rounded p-4 bg-panel-highlight grid grid-cols-3 gap-2">
+      <div class="flex">
+        <input type="radio" id="status_open"
+          {% if object.id %}
+            name="project[status]"
+            value="open"
+            {% if object.status.name == 'app.statuses.projects.open' %}checked{% endif %}
+          {% else %}
+            disabled="disabled" checked class="mt-1"
+          {% endif %}
+        >
+        <div class="ms-2">
+          <label for="status_open">{{ 'app.statuses.projects.open' | t }}</label>
+          <p class="sidenote">{{ 'app.projects.form.open_tip' | t }}</p>
+          <input name="project[deadline]" placeholder="{{ 'app.projects.form.deadline' | t }}"
+            value="{% if object.deadline != blank %}{{object.deadline | to_date }}{% endif %}"
+            type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="w-2/3 mt-1">
+        </div>
+      </div>
+      <div class="flex">
+        <input type="radio" autocomplete="off" id="status_under_evaluation"
+          {% if object.id %}
+            name="project[status]"
+            value="under_evaluation"
+            {% if object.status.name == 'app.statuses.projects.under_evaluation' %}checked{% endif %}
+          {% else %}
+            disabled="disabled" class="mt-1"
+          {% endif %}
+        >
+        <div class="ms-2">
+          <label for="status_under_evaluation">{{ 'app.statuses.projects.under_evaluation' | t }}</label>
+          <p class="sidenote">{{ 'app.projects.form.under_evaluation_tip' | t }}</p>
+        </div>
+      </div>
+      <div class="flex">
+        <input type="radio" autocomplete="off" id="status_closed"
+          {% if object.id %}
+            name="project[status]"
+            value="closed"
+            {% if object.status.name == 'app.statuses.projects.closed' %}checked{% endif %}
+          {% else %}
+            disabled="disabled" class="mt-1"
+          {% endif %}
+        >
+        <div class="ms-2">
+          <label for="status_closed">{{ 'app.statuses.projects.closed' | t }}</label>
+          <p class="sidenote">{{ 'app.projects.form.closed_tip' | t }}</p>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <div class="mb-1">{{ 'app.projects.form.cover_photo' | t }}</div>
+    {% render 'theme/simple/photos/uppy_area' %}
+  </fieldset>
+
+  <h3 class="mt-12 subtitle">
+    {{ 'app.projects.form.description_title' | t }}
+  </h3>
+
+  <fieldset data-tc="project-description">
+    <label class="mb-1 block cursor-pointer" for="description">{{ 'app.projects.form.description' | t }}</label>
+    <textarea class="w-full" id="description" name="project[description]" rows="2" data-markdown-editor>{{ object.description }}</textarea>
+
+    {% render 'theme/simple/field_error', errors: object.errors.description %}
+    {% render 'theme/simple/ui/form-tip', content_key: 'app.projects.form.description_tip' %}
+  </fieldset>
+
+  <fieldset class="mt-6" data-tc="project-terms">
+    <label class="mb-1 block cursor-pointer" for="terms_and_conditions">{{ 'app.projects.form.terms_and_conditions' | t }}</label>
+    <textarea class="w-full form-input" id="terms_and_conditions" name="project[terms_and_conditions]" rows="2" data-markdown-editor>{{ object.terms_and_conditions }}</textarea>
+
+    {% render 'theme/simple/field_error', errors: object.errors.terms_and_conditions %}
+  </fieldset>
+
+  <h3 class="mt-12 subtitle">
+    {{ 'app.projects.form.timeline_title' | t }}
+  </h3>
+
+  {% render 'theme/simple/projects/new/steps', object: object %}
+
+  <h3 class="mt-12 subtitle">
+    {{ 'app.project_offers.application' | t }}
+  </h3>
+
+  <fieldset data-tc="project-application-description">
+    <label class="mb-1 block cursor-pointer" for="offer_info">{{ 'app.project_offers.application_desc' | t }}</label>
+    <textarea class="w-full" id="offer_info" name="project[offer_info]" rows="2" data-markdown-editor>{{ object.description }}</textarea>
+    {% render 'theme/simple/ui/form-tip', content_key: 'app.project_offers.application_tip' %}
+  </fieldset>
+
+
+  <h3 class="mt-12 subtitle">
+    {{ 'app.projects.form.resources_title' | t }}
+  </h3>
+
+  {% render 'theme/simple/projects/new/videos', object: object, input_name: 'project[video_urls][]' %}
+
+  <fieldset class="mt-6">
+    <div class="mb-1 cursor-pointer">{{ 'app.projects.form.documents' | t }}</div>
+    <div class="card-lg"
+      x-data='{"isShowing": {% if object.id %}true{% else %}false{% endif %}}'
+    >
+      <p class="mb-2">{{'app.projects.form.documents_info' | t }}</p>
+      <button class="button button-secondary"
+        x-show="!isShowing" x-on:click.prevent="isShowing=true"
+      >
+        {{ 'app.projects.form.choose_files' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'folderUpload', class: 'text-content-sidenote' %}
+      </button>
+      <div id="drag-drop-area-files"
+        x-show="isShowing"
+      ></div>
+    </div>
+    {% render 'theme/simple/field_error', errors: object.errors.documents %}
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <div class="mb-1 cursor-pointer">{{ 'app.projects.form.photos' | t }}</div>
+    <div class="card-lg"
+      x-data='{"isShowing": {% if object.id %}true{% else %}false{% endif %}}'
+    >
+      <p class="mb-2">{{'app.projects.form.photos_info' | t }}</p>
+      <button class="button button-secondary"
+        x-show="!isShowing" x-on:click.prevent="isShowing=true"
+      >
+        {{ 'app.projects.form.choose_files' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'folderUpload', class: 'text-content-sidenote' %}
+      </button>
+      <div id="drag-drop-area-photos"
+        x-show="isShowing"
+      ></div>
+    </div>
+    {% render 'theme/simple/field_error', errors: object.errors.photos %}
+  </fieldset>
+
+  <h3 class="mt-12 subtitle">
+    {{ 'app.projects.form.comments_title' | t }}
+  </h3>
+  <fieldset>
+    <label class="mb-1 block cursor-pointer" for="commentable">
+      {{ 'app.projects.form.commentable' | t }}
+    </label>
+    <input type="checkbox" id="commentable" name="project[commentable]" value="on" {% if object.promoted %}checked{% endif %} class="-mt-1" data-tc="project-commentable-checkbox">
+    <label for="commentable" class="cursor-pointer">{{ 'app.projects.form.onn' | t }}</label>
+
+    {% render 'theme/simple/field_error', errors: object.errors.promoted %}
+  </fieldset>
+
+  <h3 class="mt-12 subtitle">
+    {{ 'app.projects.form.internal_information_title' | t }}
+  </h3>
+
+  <fieldset>
+    <label class="mb-1 block cursor-pointer" for="development_partners">
+      {{ 'app.projects.form.development_partners' | t }}
+    </label>
+    <input class="w-full" type="text" id="development_partners" name="project[development_partners]" value="{{ object.development_partners }}" maxlength="25" data-tc="project-development-partners"  />
+    {% render 'theme/simple/field_error', errors: object.errors.development_partners %}
+  </fieldset>
+
+  <fieldset class="mt-6">
+    <label class="mb-1 block cursor-pointer" for="sent_by">
+      {{ 'app.projects.form.sent_by' | t }}
+    </label>
+    <input class="w-full" type="text" id="sent_by" name="project[sent_by]" value="{{ object.sent_by }}" maxlength="25" data-tc="project-sent-by-input"  />
+    {% render 'theme/simple/field_error', errors: object.errors.sent_by %}
+    {% render 'theme/simple/ui/form-tip', content_key: 'app.projects.form.sent_by_tip' %}
+  </fieldset>
+</form>
+
+{% liquid
+  assign cover_photos = '' | split: ',' | add_to_array: object.cover | compact
+%}
+
+{% render 'theme/simple/photos/uppy_form',
+  target: '#drag-drop-area'
+  object_uuid: object_uuid,
+  presigned_url: context.presigned_url,
+  photo_type: 'cover',
+  note: 'Image up to 2MB',
+  existing_photos: cover_photos,
+  max_number_of_files: 1
+%}
+
+{% render 'theme/simple/photos/uppy_form',
+  target: '#drag-drop-area-photos'
+  object_uuid: object_uuid,
+  presigned_url: context.presigned_url,
+  photo_type: 'image',
+  note: 'Image up to 2MB',
+  existing_photos: object.photos,
+  max_number_of_files: 10
+%}
+
+{% render 'theme/simple/photos/uppy_document_form',
+  target: '#drag-drop-area-files'
+  object_uuid: object_uuid,
+  presigned_url: context.presigned_url,
+  type: 'file',
+  note: 'File up to 2MB',
+  existing_documents: object.files,
+  max_number_of_files: 10
+%}

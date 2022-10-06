@@ -1,0 +1,38 @@
+<div class="p-8">
+  {% if project.files != blank %}
+    <h2 class="subtitle uppercase">{{ 'app.projects.downloads' | t }}</h2>
+    <ul class="mb-12 last:mb-0 flex flex-wrap gap-2">
+      {% for file in project.files %}
+        <li class="px-3 py-2 flex gap-2 items-center border rounded">
+            <i class="p-3 rounded-full bg-interaction text-content-inverted">
+            {% render 'theme/simple/ui/icon', icon: 'fileText' %}
+          </i>
+          <div class="leading-4">
+            <strong class="block font-semibold">{{ file.file.file_name }}</strong>
+            <small class="text-content-sidenote">{{ file.file.extension }}</small>
+          </div>
+          <a href="{{file.file.url}}" target="_blank" class="p-2 border rounded hover:border-interaction-hover hover:text-interaction-hover">
+            <span class="sr-only">{{ 'app.projects.download' | t }}</span>
+            {% render 'theme/simple/ui/icon', icon: 'download' %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if project.photos != blank %}
+    <h2 class="subtitle uppercase">{{ 'app.projects.gallery' | t }}</h2>
+    <ul class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      {% for photo in project.photos %}
+        <li>
+          <a href="{{ photo.photo.url }}" target="_blank">
+            <picture>
+              <source type="image/avif" srcset="{{ photo.photo.versions.sm_avif }}, {{ photo.photo.versions.m_avif }} 2x">
+              <img src="{{ photo.photo.versions.sm }}" srcset="{{ photo.photo.versions.m }} 2x" width="{{ photo.photo_width }}" height="{{ photo.photo_height }}" alt="">
+            </picture>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

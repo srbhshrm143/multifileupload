@@ -1,0 +1,10 @@
+<header class="mt-2.5 mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+  <h2 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'users', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'app.admin.item_attributes.new.new_item_attribute' | t }}
+  </h2>
+</header>
+
+<div class="flex flex-wrap items-center mx-auto">
+  {% include 'theme/simple/admin/item_attributes/form', item_attribute: object, available_languages: available_languages %}
+</div>

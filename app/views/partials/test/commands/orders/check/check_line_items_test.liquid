@@ -1,0 +1,39 @@
+{% parse_json valid_order %} {
+  "line_items": [
+    {
+      "quantity": 1,
+      "item": {
+        "id": "1",
+        "quantity": 5,
+        "item_inventory": {"item_ids": ["1"]}
+      }
+    }
+  ]
+}{% endparse_json %}
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+  function c = 'lib/commands/orders/check/check_line_items', order: valid_order, c: c
+
+  include 'test/assertions/valid_object', contract: contract, object: c, field_name: 'order'
+%}
+
+
+
+{% parse_json invalid_order %} {
+  "line_items": [
+    {
+      "quantity": 1,
+      "item": {
+        "id": "1",
+        "quantity": 0,
+        "item_inventory": {"item_ids": ["2"]}
+      }
+    }
+  ]
+}{% endparse_json %}
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+  function c = 'lib/commands/orders/check/check_line_items', order: invalid_order, c: c
+
+  include 'test/assertions/not_valid_object', contract: contract, object: c, field_name: 'order'
+%}

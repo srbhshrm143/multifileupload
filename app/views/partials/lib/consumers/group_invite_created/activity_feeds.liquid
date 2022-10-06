@@ -1,0 +1,7 @@
+{% liquid
+  function audience = 'lib/commands/audience/build'
+
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | add_to_array: event.object.id
+
+  render 'lib/commands/activities/publish_to_many', uuid: event.uuid, audience: audience, meta: 'group_invite_created'
+%}

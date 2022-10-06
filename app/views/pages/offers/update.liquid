@@ -1,0 +1,24 @@
+---
+slug: offers/:id
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function project_offer = 'lib/queries/project_offers/find', id: context.params.project_offer.id
+  include 'lib/can_do_or_unauthorized', object: project_offer, do: "edit", actor: current_profile
+
+  function object = 'lib/commands/project_offers/update', object: context.params.project_offer, profile: current_profile
+  if object.valid
+    if object.status.name == 'app.statuses.project_offers.submitted'
+      function url = 'link_to', object: object, action: 'success'
+      redirect_to url
+    else
+      include 'redirect_to', url: '/offers/manage', notice: 'app.project_offers.form.draft_saved'
+    endif
+  else
+    function _ = 'lib/extend_context', photo_presign: true
+    render 'theme/simple/project_offers/edit', object: object, context: context
+  endif
+%}

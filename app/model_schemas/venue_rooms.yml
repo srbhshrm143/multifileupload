@@ -1,0 +1,21 @@
+name: venue_rooms
+properties:
+  - name: venue_id
+  - name: venue_room_name
+    type: string
+  - name: venue_room_capacity
+    type: string
+  # - name: room_photos
+  #   type: upload
+  # - name: room_videos
+  #   type: upload
+  - name: media_ids
+    type: array
+  - name: quantity
+    type: integer
+  - name: price_cents
+    type: integer
+  - name: event_type
+    type: string
+  - name: event_timing
+    type: string

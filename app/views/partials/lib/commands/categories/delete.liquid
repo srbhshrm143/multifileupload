@@ -1,0 +1,17 @@
+{% liquid
+  assign category = object
+  function object = 'lib/commands/categories/delete/build',  object: object
+  function object = 'lib/commands/categories/delete/check',  object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'categories/delete', selection: 'record_delete', object: object
+
+    for detail in category.category_details
+      function object = 'lib/commands/category_details/delete', object: detail, category: category
+    endfor
+
+
+  endif
+
+  return object
+%}

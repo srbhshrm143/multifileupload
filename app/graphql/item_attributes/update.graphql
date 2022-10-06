@@ -1,0 +1,27 @@
+mutation update_item_attribute(
+  $id: ID!
+  $name: String
+  $value: String
+  $disabled_at: String
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "item_attribute"
+      properties: [
+        { name: "name" value: $name }
+        { name: "value" value: $value }
+        { name: "disabled_at" value: $disabled_at }
+      ]
+    }
+  ){
+    id
+    created_at
+    updated_at
+    type: table
+
+    name: property(name: "name")
+    value: property(name: "value")
+    disabled_at: property(name: "disabled_at")
+  }
+}

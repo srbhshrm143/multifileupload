@@ -1,0 +1,23 @@
+{% liquid
+  assign can = false
+
+  assign superadmins = context.constants.superadmins | split: ','
+  if superadmins contains actor.user.email or permissions.superadmin
+    assign superadmin = true
+  endif
+
+  case do
+  when 'delete'
+    assign object = photo.object | default: photo
+    function can_delete = "lib/can", actor: actor, do: "edit", object: object
+    if can_delete.valid
+      return true
+    endif
+  when 'edit'
+    if photo.profile_id == actor.id or superadmin
+      assign can = true
+    endif
+  endcase
+
+  return can
+%}

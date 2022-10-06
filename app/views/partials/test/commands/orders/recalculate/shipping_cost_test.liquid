@@ -1,0 +1,24 @@
+{% parse_json order %}
+{
+  "shipping_type": "delivery", "shipping_address": { "city": "Warsaw" }, "seller": { "delivery_fees_for_cities": { "warsaw": 4000, "jelenia-gora": 3000, "default": 5000 }}
+}
+{% endparse_json %}
+{% liquid
+  function cost = 'lib/commands/orders/recalculate/shipping_cost', order: order
+
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'cost', given: cost, expected: 4000
+%}
+
+{% liquid
+  hash_assign order['shipping_address']['city'] = "Jelenia Gora"
+  function cost = 'lib/commands/orders/recalculate/shipping_cost', order: order
+
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'cost', given: cost, expected: 3000
+%}
+
+{% liquid
+  hash_assign order['shipping_address']['city'] = "Gdansk"
+  function cost = 'lib/commands/orders/recalculate/shipping_cost', order: order
+
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'cost', given: cost, expected: 5000
+%}

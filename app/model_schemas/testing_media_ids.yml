@@ -1,0 +1,6 @@
+name: testing_media_ids
+properties:
+  - name: media_ids
+    type: array
+  - name: media_uuid
+    type: string

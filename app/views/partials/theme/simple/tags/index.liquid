@@ -1,0 +1,58 @@
+<section>
+
+  <header class="mb-2">
+    <h2 class="title">{{ 'app.tags.followed' | t }}</h2>
+  </header>
+
+  <div class="card flex flex-wrap uppercase gap-2">
+    {% for tag in tags.results %}
+      <form action="#" data-id="{{ tag.id }}"
+        x-data="relationship('tagIds')"
+        x-ref="form"
+        x-on:submit.prevent
+        x-on:data-ready.window="initManual()"
+        x-show.transition="exists"
+        x-cloak
+      >
+        <input type="hidden" name="r_id" value="{{ tag.id }}">
+        <input type="hidden" name="name" value="followship:tag">
+        <button
+          class="px-2 py-1 uppercase bg-panel-highlight hover:line-through"
+          x-on:click="toggle()"
+          title="{{ "app.relationships.posts.title" | t }}"
+        >#{{ tag.name }}</button>
+      </form>
+    {% endfor %}
+  </div>
+
+</section>
+
+
+<section class="mt-8 ">
+
+  <header class="mb-2">
+    <h2 class="title">{{ 'app.tags.followable' | t  }}</h2>
+  </header>
+
+  <div class="card flex flex-wrap uppercase gap-2">
+    {% for tag in tags.results %}
+      <form action="#" data-id="{{ tag.id }}"
+        x-data="relationship('tagIds')"
+        x-ref="form"
+        x-on:submit.prevent
+        x-on:data-ready.window="initManual()"
+        x-show.transition="exists === false"
+        x-cloak
+      >
+        <input type="hidden" name="r_id" value="{{ tag.id }}">
+        <input type="hidden" name="name" value="followship:tag">
+        <button
+          class="px-2 py-1 uppercase border rounded hover:bg-panel-highlight hover:border-interaction-hover transition-colors"
+          x-on:click="toggle()"
+          title="{{ "app.relationships.posts.title" | t }}"
+        >#{{ tag.name }}</button>
+      </form>
+    {% endfor %}
+  </div>
+
+</section>

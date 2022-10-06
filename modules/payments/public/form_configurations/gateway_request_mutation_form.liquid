@@ -1,0 +1,17 @@
+---
+name: gateway_request_mutation_form
+resource: modules/payments/gateway_request
+resource_owner: anyone
+authorization_policies: ''
+fields:
+  properties:
+    request_type:
+    gateway:
+    config:
+    data:
+    response:
+    request_errors:
+callback_actions: >
+default_payload: >
+  {% include "modules/payments/forms/gateway_request_default_payload" %}
+---

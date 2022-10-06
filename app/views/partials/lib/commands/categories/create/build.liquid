@@ -1,0 +1,17 @@
+{% parse_json data %}
+  {
+    "id":   {{ object.id | json }},
+    "key":  {{ object.key | json }},
+    "uuid": {{ object.uuid | default: 'uuid' | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  hash_assign data['category_details'] = object.category_details
+
+  return data
+%}
+
+{%- comment -%}
+  "uuid": {{ '' | uuid | json }}
+{%- endcomment -%}

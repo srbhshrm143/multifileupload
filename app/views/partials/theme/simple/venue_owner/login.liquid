@@ -1,0 +1,68 @@
+<h1 class="pagetitle">Hello Owner Login</h1>
+
+{%- comment -%}
+  <div class="card-lg w-full md:w-96 mx-auto">
+    <!-- <form action="/sessions/create" method="POST"> -->
+    <form action="/sessions/create" method="post">
+      {% render 'authenticity_token', context: context %}
+
+      {% render 'theme/simple/field_error', errors: object.errors.base %}
+
+      <div class="mt-3">
+        <label for="owner_email_id"> Email Id : </label>
+        <input type="email" name="owner_email_id" id="owner_email_id" class="w-full" placeholder="Email Id">
+        <!-- {% render 'theme/simple/field_error', errors: object.errors.email %} -->
+        <!-- {{ object.email | json }} -->
+        <!-- {{ context.session }} -->
+      </div>
+      <div class="mt-3">
+        <label for="owner_password"> Password : </label>
+        <input type="password" name="owner_password" id="owner_password" class="w-full" placeholder="Password">
+        <!-- {% render 'theme/simple/field_error', errors: object.errors.password %} -->
+      </div>
+      <button class="button mt-3 w-full">Login Owner</button>
+    </form>
+  </div>
+{%- endcomment -%}
+
+
+<section class="container">
+  <form action="/sessions/create" method="post" class="card-lg w-full md:w-96 mx-auto">
+    {% render 'authenticity_token', context: context %}
+
+    {% render 'theme/simple/field_error', errors: object.errors.base %}
+
+    <fieldset>
+      <label for="email">{{ 'app.login_form.email' | t }}</label>
+      <input name="user[email]" type="email" id="email" value="{{ object.email | raw_escape_string }}" class="w-full" autofocus>
+      {% render 'theme/simple/field_error', errors: object.errors.email %}
+    </fieldset>
+
+    <fieldset class="mt-3">
+      <label for="password">{{ 'app.login_form.password' | t }}</label>
+      <input name="user[password]" type="password" id="password" value="" autocomplete="new-password" class="w-full">
+      {% render 'theme/simple/field_error', errors: object.errors.password %}
+    </fieldset>
+
+    <fieldset class="mt-5">
+      <button class="button mt-3">{{ 'app.login_form.log_in' | t }}</button>
+    </fieldset>
+    <!-- {{ object }} -  -->
+    <!-- {{ context }} -->
+
+    <!-- <p class="mt-8">
+      {{ 'app.login_form.anonymous' | t }} <a href='/sign-up' class="underline ps-3">{{ 'app.login_form.register' | t }}</a>
+    </p>
+    <p class="mt-1">
+      {{ 'app.login_form.password_lost' | t }} <a href='/passwords/reset' class="underline ps-3">{{ 'app.login_form.reset' | t }}</a>
+    </p>
+    <p class="mt-1">
+      {{ 'app.owner_profile.venue_owner' | t }} <a href='/venue_owner/login' class="underline ps-3">{{ "Login" }}</a>
+    </p>
+    <p class="mt-1">
+      {{ 'app.owner_profile.venue_owner' | t }} <a href='/venue_owner/register' class="underline ps-3">{{ 'app.owner_profile.owner_account_reg' | t }}</a>
+    </p> -->
+  </form>
+</section>
+
+<!-- {{ context.params }} -->

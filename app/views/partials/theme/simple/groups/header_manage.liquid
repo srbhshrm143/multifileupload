@@ -1,0 +1,36 @@
+<header class="-mt-10 bg-content text-content-inverted">
+  <div class="container pt-2 pb-8">
+    <a href="{% render 'link_to', object: group %}" class="mb-1 flex items-center gap-1 text-content-inverted hover:text-content-inverted">
+      {% render 'theme/simple/ui/icon', icon: 'dashLeft', class: 'w-2' %} {{ group.name }}
+    </a>
+    <h1 class="bigtitle !m-0">{{ 'app.groups.relationships.manage_group' | t }}: {{ group.name }}
+  </div>
+</header>
+
+{% liquid
+  assign class = 'py-4 block text-content-sidenote'
+  assign active_class = 'border-b-2 border-interaction !text-content'
+%}
+
+<nav class="mb-10 bg-panel-highlight">
+  <div class="container">
+    <ul class="overflow-x-auto flex gap-8 !mb-0 md:subtitle md:font-semibold whitespace-nowrap">
+      <li>
+        <a href="{% render 'link_to', object: group, action: 'relationships' %}" class="{{ class }} {% if context.page.slug contains 'relationships' %} {{ active_class }} {% endif %}">
+          {{ 'app.groups.nav.user_management' | t }}
+        </a>
+      </li>
+      <li>
+        <a href="{% render 'link_to', object: group, action: 'edit' %}" class="{{ class }} {% if context.page.slug contains 'edit' %} {{ active_class }} {% endif %}">
+          {{ 'app.groups.nav.group_info' | t }}
+        </a>
+      </li>
+
+      <li>
+        <a href="{% render 'link_to', object: group, action: 'invites' %}" class="{{ class }} {% if context.page.slug contains 'invites' %} {{ active_class }} {% endif %}">
+          {{ 'app.groups.nav.invites' | t }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

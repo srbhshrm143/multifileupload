@@ -1,0 +1,17 @@
+mutation create_version_fill_relations(
+  $item_ids: [ID!]!
+  $item_detail_ids: [ID!]!
+) {
+  items: records_update_all(
+    table: "item",
+    filter: { id: { value_in: $item_ids }}
+    sync: true
+    record: {
+      properties: [
+        { name: "item_detail_ids", value_array: $item_detail_ids }
+      ]
+    }
+  ){
+    count
+  }
+}

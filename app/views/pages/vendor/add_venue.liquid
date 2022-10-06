@@ -1,0 +1,16 @@
+---
+  slug: vendor/add_venue
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  assign object = '{}' | parse_json
+    
+  graphql category_gql = 'categories/cetegory_list', limit: 10
+
+  
+  render 'theme/simple/vendor/add_venue', context: context, category_gql: category_gql
+%}
+
+{%- comment -%}
+  include 'theme/simple/vendor/hompage'
+{%- endcomment -%}

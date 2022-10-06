@@ -1,0 +1,14 @@
+---
+slug: api/photos
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile
+
+  function photo = 'lib/queries/photos/find', id: context.params.photo.id, with_object: true
+  include 'lib/can_do_or_unauthorized', object: photo, do: "delete", actor: current_profile, json: true
+
+  function object = 'lib/commands/photos/delete', object: context.params.photo
+  include 'theme/json/shared/show', object: object
+%}

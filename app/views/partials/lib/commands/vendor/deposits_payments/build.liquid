@@ -1,0 +1,17 @@
+{% parse_json object %}
+  {
+    "venue_id":              {{ object.venue_id | json }},
+    "deposit_percentage":    {{ object.deposit_percentage | json }},
+    "remaining_payments":    {{ object.remaining_payments | json }},
+    "security_deposits":     {{ object.security_deposits | json }},
+    "special_instructions":  {{ object.special_instructions | json }},
+    "by_cheque_to_account1": {{ object.by_cheque_to_account1 | json }},
+    "by_cheque_to_account2": {{ object.by_cheque_to_account2 | json }},
+    "by_cheque_to_account3": {{ object.by_cheque_to_account3 | json }},
+    "payment_by_cheque":     {{ object.payment_by_cheque | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

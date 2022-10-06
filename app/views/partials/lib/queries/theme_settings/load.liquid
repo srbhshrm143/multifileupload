@@ -1,0 +1,23 @@
+{% comment %}
+  Params:
+    - theme_name
+{% endcomment %}
+
+{% liquid
+  comment
+    Collect all information for theme settings.
+  endcomment
+  assign theme_name = theme_name | default: context.constants.THEME | default: 'simple'
+  assign theme_path = 'theme/' | append: theme_name | append: '/config.json'
+  function saved_settings = 'lib/queries/theme_settings/find', name: theme_name
+  function custom_logo = 'lib/queries/photos/search', photo_type: 'theme_logo' | dig 'results' | first
+  assign custom_logo = custom_logo.results.first
+  function default_settings = 'lib/queries/theme_settings/default', theme: theme_name
+
+  assign theme_settings = saved_settings | default: default_settings
+  hash_assign theme_settings['logo'] = custom_logo
+  hash_assign theme_settings['name'] = theme_name
+
+  export theme_settings
+  return theme_settings
+%}

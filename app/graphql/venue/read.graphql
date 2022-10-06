@@ -1,0 +1,30 @@
+query read(
+  $Id: ID
+)	{
+  models(
+    per_page: 1000
+    filter: {
+      model_schema_name : {
+        value: "venues"
+      }
+      id : {
+        value:	$Id
+      }
+    }
+    sort: {
+      created_at: {
+        order:  DESC
+      }
+    }
+  )	{
+    results {
+      id
+      properties
+      # Email: property(name: "owner_email")
+      # FirstName: property(name: "owner_fname")
+      # LastName: property(name: "owner_lname")
+      # Gender: property(name: "owner_gender")
+      # Mobile: property(name: "owner_mobile")
+    }
+  }
+}

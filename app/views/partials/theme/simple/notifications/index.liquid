@@ -1,0 +1,20 @@
+<section>
+
+  <h1 class="pagetitle">
+    {{ 'app.notifications.title' | t }}
+  </h1>
+
+  <div class="container flex flex-col gap-4">
+
+    {% if list.total_entries > 0 %}
+      {% liquid
+        for activity in list.results
+          render 'theme/simple/activities/notifications/feed_unit', payload: activity.payload, current_profile: current_profile, namespace: namespace, context: context
+        endfor
+      %}
+    {% else %}
+      <p class="container my-8 text-lg">{{ 'app.search.no_items_found.title' | t }}</p>
+    {% endif %}
+  </div>
+</section>
+

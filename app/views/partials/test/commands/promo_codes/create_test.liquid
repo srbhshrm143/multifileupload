@@ -1,0 +1,45 @@
+{% parse_json profile %} {"id": "5"} {% endparse_json %}
+{% parse_json params %}
+{
+  "details": {
+    "en": {
+      "lang": "en",
+      "description": "procode"
+    },
+    "de": {
+      "lang": "de",
+      "description": "procodede"
+    }
+  },
+  "start_date": {{ 'yesterday' | to_date | json  }},
+  "end_date": {{ '10 days from now' | to_date | json }},
+  "max_available": "12",
+  "total_discount": "12",
+  "is_global": "on",
+  "upper_limit": "100",
+  "code_type": "merchant",
+  "campaign_code": "hackblob11",
+  "code": "promo-{{4 | random_string}}"
+}
+{% endparse_json %}
+
+{% liquid
+  function promo_code = 'lib/commands/promo_codes/create', object: params, profile: profile
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: promo_code, field_name: 'promo_code'
+
+  function promo_code = 'lib/queries/promo_codes/find', id: promo_code.id
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'code_type', given: promo_code.code_type, expected: "merchant"
+%}
+
+{% comment %}not allow create global code{% endcomment %}
+{% liquid
+  hash_assign params['is_global'] = 'on'
+  hash_assign params['code'] =  4 | random_string | prepend: 'promo-'
+  function promo_code = 'lib/commands/promo_codes/create', object: params, profile: profile
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: promo_code, field_name: 'promo_code'
+
+  function promo_code = 'lib/queries/promo_codes/find', id: promo_code.id
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'code_type', given: promo_code.code_type, expected: "merchant"
+%}

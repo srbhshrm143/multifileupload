@@ -1,0 +1,12 @@
+{% parse_json object %}
+  {
+    "id": {{ object.id | json }},
+    "owner": {{ owner | json }},
+    "item_type": {{ object.item_type | json }},
+    "c__status": {{ object.c__status | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

@@ -1,0 +1,17 @@
+{% liquid
+  hash_assign import['reports'] = '[]' | parse_json
+  hash_assign import['valid'] = true
+
+  for item in import.items
+    function object = 'lib/commands/items/create_complex', object: item, owner: owner_id, dry_run: true
+    unless object.valid
+      hash_assign import['reports'] = import['reports'] | add_to_array: object
+    endunless
+  endfor
+
+  unless import['reports'] == empty
+    hash_assign import['valid'] = false
+  endunless
+
+  return import
+%}

@@ -1,0 +1,25 @@
+<section>
+
+  <header class="mb-4">
+    <h2 class="title !mb-0">{{ 'app.projects.list.my_project' | t }}</h2>
+  </header>
+
+  {% if list.total_entries == 0 %}
+
+    <div class="p-8 bg-panel-highlight rounded text-center">
+      <strong class="block">{{ 'app.projects.list.empty.title' | t }}</strong>
+      {{ 'app.projects.list.empty.desc' | t }}<br>
+      <a href="{% render 'link_to', project: '' %}" class="mt-4 button">{{ 'app.projects.list.empty.cta' | t }}</a>
+    </div>
+
+  {% else %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for record in list.results %}
+        {% render 'theme/simple/projects/card', project: record, current_profile: current_profile, context: context %}
+      {% endfor %}
+    </div>
+
+  {% endif %}
+
+</section>

@@ -1,0 +1,38 @@
+<ul class="flex overflow-x-scroll lg:overflow-visible md:grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {% for item in items.results %}
+    {% function item_url = 'link_to', path: '/items/', item: item %}
+    <li class="w-full md:w-auto card mb-4 md:mb-0 flex-shrink-0 hover:shadow-cardHover hover:border-warning relative transition overflow-hidden">
+      <a href="{{ item_url }}">
+
+        <figure class="flex items-center justify-center relative h-64 mb-3 rounded-t {% if item.item_inventory.status.name == 'app.statuses.items.unavailable' %} opacity-20 {% endif %}">
+          {% render 'theme/simple/items/cover', photo: item.photo, class: 'w-full max-w-[95vw] md:max-w-full h-68 block object-center object-contain' %}
+
+          {% if item.item_inventory.status.name == 'app.statuses.items.unavailable' %}
+            {% render 'theme/simple/ui/badge', class: 'bg-danger', label_key: 'app.items.sold-out' %}
+          {% endif %}
+        </figure>
+
+        <h3 class="text-content">
+          {{ item.item_detail.name }}
+        </h3>
+
+        {% if item.item_inventory.item_type != "affiliate" %}
+          <span class="text-xl font-bold text-interaction">
+            {% render 'theme/simple/price', amount_cents: item.price, currency: item.currency %}
+          </span>
+
+          {% if item.original_price %}
+            <span class="sidenote">
+              <span class="line-through text-danger">
+                {% render 'theme/simple/price', amount_cents: item.original_price, currency: item.currency %}
+              </span>
+            </span>
+          {% endif %}
+
+        {% endif %}
+
+      </a>
+      {% render 'theme/simple/wishlists/button', profile_id: current_profile.id, item_id: item.id  %}
+    </li>
+  {% endfor %}
+</ul>

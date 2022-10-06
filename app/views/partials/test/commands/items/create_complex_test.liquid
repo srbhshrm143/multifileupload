@@ -1,0 +1,100 @@
+{% parse_json item_data %}
+  {
+    "item_type":   "physical",
+    "details": {
+      "en": {
+        "name":        "item-name",
+        "description": "item-description",
+        "lang":        "en"
+      }
+    },
+
+    "price":       121,
+    "tax_rate":    23.0,
+    "currency":    "USD",
+    "category":    "jewellery",
+
+    "quantity":    2,
+    "max_in_one_order":    2,
+    "sku":         "SKU-001",
+    "uuid":        "item.uuid",
+    "variants":    [
+      { "price": 1000, "currency": "USD", "attributes_json": "{ \"id\": \"1\", \"name\": \"color\", \"value\": \"black\" }" },
+      { "price": 2000, "currency": "USD", "attributes_json": "{ \"id\": \"2\", \"name\": \"color\", \"value\": \"red\" }" },
+      { "price": 3000, "currency": "USD", "attributes_json": "{ \"id\": \"3\", \"name\": \"color\", \"value\": \"white\" }" }
+    ]
+  }
+{% endparse_json %}
+{% liquid
+  function seller = 'test/fixtures/profile', user_id: "6999"
+  function object = 'lib/commands/items/create_complex', object: item_data, owner: seller.id
+
+  include 'test/assertions/valid_object', contract: contract, object: object, field_name: 'object'
+
+  function item = 'lib/queries/items/find', id: object.items.ids[0]
+  function contract = 'test/assertions/presence', contract: contract, object: item.item_detail, field_name: 'name'
+  function contract = 'test/assertions/presence', contract: contract, object: item.item_detail, field_name: 'description'
+  function contract = 'test/assertions/presence', contract: contract, object: item.item_detail, field_name: 'lang'
+
+  function contract = 'test/assertions/presence', contract: contract, object: item, field_name: 'sku'
+  function contract = 'test/assertions/presence', contract: contract, object: item, field_name: 'currency'
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'price', given: item.price, expected: 100000
+
+  function item_inventory = 'lib/queries/item_inventories/find', id: object.item_inventory.id, withAllVariants: true
+  function contract = 'test/assertions/presence', contract: contract, object: item_inventory.item.item_detail, field_name: 'name'
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'errors', given: item_inventory.items.size, expected: 3
+%}
+
+
+{% parse_json item_data %}
+  {
+    "item_type":   "digital",
+    "details": {
+      "en": {
+        "name":        "item-name",
+        "description": "item-description",
+        "lang":        "en"
+      }
+    },
+    "max_in_one_order":    2,
+    "price":       121,
+    "currency":    "USD",
+    "category":    "jewellery",
+    "quantity":    2,
+    "uuid":        "item.uuid"
+  }
+{% endparse_json %}
+{% liquid
+  function object = 'lib/commands/items/create_complex', object: item_data, owner: seller.id
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: object, field_name: 'object'
+%}
+
+{% parse_json item_data %}
+  {
+    "item_type":   "affiliate",
+    "details": {
+      "en": {
+        "name":        "item-name",
+        "description": "item-description",
+        "lang":        "en"
+      }
+    },
+    "max_in_one_order":    2,
+    "price":       121,
+    "currency":    "USD",
+    "category":    "jewellery",
+    "quantity":    2,
+    "uuid":        "item.uuid",
+    "affiliate_redirect_url": "https://example.com",
+    "affiliate_redirect_url_terms_and_service": "https://example.com/toc"
+  }
+{% endparse_json %}
+{% liquid
+  function object = 'lib/commands/items/create_complex', object: item_data, owner: seller.id
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: object, field_name: 'object'
+  function item = 'lib/queries/items/find', id: object.items.ids[0], with_item_type: true
+  function contract = 'test/assertions/presence', contract: contract, object: item, field_name: 'affiliate_redirect_url'
+  function contract = 'test/assertions/presence', contract: contract, object: item, field_name: 'affiliate_redirect_url_terms_and_service'
+%}

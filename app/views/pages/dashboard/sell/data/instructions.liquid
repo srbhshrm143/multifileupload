@@ -1,0 +1,8 @@
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function attributes = 'lib/commands/item_attributes/as_hash', object: object
+
+  render 'theme/simple/dashboard/sell/data/instructions', context: context, attributes: attributes
+%}

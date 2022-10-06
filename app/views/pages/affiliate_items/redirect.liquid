@@ -1,0 +1,12 @@
+{%- liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_anonymous: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_anonymous: true
+
+  function item = 'lib/queries/items/find', id: context.params.item_id, lang: context.language, with_item_type: true
+
+  if item.item_inventory.item_type == 'affiliate'
+    redirect_to item.affiliate_redirect_url
+  else
+    include 'redirect_to', url: '/', error: "app.items.errors.not_affiliate"
+  endif
+-%}

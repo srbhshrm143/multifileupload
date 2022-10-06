@@ -1,0 +1,17 @@
+
+{% function available_languages = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array" %}
+{%- capture content -%}
+<?xml version="1.0" encoding="UTF-8"?>
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    {%- render 'lib/commands/sitemaps/create/static', context: context, available_languages: available_languages -%}
+    {%- render 'lib/commands/sitemaps/create/categories', context: context, available_languages: available_languages -%}
+    {%- render 'lib/commands/sitemaps/create/items', context: context, available_languages: available_languages -%}
+    {%- render 'lib/commands/sitemaps/create/organizations', context: context, available_languages: available_languages -%}
+  </urlset>
+{% endcapture %}
+
+{% liquid
+  assign object = '{}' | parse_json
+  hash_assign object['content'] = content | strip
+  return object
+%}

@@ -1,0 +1,18 @@
+mutation update_item(
+  $ids: [ID!]!
+  $c__status: String
+) {
+  record: records_update_all(
+    table: "item"
+    sync: true
+    filter: {
+      id: { value_in: $ids }
+    }
+    record: {
+      table: "item"
+      properties: { name: "c__status" value: $c__status }
+    }
+  ){
+    count
+  }
+}

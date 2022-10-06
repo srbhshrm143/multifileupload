@@ -1,0 +1,10 @@
+{% liquid
+  function object = 'lib/commands/documents/create_with_content/build', object: object, current_profile: current_profile
+  function object = 'lib/commands/documents/create_with_content/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'documents/create_with_content' object: object
+  endif
+
+  return object
+%}

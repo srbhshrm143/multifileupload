@@ -1,0 +1,11 @@
+---
+  slug: venue_menu
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  assign object = '{}' | parse_json
+  
+  
+  render 'theme/simple/cust/venue_menus', context: context
+%}

@@ -1,0 +1,10 @@
+mutation create_version(
+  $variants_input: [CustomizationImport!]!
+) {
+  items: import_models(
+    models: $variants_input
+    _index_rebuild: false
+  ) {
+    ids
+  }
+}

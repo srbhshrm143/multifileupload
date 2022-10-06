@@ -1,0 +1,178 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $page: Int = 1
+  $item_id: String
+  $owner: String
+  $c__status: String
+  $statuses: [String!]
+  $lang: String!
+  $withAllLangs: Boolean = false
+  $withAllVariants: Boolean = false
+  $item_type: String
+) {
+  item_inventories: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "item_inventory" }
+      properties: [
+        { name: "item_id", value: $item_id }
+        { name: "owner", value: $owner }
+        { name: "c__status", value: $c__status, value_in: $statuses }
+        { name: "item_type", value: $item_type }
+      ]
+      # related_records: {
+      #   join: { join_on_property: "item_id", foreign_property: "id"}
+      #   filter: {
+      #     table: { value: "item" }
+      #   }
+      # }
+    }
+    sort: [{ created_at: { order: DESC } }]
+  ) {
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      uuid: property(name: "uuid")
+      item_id: property(name: "item_id")
+      item_ids: property_array(name: "item_ids")
+      max_in_one_order: property_int(name: "max_in_one_order")
+      c__rating_count: property_int(name: "c__rating_count")
+      c__rating_score: property_float(name: "c__rating_score")
+      item_type: property(name: "item_type")
+
+      item: related_record(
+        table: "item"
+        join_on_property: "item_ids"
+        foreign_property: "id"
+        filter: { properties: { name: "main_variant", value_boolean: true } }
+      ) {
+        ...item
+
+        item_detail_ids: property_array(name: "item_detail_ids")
+        item_detail: related_record(
+          table: "item_detail"
+          join_on_property: "item_detail_ids"
+          foreign_property: "id"
+          filter: { properties: { name: "lang", value: $lang } }
+        ) {
+          id
+          type: table
+          name: property(name: "name")
+          description: property(name: "description")
+          tags: property_array(name: "tags")
+          lang: property(name: "lang")
+        }
+
+        item_details: related_records(
+          table: "item_detail"
+          join_on_property: "item_detail_ids"
+          foreign_property: "id"
+        ) @include(if: $withAllLangs) {
+          id
+          type: table
+          name: property(name: "name")
+          description: property(name: "description")
+          tags: property_array(name: "tags")
+          lang: property(name: "lang")
+        }
+
+        photos: related_records(
+          table: "photo"
+          join_on_property: "photo_ids"
+          foreign_property: "id"
+        ) {
+          id
+          photo_width: property_int(name: "photo_width")
+          photo_height: property_int(name: "photo_height")
+          origin_url: property(name: "origin_url")
+          photo: property_upload(name: "photo") {
+            file_name
+            url
+            versions
+          }
+        }
+      }
+
+      items: related_records(
+        table: "item"
+        join_on_property: "item_ids"
+        foreign_property: "id"
+      ) @include(if: $withAllVariants) {
+        ...item
+
+        photos: related_records(
+          table: "photo"
+          join_on_property: "photo_ids"
+          foreign_property: "id"
+        ) {
+          id
+          photo_width: property_int(name: "photo_width")
+          photo_height: property_int(name: "photo_height")
+          origin_url: property(name: "origin_url")
+          photo: property_upload(name: "photo") {
+            file_name
+            url
+            versions
+          }
+        }
+      }
+
+      owner: related_record(
+        table: "organization"
+        join_on_property: "owner"
+        foreign_property: "id"
+      ) {
+        id
+        type: table
+        name: property(name: "name")
+        first_name: property(name: "first_name")
+        last_name: property(name: "last_name")
+        shipping_types: property_array(name: "shipping_types")
+        delivery_fee: property_int(name: "delivery_fee")
+      }
+
+      status: related_record(
+        join_on_property: "id"
+        foreign_property: "object_id"
+        table: "status"
+        sort: { created_at: { order: ASC } }
+      ) {
+        id
+        type: table
+        created_at
+        name: property(name: "name")
+      }
+    }
+  }
+}
+
+fragment item on Record {
+  id
+  created_at
+  type: table
+  uuid: property(name: "uuid")
+  category: property(name: "category")
+  price: property_int(name: "price")
+  original_price: property_int(name: "original_price")
+  quantity: property_int(name: "quantity")
+  return_days: property_int(name: "return_days")
+  currency: property(name: "currency")
+  item_inventory_id: property(name: "item_inventory_id")
+  attributes_ids: property_array(name: "attributes_ids")
+  attributes_json: property_object(name: "attributes_json")
+  slug: property(name: "slug")
+  sku: property(name: "sku")
+  promoted: property_boolean(name: "promoted")
+  photo_ids: property_array(name: "photo_ids")
+  attributes_ids: property_array(name: "attributes_ids")
+  attributes_json: property_object(name: "attributes_json")
+}

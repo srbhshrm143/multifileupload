@@ -1,0 +1,5 @@
+{% liquid
+  if context.constants.SLACK_WEBHOOK_URL
+    graphql notify = 'slack/send_message', data: event
+  endif
+%}

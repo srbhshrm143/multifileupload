@@ -1,0 +1,45 @@
+query search(
+  $limit: Int = 20
+  $keyword: String
+  $sort: RecordsSortInput = { created_at: { order: DESC } }
+  # $lang: String
+) {
+  venues: records(
+    per_page: $limit
+    filter: {
+      table: { value: "venues" }
+      deleted_at: { exists: false }
+      # properties: { name: "c__status", value_in: ["app.statuses.projects.open", "app.statuses.projects.under_evaluation", "app.statuses.projects.closed"] }
+      or: [
+        # { properties: { name: "venue_name", contains: $keyword } }
+        { properties: { name: "venue_address", contains: $keyword } }
+        # { properties: { name: "venue_capacity", contains: $keyword } }
+      ]
+    }
+    sort: [$sort]
+  ) {
+    total_entries
+    results {
+      id
+      created_at
+      type: table
+
+      name: property(name: "venue_name")
+      address: property(name: "venue_address")
+      # uuid: property(name: "uuid")
+      # photo: related_record(
+      #   table: "photo"
+      #   join_on_property: "uuid"
+      #   foreign_property: "object_uuid"
+      #   filter: { properties: { name: "photo_type", value: "cover" } }
+      # ) {
+      #   photo_width: property_int(name: "photo_width")
+      #   photo_height: property_int(name: "photo_height")
+      #   photo: property_upload(name: "photo") {
+      #     url
+      #     versions
+      #   }
+      # }
+    }
+  }
+}

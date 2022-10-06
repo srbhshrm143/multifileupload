@@ -1,0 +1,12 @@
+{% liquid
+  assign data = '{}' | parse_json
+  hash_assign data['items'] = object.items
+  hash_assign data['shipping_type'] = 'digital'
+  hash_assign data["shipping_first_name"] = object.shipping_first_name
+  hash_assign data["shipping_last_name"] = object.shipping_last_name
+  hash_assign data["shipping_email"] = object.shipping_email
+  hash_assign data["shipping_phone"] = object.shipping_phone
+  hash_assign data["payment_type"] = object.payment_type
+
+  return data
+%}

@@ -1,0 +1,28 @@
+<p>
+  {{ 'app.emails.orders.cancelled_seller.buyer.greeting' | t: first_name: data.buyer.first_name, last_name: data.buyer.last_name }}<br>
+  {{ 'app.emails.orders.cancelled_seller.buyer.info_cancel' | t: name: seller_name, order_id: data.order.id | markdown }}
+</p>
+
+
+<div class="mt">
+  <b>{{ data.order.seller.name }}</b><br>
+  <span class="sidenote">{{ 'app.emails.orders.order_id' | t }}: {{ data.order.id }}</span>
+</div>
+
+<table cellspacing="0" class="mt-2 w-full">
+  {% for line_item in data.order.line_items %}
+    <tr>
+      <td>
+        {% render 'theme/simple/items/cover', item: line_item.item %}
+      </td>
+      <td class="table-spacing"></td>
+      <td class="text-right">{{ line_item.quantity }}</td>
+      <td class="table-spacing"></td>
+      <td class="text-right">{% render 'theme/simple/price', amount_cents: line_item.total_price_cents, currency: line_item.currency %}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<div class="mt text-center">
+  <a href="{{ data.order.order_url }}">{{ 'app.emails.orders.cancelled_seller.buyer.order_link' | t }}</a>
+</div>

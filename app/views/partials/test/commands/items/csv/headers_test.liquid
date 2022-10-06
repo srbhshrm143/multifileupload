@@ -1,0 +1,42 @@
+{% parse_json expected_heades %}
+[
+  "product_uuid",
+  "sku",
+  "category",
+  "detail_name_en",
+  "detail_description_en",
+  "detail_name_de",
+  "detail_description_de",
+  "price",
+  "currency",
+  "original_price",
+  "quantity",
+  "max_in_one_order",
+  "return_days",
+  "photo_ids",
+  "item_type",
+  "published",
+  "attribute_1_name",
+  "attribute_1_value",
+  "attribute_2_name",
+  "attribute_2_value",
+  "attribute_3_name",
+  "attribute_3_value",
+  "photo_url_1",
+  "photo_url_2",
+  "photo_url_3",
+  "photo_url_4",
+  "photo_url_5",
+  "photo_url_6",
+  "photo_url_7",
+  "photo_url_8",
+  "photo_url_9",
+  "photo_url_10"
+]
+{% endparse_json %}
+
+{% liquid
+  function headers = 'lib/queries/bulk_operations/v1/headers'
+
+  function contract = 'test/assertions/equal', contract: contract, given: headers, expected: expected_heades
+%}

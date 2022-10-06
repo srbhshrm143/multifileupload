@@ -1,0 +1,29 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  for line in object.line_items
+    assign input = '{}' | parse_json
+    hash_assign input['id'] = line.item.id
+    hash_assign input['step'] = line.quantity
+
+    function result = 'lib/commands/call', command: 'items/decrement_quantity', object: input
+
+    if result['valid']
+      function item_inventory = 'lib/queries/item_inventories/find', id: line.item.item_inventory.id, lang: context.language, withAllVariants: true
+      assign all_variants_quantity = item_inventory.items | map: 'quantity' | sum_array
+      if all_variants_quantity < 1
+        function status = 'lib/commands/statuses/create', object_id: line.item.item_inventory.id, name: 'app.statuses.items.unavailable', profile_id: result.item_inventory.owner.id
+        if status['valid']
+          function _event = 'lib/commands/events/create', type: 'status_created', actor_id: result.item_inventory.owner.id, object_id: status.id, target_id: status.object_id
+        else
+          log status, type: 'ERROR: take_out_of_inventory status failed'
+        endif
+      endif
+    else
+      hash_assign c['errors'] = result['errors']
+      hash_assign c['valid']  = false
+    endif
+  endfor
+
+  return c
+%}

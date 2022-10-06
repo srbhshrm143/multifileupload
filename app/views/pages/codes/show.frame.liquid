@@ -1,0 +1,30 @@
+---
+layout: null
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile, allow_anonymous: true
+
+  assign seller_ids = context.params.sellerIds | split: ","
+
+  function promo_codes = 'lib/queries/promo_codes/search_by_code', limit: 5, lang: context.language, s_creator_ids: seller_ids, with_organization: true, page: 1, active: true, min_available_quantity: "1"
+  hash_assign promo_codes['seller_ids'] = promo_codes.results | map: 'creator_id'
+
+  function codes = 'lib/commands/promo_codes/calculate_discounts_for_order', codes: promo_codes, current_profile: current_profile
+  
+%}
+
+{{ codes | json }}
+
+{%- comment -%}
+
+  assign seller_ids = context.params.sellerIds | split: ","
+
+  function promo_codes = 'lib/queries/promo_codes/search_by_code', limit: 5, lang: context.language, s_creator_ids: seller_ids, with_organization: true, page: 1, active: true, min_available_quantity: "1"
+  hash_assign promo_codes['seller_ids'] = promo_codes.results | map: 'creator_id'
+
+  function codes = 'lib/commands/promo_codes/calculate_discounts_for_order', codes: promo_codes, current_profile: current_profile
+
+  render 'theme/simple/codes/show', promo_codes: codes, context: context, currency: codes.currency
+
+{%- endcomment -%}

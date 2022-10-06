@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/promo_codes/create/build', object: object, profile: profile
+  function object = 'lib/commands/promo_codes/create/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/promo_codes/create/execute', object: object
+  endif
+
+  return object
+%}

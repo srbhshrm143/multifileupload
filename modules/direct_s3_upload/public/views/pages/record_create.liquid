@@ -1,0 +1,30 @@
+---
+slug: direct-s3-upload/images/record_create
+method: post
+---
+{%- comment -%}
+{%- endcomment -%}
+{% graphql record, direct_url: context.params.direct_url, object__uuid: context.params.obj_uuid, object__type: context.params.photo_type, user_id: context.params.user_id %}
+  mutation record_create(
+    $direct_url: String!,
+    $object__uuid: String!,
+    $object__type: String!,
+    $user_id: ID!
+    ) {
+    record_create(
+      record: {
+        table: "form_media_testing"
+        user_id: $user_id
+        properties: [
+          { name: "testing_media" value: $direct_url }
+          { name: "origin_url" value: $direct_url }
+          { name: "media_uuid" value: $object__uuid }
+          { name: "media_type" value: $object__type }
+        ]
+      }
+    ) {
+      id
+    }
+  }
+{% endgraphql %}
+{{ record | fetch: "record_create" }}

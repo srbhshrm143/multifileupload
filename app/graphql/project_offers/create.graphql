@@ -1,0 +1,34 @@
+mutation create_project_offer(
+  $uuid: String!
+  $name: String!
+  $project_id: String!
+  $creator_id: String!
+  $video_urls: [String!]
+  $collaborator_emails: [String!]
+) {
+  record: record_create(
+    record: {
+      table: "project_offer"
+      properties: [
+        { name: "uuid" value: $uuid }
+        { name: "name" value: $name }
+        { name: "project_id" value: $project_id }
+        { name: "creator_id" value: $creator_id }
+        { name: "video_urls" value_array: $video_urls }
+        { name: "collaborator_emails" value_array: $collaborator_emails }
+      ]
+    }
+  ){
+    id
+    created_at
+    deleted_at
+    type: table
+
+    uuid: property(name: "uuid")
+    name: property(name: "name")
+    project_id: property(name: "project_id")
+    creator_id: property(name: "creator_id")
+    video_urls: property_array(name: "video_urls")
+    collaborator_emails: property_array(name: "collaborator_emails")
+  }
+}

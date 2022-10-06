@@ -1,0 +1,15 @@
+{% parse_json data %}
+{
+  "buyer":   "{% print current_profile.id %}",
+  "vendor":  "{% print vendor %}",
+  "item_id":  "{{ venue.id }}",
+  "quantity":  "{{ object.quantity }}",
+  "item_price":  "{{ object.item_price }}",
+  "currency": {{ "USD" | json }}
+
+}
+{% endparse_json %}
+
+{% liquid
+  return data
+%}

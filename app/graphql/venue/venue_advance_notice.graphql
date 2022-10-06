@@ -1,0 +1,20 @@
+mutation create(
+  $venue_id: String!
+  $booking_before: String!
+  $booking_confirmation: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "advance_notice"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "booking_before", value: $booking_before }
+        { name: "booking_confirmation", value: $booking_confirmation }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

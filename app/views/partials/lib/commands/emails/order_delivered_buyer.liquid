@@ -1,0 +1,18 @@
+{% liquid
+  context_rc language: order.buyer.language | default: 'en'
+  assign object = '{}' | parse_json
+  hash_assign object["to"] = order.shipping_email
+  hash_assign object["from"] = 'app.support_email' | t
+  hash_assign object["order"] = order
+
+  assign site_name = 'app.title' | t
+  hash_assign object['subject'] = order.shipping_type | t: order_id: order.id, site_name: site_name, scope: 'app.emails.orders.delivered.buyer.subject'
+
+  function object = 'lib/commands/emails/send', template: 'orders/delivered_buyer', object: object
+  if object.valid != true
+    log object, type: 'ERROR: order_delivered_buyer'
+  endif
+
+  return object
+%}
+

@@ -1,0 +1,15 @@
+{% liquid
+  assign items = '[]' | parse_json
+  assign inventory_items = data | group_by: 'product_uuid'
+
+  for ii in inventory_items
+    assign item_inventory = current_state.item_inventories[ii[0]]
+    function item = 'lib/commands/items/import/csv/v1/from_csv', items: ii[1], item_attributes: item_attributes, owner_uuid: owner_uuid, item_inventory: item_inventory
+    assign items = items | add_to_array: item
+  endfor
+
+  assign import = '{}' | parse_json
+  hash_assign import['items'] = items
+  hash_assign import['data'] = data
+  return import
+%}

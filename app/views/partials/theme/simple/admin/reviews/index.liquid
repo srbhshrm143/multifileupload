@@ -1,0 +1,95 @@
+<header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+
+  <h2 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'star', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'admin.navigation.reviews' | t }}
+  </h2>
+
+  <div class="flex gap-4">
+      <div class="pe-4 border-frame text-center">
+        <strong class="subtitle leading-tight">{{ reviews.total_entries }}</strong>
+        <div class="sidenote">{{ 'app.admin.reviews.title' | t }}</div>
+      </div>
+  </div>
+
+</header>
+
+<form action="" id="admin-form"></form>
+
+<div class="flex min-h-screen">
+
+  <div class="w-full">
+    <section class="table">
+
+      <header>
+        <div>{{ 'app.reviews.items.name' | t }}</div>
+        <div>{{ 'app.reviews.items.rating' | t }}</div>
+        <div>{{ 'app.reviews.items.date' | t }}</div>
+        <div>{{ 'app.items.by' | t }}</div>
+        <div>{{ 'app.reviews.items.seller' | t }}</div>
+        <div>{{ 'app.number' | t }}</div>
+        <div></div>
+      </header>
+
+      <div class="table-content">
+        {% for review in reviews.results %}
+          <ul data-tc="review-admin-panel">
+            <li>
+              <span class="lg:hidden">{{ 'app.reviews.items.name' | t }}</span>
+              <div>
+                {% render 'theme/simple/dashboard/reviews/items/item_card', item_inventory: review.item_inventory %}
+              </div>
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.reviews.items.rating' | t }}</span>
+              {% render 'theme/simple/ui/rating_stars', rating: review.score %}
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.reviews.items.date' | t }}</span>
+              {{ review.created_at | l: 'compact' }}
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.items.by' | t }}</span>
+              <span>
+                {{review.profile.name}}
+              </span>
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.reviews.items.seller' | t }}</span>
+              <span>
+                <a target="_blank" href="{% render 'link_to', object: review.item_inventory.owner, namespace: 'admin' %}" class="mb-1 inline-block">
+                  {{ review.item_inventory.owner.name }}
+                </a>
+              </span>
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.number' | t }}</span>
+              <span>
+                <a target="_blank" href="/admin/orders/{{review.order_id}}" class="mb-1 inline-block">
+                  {{ review.order_id }}
+                </a>
+              </span>
+            </li>
+            <li>
+              <a href="/admin/reviews/{{review.id}}" class="button button-small button-secondary">
+                {{ 'app.reviews.items.see_review' | t }}
+              </a>
+
+              <form action="/admin/reviews" method="post" class="inline ms-2" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }" >
+                {% render 'authenticity_token', context: context %}
+                <input type="hidden" name="_method" value="delete" />
+                <input type="hidden" name="id" value="{{ review.id }}">
+
+                <button class="button button-secondary button-small">{{ 'app.models.shared.delete' | t }}</button>
+              </form>
+            </li>
+          </ul>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% render 'theme/simple/ui/pagination', form: 'admin-form' collection: reviews, current_page: filters.page %}
+  </div>
+
+
+</div>

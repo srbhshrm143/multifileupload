@@ -1,0 +1,11 @@
+{% liquid
+  assign names = '[]' | parse_json
+  for attribute in item.attributes_json
+    assign value_slug = attribute.value | slugify
+    assign value =  attribute.name | append: '_' | append: value_slug
+    assign translated = attribute.value | t: scope: 'app.item_attributes'
+    assign names = names | add_to_array: translated
+  endfor
+%}
+{{ item.properties.venue_room_name }}
+{{ names | join: '/' }}

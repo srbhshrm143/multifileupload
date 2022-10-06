@@ -1,0 +1,44 @@
+{% if header_text == blank %}
+  {% assign header_text =  'app.search.all_categories' | t %}
+  {% assign seo_description = 'app.seo.search.generic' | t %}
+{% else %}
+  {% assign seo_description = header_text %}
+{% endif %}
+
+{% content_for metatags %}
+  {% render 'theme/simple/search/metatags', seo_description: seo_description, lang: lang %}
+{% endcontent_for %}
+
+<div class="container"
+  x-data="searchComponent()"
+  x-init="init()"
+>
+
+  <div class="flex flex-wrap antialiased">
+
+    <div class="fixed inset-0 z-20 bg-gray-800 hidden lg:hidden"
+      style="opacity: 0.8"
+      x-ref="overlay"
+      @click="toggleSidebar()"
+    ></div>
+
+    {% render 'theme/simple/items/sidebar', filters: filters %}
+    {% render 'theme/simple/items/sidebar_buttons' %}
+
+    <main class="flex-1">
+      {% render 'theme/simple/items/search_form', query: search.query, filters: filters %}
+
+      <div class="flex items-center justify-center h-32 lg:h-screen" x-cloak x-show="spinner">
+        {% render 'theme/simple/ui/spinner', size: 32 %}
+      </div>
+
+      <hr class="mt-7 mb-4 border-t border-frame">
+
+      <div
+        x-ref="main" x-show="!spinner"
+      >
+        {% render 'theme/simple/items/search_frame', items: items, filters: filters, current_profile: current_profile %}
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{%  liquid
+  function object = 'lib/commands/item_attributes/update_many/build', object: object
+  function object = 'lib/commands/item_attributes/update_many/check', object: object
+
+  if object.valid
+    for attribute_object in object.attributes
+      if attribute_object.id != blank
+        function attribute = 'lib/commands/item_attributes/update', object: attribute_object
+      else
+        function attribute = 'lib/commands/item_attributes/create', object: attribute_object
+      endif
+
+      if attribute.valid != true
+        log attribute, type: 'ERROR: item_attributes/update'
+      endif
+    endfor
+
+    for translation in object.translations_update
+      function translation = 'lib/commands/execute', mutation_name: 'translations/update' object: translation
+    endfor
+    for translation in object.translations_create
+      function translation = 'lib/commands/execute', mutation_name: 'translations/create' object: translation
+    endfor
+  endif
+
+  return object
+%}

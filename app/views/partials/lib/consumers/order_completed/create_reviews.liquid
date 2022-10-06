@@ -1,0 +1,8 @@
+{% liquid
+ function reviews = 'lib/commands/reviews/create_multiple', order_id: event.object.id
+
+  assign collection = '{ "type": "collection" }' | parse_json
+  hash_assign collection['items'] = reviews
+
+  function _event = 'lib/commands/events/create', type: 'reviews_created', actor_id: event.actor.id, target_id: event.object.id, object: collection, delay: 0
+%}

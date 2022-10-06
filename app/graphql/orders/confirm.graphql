@@ -1,0 +1,27 @@
+mutation orders_confirm(
+  $id: ID!
+  $c__status: String
+  $total_shipping_cost_cents: Int
+  $total_price_cents: Int
+  $products_price_cents: Int
+  $promo_code_discount: Int
+) {
+  record: record_update(
+    id: $id
+    record: {
+      properties: [
+        { name: "c__status", value: $c__status }
+        { name: "total_shipping_cost_cents", value_int: $total_shipping_cost_cents }
+        { name: "total_price_cents", value_int: $total_price_cents }
+        { name: "products_price_cents", value_int: $products_price_cents }
+        { name: "promo_code_discount", value_int: $promo_code_discount }
+      ]
+    }
+  ) {
+    id
+    total_shipping_cost_cents: property_int(name: "total_shipping_cost_cents")
+    total_price_cents: property_int(name: "total_price_cents")
+    products_price_cents: property_int(name: "products_price_cents")
+    promo_code_discount: property_int(name: "promo_code_discount")
+  }
+}

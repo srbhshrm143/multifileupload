@@ -1,0 +1,24 @@
+mutation create_item_inventory(
+  $owner: String!
+  $c__status: String!
+  $item_type: String = "physical"
+) {
+  record: record_create(
+    record: {
+      table: "item_inventory"
+      properties: [
+        { name: "owner", value: $owner }
+        { name: "item_type", value: $item_type }
+        { name: "c__status", value: $c__status }
+      ]
+    }
+  ) {
+    id
+    created_at
+    deleted_at
+
+    owner: property(name: "owner")
+    c__status: property(name: "c__status")
+    item_type: property(name: "item_type")
+  }
+}

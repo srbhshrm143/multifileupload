@@ -1,0 +1,7 @@
+---
+from: "{{ data.from }}"
+layout: mailer
+subject: "{{ data.subject }}"
+to: "{{ data.to }}"
+---
+{% include 'theme/simple/emails/orders/confirmed_buyer', data: data %}

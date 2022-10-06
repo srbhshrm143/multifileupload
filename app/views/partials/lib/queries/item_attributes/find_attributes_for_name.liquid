@@ -1,0 +1,9 @@
+{% liquid
+  function object = 'lib/queries/item_attributes/search', name: name
+
+  assign data = '{}' | parse_json
+  hash_assign data['attributes'] = object.results
+  hash_assign data['name'] = name
+
+  return data
+%}

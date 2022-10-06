@@ -1,0 +1,32 @@
+query search_by_promo_code(
+  $limit: Int = 500
+  $page: Int = 1
+  $promo_code_id: String!
+  $buyer: String!
+) {
+  orders: records(
+    page: $page
+    per_page: $limit
+    filter: {
+      table: { value: "order" }
+      properties: [
+        { name: "buyer", value: $buyer }
+        { name: "promo_id", value: $promo_code_id }
+        { name: "c__status", value_in: ["app.statuses.orders.confirmed", "app.statuses.orders.paid", "app.statuses.orders.delivered", "app.statuses.orders.in_progress", "app.statuses.orders.completed"] }
+      ]
+    }
+  ) {
+    total_entries
+    results {
+      id
+      type: table
+
+      promo_code_discount: property_int(name: "promo_code_discount")
+      currency: property(name: "currency")
+      promo_id: property(name: "promo_id")
+
+      c__status: property(name: "c__status")
+
+    }
+  }
+}

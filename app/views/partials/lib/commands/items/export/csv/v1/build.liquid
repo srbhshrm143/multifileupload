@@ -1,0 +1,23 @@
+{% liquid
+  function item_attributes = 'lib/queries/item_attributes/search'
+
+  assign result = '{ "valid": true, "item_inventories": {} }' | parse_json
+  assign data = '[]' | parse_json
+
+  function headers = 'lib/queries/bulk_operations/v1/headers'
+  assign data = data | add_to_array: headers
+
+  for item_inventory in item_inventories
+    function object = 'lib/commands/items/build_new_version', item_inventory: item_inventory
+
+    function rows = 'lib/commands/items/export/csv/v1/to_csv', item: object
+    for r in rows
+      assign data = data | add_to_array: r
+    endfor
+
+    hash_assign result['item_inventories'][object.uuid] = item_inventory
+  endfor
+
+  hash_assign result['data'] = data
+  return result
+%}

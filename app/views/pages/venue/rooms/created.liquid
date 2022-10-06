@@ -1,0 +1,44 @@
+---
+slug: dashboard/rooms/room_submited
+method: post
+---
+{{ context.params }}
+{% assign object_uuid = context.params.venue_rooms.uuid %}
+{% assign venue_id = context.params.venue_rooms.venue_id %}
+{% assign venue_room_name = context.params.venue_rooms.room_name %}
+{% assign room_capacity = context.params.venue_rooms.maximum_capacity %}
+
+{%liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  
+  
+  graphql search_data = 'venue/media_search', object_uuid: object_uuid
+  if search_data and context.params.venue_rooms
+    assign photo_ids = search_data.photos.results | map: 'id'
+    graphql venue_rooms = 'venue_rooms/create',venue_id: venue_id, room_name: venue_room_name, room_capacity: room_capacity, photo_ids: photo_ids
+  endif
+%}
+<br>
+<br>
+<!-- {{ search_data.photos.results }} -->
+{{ search_data.photos.results | map: 'id' }}
+{% for new_medias in search_data.photos.results limit: 10 %}
+<!-- {{ new_media }}<br><br> -->
+  {% if object_uuid == new_media.media_uuid %}
+    {% if new_media %}
+      {{ new_media }}<br><br>
+    {% endif %}
+    {% if new_media.id %}
+      {{ new_media.id }}<br><br>
+    {% endif %}
+    {% if new_media.media_uuid %}
+      {{ new_media.media_uuid }}<br><br>
+    {% endif %}
+    {% if new_media.origin_url %}
+      {{ new_media.origin_url }}<br><br>
+    {% endif %}
+    {% if new_media.testing_media %}
+      {{ new_media.testing_media }}<br><br>
+    {% endif %}
+  {% endif %}
+{% endfor %}

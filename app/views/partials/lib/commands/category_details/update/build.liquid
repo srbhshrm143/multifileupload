@@ -1,0 +1,13 @@
+{% parse_json object %}
+  {
+    "id": {{ object.id | json }},
+    "category_id": {{ category.id | json }},
+    "lang": {{ object.lang | json }},
+    "name": {{ object.name | sanitize | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  hash_assign object['translation_key'] = 'categories.' | append: category.key
+  return object
+%}

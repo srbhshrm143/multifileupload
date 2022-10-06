@@ -1,0 +1,91 @@
+{% unless import.reports == empty %}
+
+  <section class="mt-8">
+    <h2 class="title text-danger">{{ 'app.bulk_operations.report.erros.title' | t }} ({{import.reports.size}})</h2>
+
+    <div class="table">
+      <header>
+        <div>{{ 'app.bulk_operations.report.erros.row' | t }}</div>
+        <div>{{ 'app.bulk_operations.report.erros.name' | t }}</div>
+        <div>{{ 'app.bulk_operations.report.erros.value' | t }}</div>
+        <div>{{ 'app.bulk_operations.report.erros.problem' | t }}</div>
+      </header>
+
+      <div class="table-content">
+        {% for entry in import.reports %}
+
+          {% for e in entry.errors %}
+              <ul>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.row' | t }}: </span>
+                  {{ entry._row_ids[0] }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.name' | t }}: </span>
+                  {{ e[0] }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.value' | t }}: </span>
+                  {{ d[1][e[0]] | json }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.problem' | t }}: </span>
+                  {{ e[1] }}
+                </li>
+              </ul>
+          {% endfor %}
+
+          {% for v in entry.variants %}
+            {% if v.valid %}{% continue %}{% endif %}
+            {% for e in v.errors %}
+              <ul>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.row' | t }}: </span>
+                  {{ v._row_id }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.name' | t }}: </span>
+                  {{ e[0] }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.value' | t }}: </span>
+                  {{ v[e[0]] | json }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.problem' | t }}: </span>
+                  {{ e[1] | join: ',' }}
+                </li>
+              </ul>
+            {% endfor %}
+          {% endfor %}
+
+          {% for d in entry.details %}
+            {% for e in d[1].errors %}
+              <ul>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.row' | t }}: </span>
+
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.name' | t }}: </span>
+                  {{ d[0] }}:{{ e[0] }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.value' | t }}: </span>
+                  {{ d[1][e[0]] | json }}
+                </li>
+                <li>
+                  <span class="lg:hidden">{{ 'app.bulk_operations.report.erros.problem' | t }}: </span>
+                  {{ e[1] | join: ',' }}
+                </li>
+              </ul>
+            {% endfor %}
+          {% endfor %}
+
+        {% endfor %}
+      </div>
+    </div>
+
+  </section>
+
+{% endunless %}

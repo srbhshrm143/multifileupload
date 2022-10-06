@@ -1,0 +1,34 @@
+mutation update(
+  $Id: ID!,
+  $venue_name: String!
+  $corporate_name:  String!
+  $company_name:  String!
+  $business_number: String!
+  $venue_address: String!
+  $venue_phone_number: String!
+  $venue_email: String!
+  $venue_contact_person: String!
+  $contact_email: String!
+  $contact_phone_number: String!
+){ 
+  record_update(
+     id: $Id
+     record: {
+        table : "venues"
+      	properties: [
+        { name: "venue_name", value: $venue_name }
+        { name: "corporate_name", value: $corporate_name }
+        { name: "company_name", value: $company_name }
+        { name: "business_number", value: $business_number }
+        { name: "venue_address", value: $venue_address }
+        { name: "venue_phone_number", value: $venue_phone_number }
+        { name: "venue_email", value: $venue_email }
+        { name: "venue_contact_person", value: $venue_contact_person }
+        { name: "venue_contact_email", value: $contact_email }
+        { name: "venue_contact_phone_number", value: $contact_phone_number }
+        ]
+      }
+  ) {
+    id properties
+  }
+}

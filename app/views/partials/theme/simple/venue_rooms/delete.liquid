@@ -1,0 +1,23 @@
+<h1 class="pagetitle"> Room Deleted - {{ context.params.id }} </h1>
+
+
+{% assign venue_id = context.headers.HTTP_REFERER | split: '=' %}
+<!-- {{ venue_id | last }} -->
+
+{%- comment -%}
+{%- endcomment -%}
+{% graphql upd_gql = 'venue_rooms/delete', Id: context.params.id %}
+
+
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue_rooms/manage_rooms?id={{ venue_id | last }}";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>
+
+
+
+

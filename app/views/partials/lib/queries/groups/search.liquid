@@ -1,0 +1,7 @@
+{% liquid
+  assign page = page | to_positive_integer: 1
+  graphql r = 'groups/search', limit: limit, page: page, tags: tags, sort: sort, title: keyword, owner_id: owner_id, relation_name: relation_name, meta_visible: meta_visible, not_name: not_name, not_ids: not_ids, ask_to_join: ask_to_join
+
+  function groups = 'lib/queries/groups/add_current_profile_role_info', groups: r.groups, current_profile: current_profile
+  return groups
+%}

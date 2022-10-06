@@ -1,0 +1,39 @@
+<section class="card-lg">
+  {% if project_offers != blank %}
+    <div class="table">
+      <header>
+        <div>{{ 'app.project_offers.solution_title' | t }}</div>
+        <div>{{ 'app.models.shared.date' | t }}</div>
+        <div class="text-end">{{ 'app.models.shared.id' | t }}</div>
+        <div></div>
+      </header>
+
+      <div class="table-content-simple">
+        {% for offer in project_offers %}
+          <ul>
+            <li><a href="{% render 'link_to': object: offer %}">{{offer.name}}</a></li>
+            <li>{{ offer.created_at | to_time | l: 'date_compact' }}</li>
+            <li class="text-end">{{ offer.id }}</li>
+            <li>
+              <div class="flex items-center justify-end gap-2">
+                <a href="{% render 'link_to': object: offer %}" class="button">
+                  {{ 'app.show_more' | t }}
+                  {% render 'theme/simple/ui/icon', icon: 'dashRight' %}
+                </a>
+              </div>
+            </li>
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <section class="md:h-64 flex flex-col md:flex-row justify-center items-center text-center md:text-start">
+      <div class="order-2 md:order-1">
+        <p class="subtitle">{{ 'app.project_offers.empty' | t }}</p>
+      </div>
+      <div class="w-16 mb-6 md:mb-0 md:w-32 md:ms-10 md:ps-10 md:mt-1 order-1 md:order-last md:border-s">
+        {% render 'theme/simple/ui/icon', icon: 'notesBook', class: 'w-full text-interaction-disabled' %}
+      </div>
+    </section>
+  {% endif %}
+</section>

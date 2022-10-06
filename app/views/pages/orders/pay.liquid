@@ -1,0 +1,68 @@
+---
+layout: null
+---
+{%liquid
+assign formData = context.params
+assign cardName = formData.cardName
+assign cardNumber = formData.cardNumber
+assign cardMonth = formData.cardMonth
+assign cardYear = formData.cardYear
+assign cardCVV = formData.cardCVV
+assign itemPrice = formData.itemPrice | times: 100
+%}
+{% parse_json data %} 
+		{
+    "cardName": "{{cardName}}",
+		"cardNumber": "{{cardNumber}}",
+		"cardMonth": "{{cardMonth}}",
+    "cardYear": "{{cardYear}}",
+    "cardCVV": "{{cardCVV}}"
+		}  
+{% endparse_json %}
+ 
+  {% graphql stripeToken = 'api_calls/stripe_calls', template: 'create_stripe_token', data: data %}
+  {% assign response_json_stripe = stripeToken.api_call_send.response.body | to_hash %}
+
+  {% if response_json_stripe.error != blank %}
+  {{response_json_stripe}}
+    {%- comment -%} {% parse_json error %} 
+      {
+      "message": "{{response_json_stripe.error.message}}",
+      "error": true
+      }  
+    {% endparse_json %}
+    {{error}} {%- endcomment -%}
+  {% else %}
+
+  {% parse_json dataCharge %} 
+    {
+    "stripetoken": "{{response_json_stripe.id}}",
+    "price": "{{itemPrice}}",
+    "cardMonth": "{{itemPrice}}"
+    }  
+  {% endparse_json %}
+   {% graphql stripeCharge = 'api_calls/stripe_calls', template: 'stripecharge_amount', data: dataCharge %}
+  {% assign response_json_stripeCharge = stripeCharge.api_call_send.response.body | to_hash %}
+  {% assign hst_percentage = formData.itemPric | times: 15 | divided_by: 100 %}
+  {% parse_json objctitem %} 
+    {
+    "userId": "{{formData.userId}}",
+    "item_id": "{{formData.item_id}}",
+    "guest_count": "{{formData.guest_count}}",
+    "event_date": "{{formData.booking_date}}",
+    "event_time": "{{formData.selected_time}}",
+    "amount_paid": "{{hst_percentage}}",
+    "total_amount": "{{formData.itemPrice}}",
+    "base_price": "{{formData.itemPrice}}" ,
+    "additonal_features": "",
+    "c__status": "paid",
+    "applied_gst": "13",
+    "payment_type":"stripe"
+    }  
+  {% endparse_json %}
+  {%liquid
+      function objects = 'lib/commands/execute', object: objctitem, mutation_name: 'orders/venue_orders'
+  %} 
+  {{objects}}
+
+  {% endif %}

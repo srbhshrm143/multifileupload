@@ -1,0 +1,16 @@
+{% liquid
+  assign method = 'post'
+  assign object_uuid = '' | uuid
+%}
+
+<form action="/bulk_operations" method="post">
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="{{ method }}">
+  <input name="bulk_operation[uuid]" type="hidden" value="{{ object_uuid }}">
+  <input name="bulk_operation[operation_type]" type="hidden" value="export">
+
+  <button type="submit" x-on:click="$nextTick(() => { $event.target.disabled = true; })" class="button">
+    {{ 'app.bulk_operations.export' | t }}
+    {% render 'theme/simple/ui/icon', icon: 'download' %}
+  </button>
+</form>

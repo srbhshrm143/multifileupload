@@ -1,0 +1,6 @@
+<h2 class="subtitle">{{ 'app.emails.groups.invite.title' | t: group_name: data.group_name, member: data.member }}</h2>
+
+<p>{{ 'app.emails.groups.invite.content' | t: member: data.member, group_name: data.group_name }}</p>
+<p class="sidenote">{{ 'app.emails.groups.invite.ignore' | t }}</p>
+
+<p class="mt text-center"><a href="{{ data.url }}" class="button">{{ 'app.emails.groups.invite.claim' | t }}</a></p>

@@ -1,0 +1,36 @@
+---
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function item_inventory = 'lib/queries/item_inventories/find', id: context.params.item.item_inventory_id, owner: current_profile.id, lang: context.language, withAllLangs: true
+  include 'lib/can_do_or_unauthorized', object: item_inventory, do: "edit", actor: current_profile
+
+  function pending_process = 'lib/queries/processes/find_pending_item_publish_version', profile_id: current_profile.id, item_inventory_id: item_inventory.id
+  if pending_process
+    function process_url = 'link_to', object: pending_process, namespace: 'dashboard/sell'
+    include 'redirect_to', url: process_url, error: 'app.items.cant_edit_version_pending_approve'
+  else
+    function object = 'lib/commands/items/create_version_and_publish', object: conetxt.params.item, current_profile: current_profile: item_inventory: item_inventory
+    if object.valid
+      if object.publish_object.require_acceptance
+        include 'redirect_to', url: '/dashboard/sell/items', notice: 'app.items.need_to_be_accepted_before_publish'
+      else
+        function item_inventory = 'lib/queries/item_inventories/find', id: item_inventory.id, owner: current_profile.id, lang: context.language
+        function url = 'link_to', item: item_inventory.item
+        include 'redirect_to', url: url, notice: 'app.items.updated'
+      endif
+    else
+      function filters = 'lib/queries/search/filters', query: context.params
+      function _ = 'lib/extend_context', default_currency: true, item_attributes: true, photo_presign: true
+
+      function item_inventory = 'lib/queries/item_inventories/find', id: context.params.item.item_inventory_id, owner: current_profile.id, lang: context.language
+      function photos = 'lib/queries/photos/search', object_uuid: object.uuid
+      assign photos = item_inventory.item.photos | concat: photos.results
+
+      render 'theme/simple/dashboard/items/edit', item: object, lib: filters, context: context, photos: photos
+    endif
+  endif
+%}

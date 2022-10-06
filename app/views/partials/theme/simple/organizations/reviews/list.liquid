@@ -1,0 +1,43 @@
+{% for review in reviews.results %}
+
+  <article class="mt-4 first:mt-0 pt-4 first:pt-0 flex flex-col md:flex-row items-start gap-8 md:gap-28 border-t first:border-t-0">
+
+    <div class="flex items-center gap-4 whitespace-nowrap">
+      {% if review.recommend %}
+        {% render 'theme/simple/ui/icon', icon: 'thumbUp', class: 'w-5 text-confirmation' %}
+      {% else %}
+        {% render 'theme/simple/ui/icon', icon: 'thumbDown', class: 'w-5 text-danger' %}
+      {% endif %}
+      <time datetime="review.created_at" class="sidenote text-content-sidenote">{{ review.created_at | l: 'date_compact' }}</time>
+    </div>
+
+    <div class="w-full md:ps-2">
+      <dl class="flex flex-col md:flex-row md:items-end gap-8">
+        <div class="md:w-1/3">
+          <dt class="sidenote mb-2 text-content-sidenote uppercase">{{ 'app.reviews.organizations.new.compliance_description' | t }}</dt>
+          <dd>{% render 'theme/simple/ui/rating_stars', rating: review.description_score %}</dd>
+        </div>
+        <div class="md:w-1/3">
+          <dt class="sidenote mb-2 text-content-sidenote uppercase">{{ 'app.reviews.organizations.new.shipping_cost' | t }}</dt>
+          <dd>{% render 'theme/simple/ui/rating_stars', rating: review.delivery_score %}</dd>
+        </div>
+        <div class="md:w-1/3">
+          <dt class="sidenote mb-2 text-content-sidenote uppercase">{{ 'app.reviews.organizations.new.buyer_service' | t }}</dt>
+          <dd>{% render 'theme/simple/ui/rating_stars', rating: review.service_score %}</dd>
+        </div>
+      </dl>
+
+      {% if review.body %}
+        <p class="mt-4">{{ review.body }}</p>
+      {% endif %}
+    </div>
+
+  </article>
+
+{% else %}
+
+  {% render 'theme/simple/organizations/reviews/empty', organization_name: organization.name %}
+
+{% endfor %}
+
+<div x-init="morePages = {{ reviews.has_next_page }}"></div>

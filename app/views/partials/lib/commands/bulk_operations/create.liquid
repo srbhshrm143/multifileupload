@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/bulk_operations/create/build', object: object
+  function object = 'lib/commands/bulk_operations/create/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'bulk_operations/create' object: object
+  endif
+
+  return object
+%}

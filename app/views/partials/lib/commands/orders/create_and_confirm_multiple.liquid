@@ -1,0 +1,13 @@
+{% liquid
+  function object = 'lib/commands/orders/create_and_confirm_multiple/build', object: object
+  function object = 'lib/commands/orders/create_and_confirm_multiple/check', object: object, current_profile
+
+  if object.valid
+    hash_assign object['order_ids'] = '[]' | parse_json
+    for item in object.items
+      function object = 'lib/commands/orders/create_and_confirm_multiple/execute', object: object, item: item, current_profile: current_profile
+    endfor
+  endif
+
+  return object
+%}

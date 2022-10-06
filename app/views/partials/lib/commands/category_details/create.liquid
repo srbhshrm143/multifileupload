@@ -1,0 +1,10 @@
+{% liquid
+  function object = 'lib/commands/category_details/create/build', object: object, category: category, lang: lang
+  function object = 'lib/commands/category_details/create/check', object: object, category: category
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'category_details/create' object: object, selection: 'record_create'
+  endif
+
+  return object
+%}

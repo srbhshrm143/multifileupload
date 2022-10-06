@@ -1,0 +1,17 @@
+{% liquid
+
+  function orders = 'lib/queries/orders/search_by_promo_code', buyer: buyer, promo_code_id: promo_code.id
+  if orders.total_entries > 0
+    assign currency = orders.results.first.currency
+    assign discount_amount_sum = orders.results | map: 'promo_code_discount' | compact | sum_array | fractional_to_amount: currency
+  else
+    assign discount_amount_sum = 0
+  endif
+
+
+  assign order_ids = orders.results | map: 'id'
+  graphql transactions_count = 'transactions/count', order_ids: order_ids | dig: 'transactions', 'total_entries'
+  assign object = '{}' | parse_json | hash_merge: used_by_user: transactions_count, total_discounted_amount: discount_amount_sum, promo_code: promo_code
+
+  return object
+ %}

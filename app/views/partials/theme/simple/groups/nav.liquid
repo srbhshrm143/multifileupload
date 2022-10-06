@@ -1,0 +1,74 @@
+{% liquid
+  assign active_class = 'text-interaction-hover font-medium'
+  assign class = 'mb-4 inline-flex justify-between items-center text-content'
+%}
+
+<div class="lg:w-1/5 md:w-1/4">
+  <nav>
+    <ul class="w-full flex gap-6 md:block overflow-x-auto whitespace-nowrap md:whitespace-normal">
+      {% liquid
+        function can_see_content = "lib/can", actor: current_profile, do: "see_content", object: group
+      %}
+      {% if can_see_content.valid %}
+        <li>
+          <a href="{% render 'link_to', group: group %}" class="{{class}} {% if tab == 'activity' %}{{ active_class }}{% endif %}">
+            {{ 'app.groups.nav.activity' | t }}
+          </a>
+        </li>
+        <li>
+          <a href="{% render 'link_to', group: group, action: 'content' %}" class="{{ class }} {% if tab == 'content' %}{{ active_class }}{% endif %}">
+            {{ 'app.groups.form.content' | t }}
+          </a>
+        </li>
+      {% endif %}
+      <li>
+        <a href="{% render 'link_to', group: group, action: 'members' %}" class="{{ class }} {% if tab == 'members' %}{{ active_class }}{% endif %}">
+          {{ 'app.groups.nav.members' | t }}
+        </a>
+      </li>
+      <li class="md:hidden">
+        <a href="{% render 'link_to', object: group, action: 'about' %}" class="{{ class }} {% if tab == 'about' %}{{ active_class }}{% endif %}">
+          {{ 'app.groups.nav.about' | t }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  {% comment %}
+  <a href="/groups/{{ group.id }}/invitations" class="pt-5 pb-4 px-6 focus:outline-none {% if tab == 'invitations' %}{{ active_class }}{% endif %}">
+    Invitations
+  </a>
+  {% endcomment %}
+
+  <div class="mt-12 hidden md:block break-words">
+    <div class="sidenote mb-1 uppercase text-content-sidenote">
+      {{ 'app.groups.nav.group_type' |t: type: group.group_type }}
+    </div>
+
+    <strong class="font-semibold">{{ 'app.groups.nav.created' | t }}:</strong> {{ group.created_at | l: 'date_compact' }}
+
+    <div class="flex items-center gap-1">
+      <strong class="font-semibold">{{ 'app.groups.nav.admins' | t }}:</strong>
+      <a class="inline-flex items-center gap-1" href="{% render 'link_to', profile: group.owner.profile %}">
+        {% render 'theme/simple/ui/avatar', profile: group.owner.profile, size: 24, class: 'w-6 h-6 text-xs', alt: group.owner.profile.name %}
+        {{ group.owner.profile.first_name }} {{ group.owner.profile.last_name  }}
+      </a>
+    </div>
+
+    <hr class="mt-4 mb-3 border-t">
+
+    <span class="sidenote mb-1 uppercase text-content-sidenote">
+      {{ 'app.groups.description' | t }}
+    </span>
+    <div class="prose">
+      {{ group.description | markdown }}
+    </div>
+
+    {% if group.code_of_conduct %}
+      <hr class="mt-4 mb-3 border-t">
+
+      <a href="{% render 'link_to', group: group, action: 'about', anchor: 'rules' %}">{{ 'app.groups.code_of_conduct' | t }}</a>
+    {% endif %}
+
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<h1 class="pagetitle">{{ 'app.projects.edit.title' | t }}</h1>
+
+<div class="container">
+  {% render 'theme/simple/projects/form', object: object, current_profile: current_profile, context: context %}
+  <button class="mt-12 button" form="projects">
+    {{ 'app.projects.form.update' | t }}
+  </button>
+</div>

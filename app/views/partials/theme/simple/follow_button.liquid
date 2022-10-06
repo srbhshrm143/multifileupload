@@ -1,0 +1,36 @@
+{% if current_profile and profile.id != current_profile.id %}
+  <form action="#" data-id="{{ profile.id }}"
+    x-data="relationship('profileIds')"
+    x-ref="form"
+    x-on:submit.prevent
+    x-on:data-ready.window="initManual()">
+    <input type="hidden" name="r_id" value="{{ profile.id }}">
+    <input type="hidden" name="name" value="followship:profile">
+    <button
+      title="Follow or unfollow user"
+      x-show.transition="initialized"
+      {% if text %}
+        class="uppercase button button-small button-secondary"
+        x-text="exists ? '{{ "app.relationships.posts.unfollow" | t }}' : '{{ "app.relationships.posts.follow" | t }}'"
+      {% endif %}
+      x-cloak
+      x-on:click="toggle()"
+      title="{{ "app.relationships.posts.title" | t }}"
+    >
+
+      {% unless text %}
+        {% if big %}
+          {% assign class_add="button pointer-events-none" %}
+          {% assign class_remove="button button-secondary pointer-events-none" %}
+        {% else %}
+          {% assign class_add="button button-small button-compact pointer-events-none" %}
+          {% assign class_remove="button button-small button-compact button-secondary pointer-events-none" %}
+        {% endif %}
+
+        <span x-cloak x-show="!exists" class="{{ class_add }}">{% render 'theme/simple/ui/icon', icon: 'userAdd' %}</span>
+        <span x-cloak x-show="exists" class="{{ class_remove }}">{% render 'theme/simple/ui/icon', icon: 'userRemove' %}</span>
+      {% endunless %}
+
+    </button>
+  </form>
+{% endif %}

@@ -1,0 +1,26 @@
+{% assign now = 'now' | to_time | strftime: '%Y-%m-%dT%H:%M:%S.%L%z' %}
+
+<form action="#" data-id="{{ group.id }}"
+  x-data="relationship('groupIds')"
+  x-ref="form"
+  x-on:submit.prevent
+  x-on:data-ready.window="initManual()">
+  <input type="hidden" name="r_id" value="{{ group.id }}">
+  <input type="hidden" name="name" value="membership">
+  <input type="hidden" name="l_accepted_at" value="{{ now }}">
+  <input type="hidden" name="r_accepted_at" value="{{ now }}">
+  <button class="button button-small button-secondary"
+    x-show.transition="initialized"
+    x-cloak
+    x-on:click="toggle()"
+  >
+    <span x-show="!exists" class="flex items-center gap-2">
+      {{ 'app.projects.subscribe' | t }}
+      {% render 'theme/simple/ui/icon', icon: 'bell' %}
+    </span>
+    <span x-show="exists" class="flex items-center gap-2">
+      {{ 'app.projects.unsubscribe' | t }}
+      {% render 'theme/simple/ui/icon', icon: 'x' %}
+    </span>
+  </button>
+</form>

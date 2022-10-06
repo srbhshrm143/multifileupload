@@ -1,0 +1,19 @@
+---
+slug: payments/zero/:transaction_id
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_uncompleted: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+
+  function transaction = 'lib/queries/transactions/find', id: context.params.transaction_id, with_profile: true
+  include 'lib/present_or_404', property: transaction.id
+
+  function object = 'lib/commands/payments/zero/pay', transaction: transaction
+  if object.valid
+    assign url = '/orders/success/' | append: object.id
+    include 'redirect_to', url: url, notice:  'app.orders.checkout.success'
+  else
+    assign url = '/orders/failed/' | append: object.id
+    include 'redirect_to', url: url, error: 'app.orders.checkout.failed'
+  endif
+%}

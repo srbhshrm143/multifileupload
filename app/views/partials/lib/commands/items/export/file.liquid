@@ -1,0 +1,16 @@
+{% liquid
+  assign object = '{}' | parse_json
+  hash_assign object['content'] = content | to_csv: force_quotes: true
+  hash_assign object['object_uuid'] = object_uuid
+  hash_assign object['document_type'] = 'file'
+  hash_assign object['content_type']  = "text/csv; charset=UTF-8"
+  hash_assign object['content_disposition'] = "attachment; filename=data-export.csv;"
+
+  function document = 'lib/commands/documents/create_with_content', object: object, current_profile: current_profile
+
+  unless document.valid
+    log document, type: 'ERROR: /lib/commands/items/export/file'
+  endunless
+
+  return document
+%}

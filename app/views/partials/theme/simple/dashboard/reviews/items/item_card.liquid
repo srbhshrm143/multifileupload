@@ -1,0 +1,5 @@
+<a class="flex items-center gap-4" href="{% render 'link_to', object: item_inventory.item %}">
+  {% render 'theme/simple/items/cover', item: item_inventory.item %}
+
+  {{ item_inventory.item.item_detail.name }}
+</a>

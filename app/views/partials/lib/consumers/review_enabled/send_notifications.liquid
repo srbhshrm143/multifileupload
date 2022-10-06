@@ -1,0 +1,18 @@
+{% liquid
+  function order = 'lib/queries/orders/find', id: event.target.id
+  assign most_expensive_line_item = order.line_items.first
+  for line_item in order.line_items
+    if line_item.price_cents > most_expensive_line_item.price_cents
+      assign most_expensive_line_item = line_item
+    endif
+  endfor
+
+  for item in event.object.items
+    if item.item_inventory_id == most_expensive_line_item.item.item_inventory.id and item.type == 'item_review'
+      assign most_expensive_item_review = item
+      break
+    endif
+  endfor
+
+  function email_buyer = 'lib/commands/emails/review_enabled', order: order, most_expensive_line_item: most_expensive_line_item, most_expensive_item_review: most_expensive_item_review
+%}

@@ -1,0 +1,36 @@
+---
+slug: items(/:language)/:slug
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, followships: true, load_organizations: true
+
+  assign id = context.params.slug | split: '-' | last
+  assign lang = language | default: context.language
+
+  function item = 'lib/queries/items/find', id: id, withInventoryItem: true, lang: lang, withAllLangs: true, withAllVariants: true
+  include 'lib/present_or_404', property: item.id
+
+  assign english_detail = item.item_details | detect: lang: 'en'
+  function slug = 'generate_slug', title: english_detail.name, id: item.id
+  assign redirect_path = '/items/' | append: lang | append: '/' |  append: slug
+  include 'lib/redirect_to_last_slug', redirect_to: redirect_path, last_slug: slug, current_slug: context.params.slug
+
+  function can_display = "lib/can", actor: current_profile, do: "display", object: item.item_inventory
+  function can_purchase = "lib/can", actor: current_profile, do: "purchase", object: item.item_inventory
+
+  function available_languages = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array"
+  unless available_languages contains lang
+    include 'lib/present_or_404', property: null
+  endunless
+
+  assign related_item_statuses = 'published' | split: ','
+  function use_search_index = 'lib/queries/constants/find' name: "USE_SEARCH_INDEX", type: "boolean"
+  function related_items = 'lib/queries/items/search', limit: 8, lang: lang, owner: item.item_inventory.owner.id, main_variant: true, statuses: related_item_statuses, not_ids: item.item_inventory.item_ids, category: item.category, use_search_index: use_search_index
+
+  if can_display.valid
+    function chat_enabled = 'lib/queries/constants/find' name: "USE_WEBSOCKET_CHAT", type: "boolean", context: context
+    render 'theme/simple/items/show', lang: lang, item: item, current_profile: current_profile, context: context, chat_enabled: chat_enabled, can_purchase: can_purchase, available_languages: available_languages, related_items: related_items
+  else
+    render 'theme/simple/items/unpublished', item: item, current_profile: current_profile, authenticity_token: context.authenticity_token, chat_enabled: chat_enabled, related_items: related_items
+  endif
+%}

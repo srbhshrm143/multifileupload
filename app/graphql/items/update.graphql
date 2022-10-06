@@ -1,0 +1,27 @@
+mutation update_item(
+  $id: ID!
+  $c__status: String
+  $c__keywords: String
+  $promoted: Boolean
+  $photo_ids: [String!]
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "item"
+      properties: [
+        { name: "c__status" value: $c__status }
+        { name: "c__keywords" value: $c__keywords }
+        { name: "promoted" value_boolean: $promoted }
+        { name: "photo_ids" value_array: $photo_ids }
+      ]
+    }
+  ){
+    id
+    created_at
+    updated_at
+    photo_ids: property_array(name: "photo_ids")
+    c__status: property(name: "c__status")
+    c__keywords: property(name: "c__keywords")
+  }
+}

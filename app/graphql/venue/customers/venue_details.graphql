@@ -1,0 +1,88 @@
+query search(
+  $id: ID,
+  $limit: Int,
+  $page: Int = 1,
+  $venue_id: String
+  ) {
+    data: records(
+      per_page: $limit
+      page: $page
+      filter: {
+        id: { value: $id }
+        table: {
+          value: "venue_event_space"
+        }
+        properties: [
+          { name: "venue_id", value: $venue_id }
+        ]
+      }
+      sort: {
+        created_at: {
+          order:  DESC
+        }
+      }
+    ) {
+      total_entries
+      total_pages
+      results {
+        id
+        properties
+        venue_details: related_records(
+          join_on_property: "venue_id"
+          foreign_property: "id"
+          table: "venues"
+        ) {
+          id
+          properties
+        }
+        venue_media: related_records(
+          join_on_property: "media_uuid"
+          foreign_property: "media_uuid"
+          table: "form_media_testing"
+        ) {
+          id
+          # properties
+          testing_media: property_upload(name: "testing_media") {
+            # File Url Link
+            url
+            # File Name
+            file_name
+            # File Extension
+            extension
+          }
+        }
+        venue_features: related_records(
+          join_on_property: "venue_id"
+          foreign_property: "venue_id"
+          table: "venue_special_features"
+        ) {
+          id
+          properties
+        }
+        venue_payments: related_records(
+          join_on_property: "venue_id"
+          foreign_property: "venue_id"
+          table: "venue_payments"
+        ) {
+          id
+          properties
+        }
+        venue_hours: related_records(
+          join_on_property: "venue_id"
+          foreign_property: "venue_id"
+          table: "venue_hours"
+        ) {
+          id
+          properties
+        }
+        venue_pricing: related_records(
+          join_on_property: "venue_id"
+          foreign_property: "venue_id"
+          table: "venue_pricing"
+        ) {
+          id
+          properties
+        }
+      }
+    }
+  }

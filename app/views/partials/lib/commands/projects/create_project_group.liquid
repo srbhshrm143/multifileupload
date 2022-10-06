@@ -1,0 +1,13 @@
+{% liquid
+  function object = 'lib/commands/projects/create_project_group/build'
+  function object = 'lib/commands/groups/create', object: object
+
+  if object.valid
+    assign now = 'now' | to_time
+    function relation = 'lib/commands/relationships/create', name: 'owner', l_id: profile.id, r_id: object.id, l_at: now, r_at: now
+  else
+    log object, type: 'ERROR: projecst/create_project_group'
+  endif
+
+  return object
+%}

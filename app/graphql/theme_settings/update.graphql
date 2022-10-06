@@ -1,0 +1,17 @@
+mutation (
+  $name: String!
+  $colors: String!
+) {
+  record: records_update_all(
+    table: "theme_settings"
+    filter: { properties: [{ name: "name", value: $name }] }
+    record: {
+      properties: [
+        { name: "name", value: $name }
+        { name: "colors", value: $colors }
+      ]
+    }
+  ) {
+    count
+  }
+}

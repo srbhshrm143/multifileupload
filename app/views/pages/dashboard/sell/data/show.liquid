@@ -1,0 +1,12 @@
+---
+slug: dashboard/sell/data/:id
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function operation = 'lib/queries/bulk_operations/find', id: context.params.id
+
+  function _ = 'lib/extend_context', document_presign: true
+  render 'theme/simple/dashboard/sell/data/show', context: context, operation: operation, current_profile: current_profile
+%}

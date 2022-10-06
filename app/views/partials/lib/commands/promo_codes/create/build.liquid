@@ -1,0 +1,23 @@
+{% parse_json data %}
+  {
+    "id": {{ object.id | json }},
+    "start_date": {{ object.start_date | json }},
+    "end_date": {{ object.end_date | json }},
+    "total_discount": {{ object.total_discount | to_positive_integer: 1 | json }},
+    "upper_limit": {{ object.upper_limit | to_positive_integer: 1 | json }},
+    "code": {{ object.code | upcase | json  }},
+    "max_available": {{ object.max_available | to_positive_integer: 1 | json }},
+    "max_discount_amount_per_user": {{ object.max_discount_amount_per_user | plus: 0 | json }},
+    "max_times_user_can_use": {{ object.max_times_user_can_use | plus: 0 | json }},
+    "available_quantity": {{ object.available_quantity | json }},
+    "creator_id": {{ profile.id | json }},
+    "code_type": "merchant",
+    "campaign_code": {{ object.campaign_code | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  hash_assign data['details'] = object.details
+
+  return data
+%}

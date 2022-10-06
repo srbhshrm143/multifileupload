@@ -1,0 +1,24 @@
+<form action="/admin/themes" method="post">
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="put" />
+  <input type="hidden" name="settings[name]" value="{{ theme_settings.name }}" />
+
+  <div class="mt-5">
+    <h2 class="title">{{ 'admin.themes.colors.title' | t }}</h2>
+    {% for color in theme_settings.colors %}
+        <div class="flex py-2 border-b border-frame items-center {% unless color.isEditable %}hidden{% endunless %}">
+          <label class="flex-1 md:flex-initial md:w-96">{{ 'admin.themes.colors.labels.' | append: color.name| t }}:</label>
+          {% assign input_name = "settings[colors][" | append: color.name | append: "]" %}
+          {% render "theme/simple/ui/color_input",
+            class: "inline-block",
+            name: input_name,
+            value: color.value,
+            is_hex: false %}
+        </div>
+    {% endfor %}
+  </div>
+
+  <div class="mt-4 text-right">
+    <button type="submit"class="text-sm button">{{ 'app.save' | t }}</button>
+  </div>
+</form>

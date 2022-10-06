@@ -1,0 +1,12 @@
+{%  liquid
+  function object = 'lib/commands/order_deliveries/create/build', object: object
+  function object = 'lib/commands/order_deliveries/create/check', object: object
+
+  if object.valid
+    assign delivered = object.delivered
+    function object = 'lib/commands/execute', mutation_name: 'order_deliveries/create' object: object
+    hash_assign object['delivered'] = delivered
+  endif
+
+  return object
+%}

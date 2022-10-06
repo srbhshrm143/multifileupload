@@ -1,0 +1,4 @@
+name: theme_settings
+properties:
+  - name: name
+  - name: colors

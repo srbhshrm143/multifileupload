@@ -1,0 +1,23 @@
+{% liquid
+  for step in object.steps
+    assign step2 = step
+    assign cs = '{ "errors": {}, "valid": true }' | parse_json
+    function cs = 'lib/validations/presence', c: cs, object: step, field_name: 'name'
+
+    if step.from != blank and step.to != blank
+      assign from = step.from | to_date
+      assign to = step.to | to_date
+      if from > to
+        include 'lib/register_error', contract: cs, field_name: 'from', key: 'app.projects.form.errors.from_before_to'
+      endif
+    endif
+
+    hash_assign step2['valid'] = cs.valid
+    hash_assign step2['errors'] = cs.errors
+    if step2.valid != true
+      hash_assign c['valid'] = false
+    endif
+  endfor
+
+  return c
+%}

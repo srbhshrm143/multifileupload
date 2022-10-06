@@ -1,0 +1,10 @@
+{% liquid
+  function import = 'lib/commands/items/import/csv/v1/build', data: data, item_attributes: item_attributes, owner_uuid: owner_uuid, diff: diff, current_state: current_state
+  function import = 'lib/commands/items/import/csv/v1/check', import: import, owner_id: owner.id, diff: diff
+
+  if import.valid and dry_run == blank
+    function import = 'lib/commands/items/import/csv/v1/execute', import: import, owner: owner, diff: diff, current_state: current_state, operation: operation, sync: sync
+  endif
+
+  return import
+%}

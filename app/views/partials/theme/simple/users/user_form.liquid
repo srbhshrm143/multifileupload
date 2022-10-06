@@ -1,0 +1,2069 @@
+{%liquid
+
+  assign uuid = '' | uuid
+  assign object_uuid = '' | uuid
+%}
+<!-- {{ context }} -->
+<div class="pagetitle"> Create an Vendor Account </div>
+<div class="w-full mx-auto card-lg md:w-96" id="regForm">
+  <p id="page-counter"></p>
+  <form action="/users" method="post" enctype="multipart/form-data">
+    {% include 'authenticity_token' %}
+    <input type="hidden" name="profile[uuid]" value="{{ object_uuid }}">
+    <input type="hidden" name="object_uuid" value="{{ object_uuid }}">
+    <input name="profile[language]" type="hidden" value="{{context.language}}">
+    <input type="hidden" name="profile[user__type]" id="user_type" class="user_type" value="venue_owner">
+  
+    <!-- <div class="tab">
+      <fieldset class="mt-3">
+        <label for="user_type"> Select User Type </label>
+        <select class="form-input-small" name="profile[user__type]" id="user_type" class="user_type w-full">
+          <option value="customer"> Customer </option>
+          <option value="venue_owner"> Venue Owner </option>
+        </select>
+      </fieldset>
+    </div> -->
+
+    <div class="tab">
+      <fieldset class="mt-3">
+        <label for="venue_name"> {{ "Venue Name :" }} </label>
+        <input type="text" name="venue[venue_name]" class="venue_name w-full" id="venue_name">
+      </fieldset>
+      
+      <fieldset class="mt-3">
+        <label for="corporate_name"> {{ "Corporate Name :" }} </label>
+        <input type="text" name="venue[corporate_name]" class="corporate_name w-full" id="corporate_name">
+      </fieldset>
+      
+      <fieldset class="mt-3">
+        <label for="business_name"> {{ "9 Digit CRA/Business Number (if applicable) :" }} </label>
+        <input type="text" name="venue[business_number]" id="business_number" class="business_number w-full">
+      </fieldset>
+
+      <fieldset class="mt-3">
+        <label for="address"> {{ "Address :" }} </label>
+        <input type="text" name="venue[venue_address]" id="address" class="address w-full" placeholder="Enter a location">
+      </fieldset>
+  
+      <fieldest class="mt-3">
+        <label for="venue_phone_number"> {{ "Public Phone Number of Venue (Example: 9876543210)" }} </label>
+        <input type="number" name="venue[venue_phone_number]" id="venue_phone_number" class="venue_phone_number w-full">
+      </fieldest>
+  
+      <fieldset class="mt-3">
+        <label for="venue_email"> {{ "Public Email of Venue" }} </label>
+        <input type="email" name="venue[venue_email]" id="venue_email" class="venue_email w-full">
+      </fieldset>
+  
+      <fieldset class="mt-3">
+        <label for="contact_person"> {{ "Contact Person For Us" }} </label>
+        <input type="number" name="venue[contact_person]" id="contact_person" class="contact_person w-full">
+      </fieldset>
+    </div>
+    {%- comment -%}
+    {%- endcomment -%}
+      
+
+    <div class="tab">
+      <h1 class="mt-3 text-2xl font-bold"> {{ "Login Info :" }} </h1>
+  
+  
+  
+      <fieldset class="mt-3">
+        <label for="first_name">{{ 'app.users.form.first_name' | t }}</label>
+        <input name="profile[first_name]" type="text" id="first_name" value="{{ object.first_name | raw_escape_string }}" class="w-full" autocomplete="given-name" autofocus>
+        {% include 'theme/simple/field_error', errors: object.errors.first_name %}
+      </fieldset>
+    
+      <fieldset class="mt-3">
+        <label for="last_name">{{ 'app.users.form.last_name' | t }}</label>
+        <input name="profile[last_name]" type="text" id="last_name" value="{{ object.last_name | raw_escape_string }}" class="w-full" autocomplete="family-name" autofocus>
+        {% include 'theme/simple/field_error', errors: object.errors.last_name %}
+      </fieldset>
+    
+      <fieldset class="mt-3">
+        <label for="email">{{ 'app.users.form.email' | t }} Address </label>
+        <input name="user[email]" type="email" id="email" value="{{ object.email | raw_escape_string }}" class="w-full" autocomplete="email"  autofocus>
+        {% include 'theme/simple/field_error', errors: object.errors.email %}
+      </fieldset>
+      
+      <fieldset class="mt-3">
+        <label for="password"> Your {{ 'app.users.form.password' | t }}</label>
+        <input name="user[password]" type="password" id="password" value="{{ object.password | raw_escape_string }}" class="w-full" autocomplete="new-password">
+        {% include 'theme/simple/field_error', errors: object.errors.password %}
+      </fieldset>
+
+      <fieldset class="mt-3 user__pass">
+        <label for="confirm_password"> Confirm {{ 'app.users.form.password' | t }}</label>
+        <input type="password" id="confirm_password" value="{{ object.password | raw_escape_string }}" class="w-full" autocomplete="new-password" onChange="onChange_pass();">
+        {% include 'theme/simple/field_error', errors: object.errors.password %}
+        <span class="pass_span"> Wrong Password </span>
+      </fieldset>
+    </div>
+    {%- comment -%}
+    {%- endcomment -%}
+
+    {%- comment -%}
+    <div class="tab">
+      <fieldset class="mt-16">
+        <label for="" class="mt-3 text-2xl font-bold"> {{ "Next Tab:- Advance Notice" }} </label>
+      </fieldset>
+
+      <fieldset class="mt-3">
+        <label for="booking_time" class="text-2xl font-bold"> {{ "How much advanced notice do you need before an event is booked?" }} </label>
+        <div class="flex flex-row gap-4">
+
+          <div class="mt-2 booking_time-flex flex flex-row gap-2 items-center">
+            <input type="radio" name="booking_notice[booking_time]" value="24_hours" id="24_hours">
+            <label for="24_hours"> {{ "24 Hours" }} </label>
+          </div>
+
+          <div class="mt-2 booking_time-flex flex flex-row gap-2 items-center">
+            <input type="radio" name="booking_notice[booking_time]" value="48_hours" id="48_hours">
+            <label for="48_hours"> {{ "48 Hours" }} </label>
+          </div>
+
+          <div class="mt-2 booking_time-flex flex flex-row gap-2 items-center">
+            <input type="radio" name="booking_notice[booking_time]" value="1_week" id="1_week">
+            <label for="1_week"> {{ "1 Week" }} </label>
+          </div>
+
+          <div class="mt-2 booking_time-flex flex flex-row gap-2 items-center">
+            <input type="radio" name="booking_notice[booking_time]" value="1_month" id="1_month">
+            <label for="1_month"> {{ "1 Month" }} </label>
+          </div>
+
+        </div>
+
+        <p>
+          {{ "Tip: If you select “1 month notice” – a customer who wants to book a February 1, 2020 date must do so by or before January 1, 2020." }}
+        </p>
+      </fieldset>
+      
+      <fieldset class="mt-3">
+        <h1 class="text-3xl font-bold"> {{ "Booking Confirmation" }} </h1>
+
+        <h3 class="text-xl font-bold">
+          {{ "Choose Your Style" }}
+        </h3>
+
+        <div class="flex flex-col">
+          <div class="mt-3 flex flex-row gap-4 items-center">
+            <input type="radio" name="booking_notice[confirmation]" id="confirmation__auto" value="confirmation__auto">
+            <label for="confirmation__auto"> {{ "Automatic Confirmation." }} </label>
+          </div>
+          <p>Customers can book any available date, automatically, without approval. All bookings are final and cannot be cancelled by you or the Customer</p>
+          <div class="mt-3 flex flex-row gap-4 items-center">
+            <input type="radio" name="booking_notice[confirmation]" id="confirmation_manual" value="confirmation_manual">
+            <label for="confirmation_manual"> {{ " Manual Confirmation." }} </label>
+          </div>
+          <p>Customers will request to book a date. You will have 48 hours to accept or deny the request. This gives you a chance to ensure that date was not already booked. While waiting for your confimation Customers will be able to cancel their request and book with a different venue.</p>
+        </div>
+      </fieldset>
+    </div>
+    {%- endcomment -%}
+      
+    {%- comment -%}
+    <div class="tab">
+      <fieldset class="mt-16">
+        <label for="" class="mt-3 text-2xl font-bold"> {{ " Next tab:- Hours" }} </label>
+      </fieldset>
+
+      <fieldset class="mt-4">
+        <p> To Simplifly booking there are only three possible time slots that a guest can book. "Day", "Night" or "All Day" </p>
+      </fieldset>
+      
+      <fieldset class="mt-4">
+        <p> You can decide what hours make the most sense for your venue. On the next page you will be able to input different pricing for the different time slots. </p>
+      </fieldset>
+      
+      <fieldset class="mt-4">
+        <p> Note: Day and Night cannot overlap. Leave enough time between Day and Night to clean and reset your venue. </p>
+      </fieldset>
+      
+      <fieldset class="mt-4">
+        <p> These are the maximum time allowances. Reach out to your guests to find out about how they will actually be using your Venue.</p>
+      </fieldset>
+
+      <fieldset class="mt-3">
+        <div class="time_slots">
+          <div class="time-slots mt-3">
+            <div class="time-slots-type">
+              <p> Day </p>
+            </div>
+            <div class="time_slot-selects">
+              <select class="form-input-small" name="hours[hours_day_starts]">
+                <option value="">Select</option>
+                <option value="time_1">Time 1</option>
+                <option value="time_2">Time 2</option>
+                <option value="time_3">Time 3</option>
+                <option value="time_4">Time 4</option>
+                <option value="time_5">Time 5</option>
+                <option value="time_6">Time 6</option>
+                <option value="time_7">Time 7</option>
+                <option value="time_8">Time 8</option>
+                <option value="time_9">Time 9</option>
+                <option value="time_10">Time 10</option>
+              </select>
+              <span> To </span>
+              <select class="form-input-small" name="hours[hours_day_ends]">
+                <option value="">Select End Time</option>
+                <option value="ending_time_1">Ending Time 1</option>
+                <option value="ending_time_2">Ending Time 2</option>
+                <option value="ending_time_3">Ending Time 3</option>
+                <option value="ending_time_4">Ending Time 4</option>
+                <option value="ending_time_5">Ending Time 5</option>
+                <option value="ending_time_6">Ending Time 6</option>
+                <option value="ending_time_7">Ending Time 7</option>
+                <option value="ending_time_8">Ending Time 8</option>
+                <option value="ending_time_9">Ending Time 9</option>
+                <option value="ending_time_10">Ending Time 10</option>
+              </select>
+            </div>
+            <div class="time_slot-last">
+              <!-- Blank Time Slot -->
+            </div>
+          </div>
+          <div class="time-slots mt-3">
+            <div class="time-slots-type">
+              <p> Night </p>
+            </div>
+            <div class="time_slot-selects">
+              <select class="form-input-small" name="hours[hours_night_starts]">
+                <option value="">Select</option>
+                <option value="time_1">Time 1</option>
+                <option value="time_2">Time 2</option>
+                <option value="time_3">Time 3</option>
+                <option value="time_4">Time 4</option>
+                <option value="time_5">Time 5</option>
+                <option value="time_6">Time 6</option>
+                <option value="time_7">Time 7</option>
+                <option value="time_8">Time 8</option>
+                <option value="time_9">Time 9</option>
+                <option value="time_10">Time 10</option>
+              </select>
+              <span> To </span>
+              <select class="form-input-small" name="hours[hours_night_ends]">
+                <option value="">Select End Time</option>
+                <option value="ending_time_1">Ending Time 1</option>
+                <option value="ending_time_2">Ending Time 2</option>
+                <option value="ending_time_3">Ending Time 3</option>
+                <option value="ending_time_4">Ending Time 4</option>
+                <option value="ending_time_5">Ending Time 5</option>
+                <option value="ending_time_6">Ending Time 6</option>
+                <option value="ending_time_7">Ending Time 7</option>
+                <option value="ending_time_8">Ending Time 8</option>
+                <option value="ending_time_9">Ending Time 9</option>
+                <option value="ending_time_10">Ending Time 10</option>
+              </select>
+            </div>
+            <div class="time_slot-last">
+              <!-- Blank Time Slot -->
+            </div>
+          </div>
+          <div class="time-slots mt-3">
+            <div class="time-slots-type">
+              <p> All Day </p>
+            </div>
+            <div class="time_slot-selects">
+              <select class="form-input-small" name="hours[hours_All-day_starts]">
+                <option value="">Select</option>
+                <option value="time_1">Time 1</option>
+                <option value="time_2">Time 2</option>
+                <option value="time_3">Time 3</option>
+                <option value="time_4">Time 4</option>
+                <option value="time_5">Time 5</option>
+                <option value="time_6">Time 6</option>
+                <option value="time_7">Time 7</option>
+                <option value="time_8">Time 8</option>
+                <option value="time_9">Time 9</option>
+                <option value="time_10">Time 10</option>
+              </select>
+              <span> To </span>
+              <select class="form-input-small" name="hours[hours_All-day_ends]">
+                <option value="">Select End Time</option>
+                <option value="ending_time_1">Ending Time 1</option>
+                <option value="ending_time_2">Ending Time 2</option>
+                <option value="ending_time_3">Ending Time 3</option>
+                <option value="ending_time_4">Ending Time 4</option>
+                <option value="ending_time_5">Ending Time 5</option>
+                <option value="ending_time_6">Ending Time 6</option>
+                <option value="ending_time_7">Ending Time 7</option>
+                <option value="ending_time_8">Ending Time 8</option>
+                <option value="ending_time_9">Ending Time 9</option>
+                <option value="ending_time_10">Ending Time 10</option>
+              </select>
+            </div>
+            <div class="time_slot-last">
+              <!-- Blank Time Slot -->
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      
+      <fieldset class="mt-4">
+        <p> If Day is booked, "Night" will still be available. but "All Day" will not. If "All Day" is booked. Neither "Day" nor "Night" will be available for that day. </p>
+      </fieldset>
+    </div>
+    {%- endcomment -%}
+      {%- comment -%}
+        <div class="tab">
+          <fieldset class="mt-16">
+            <h1 class="text-2xl font-bold"> {{ "Next Tab:- Menus" }} </h1>
+          </fieldset>
+          
+          <fieldset class="mt-3">
+            <p> Please Upload your Food and Bar menus to the descriptions that best match your venue's offerings, or type in your own menu titles below. </p>
+          </fieldset>
+        </div>
+      {%- endcomment -%}
+      
+      {%- comment -%}
+        {% liquid
+          assign url_components = from | url_decode | split: '/'
+          assign file_name_index = url_components | size | minus: 0
+          hash_assign url_components[file_name_index] = url_components[file_name_index] | url_encode
+          assign url_params = url_components | join: '/' | extract_url_params: 'https://{{ context.location.host }}/{{ "instance" }}/{{ context.instance.id }}/property_uploads/{instance_id}/{+params}'
+          return 'https://{bucket}/instances/{instance_id}/property_uploads/{+params}' | expand_url_template: url_params
+        %}
+      {%- endcomment -%}
+      
+      {%- comment -%}
+      <fieldset class="mt-3">
+          {% assign limits = 5 %}
+          {% for divs in (1..limits) %}
+            {% if divs <= limits %}
+              <!-- {{ forloop.index }} -->
+              <div class="w-full menu_list">
+                <label for="files_{{ forloop.index }}"> File - {{ forloop.index }} </label>
+                <input type="file" class="form-input-small" name="menu[menu_file_{{ forloop.index }}]" id="files_{{ forloop.index }}">
+              </div>
+            {% endif %}
+          {% endfor %}
+        {%- endcomment -%}
+
+        {%- comment -%}
+      </fieldset>
+      {%- endcomment -%}
+      
+   
+      {%- comment -%}
+        <div class="tab">
+          <div class="mt-3 media_upload">
+            {% include 'theme/simple/media_form/form' %}
+          </div>
+        </div>
+      {%- endcomment -%}
+      
+      {%- comment -%}
+        <fieldset class="mt-16">
+          <h1 class="text-3xl font-bold"> {{ "Next Tab:- Contract Information" }} </h1>
+        </fieldset>
+
+        <fieldset class="mt-3">
+          <p> If you require guests to sign a contract upon booking, please copy and paste it below. Guests are unable to book without accepting your terms and conditions. Please ensure you are familiar with the EventHounds Terms and Conditions (link to open our terms and conditions in the in the event of a discrepancy between our terms and conditions and yours, the EventHounds Terms and Conditions will override yours. </p>
+        </fieldset>
+        
+        <fieldset class="mt-3">
+          <textarea name="contract[contract_info]" id="contract_info" cols="30" rows="10" class="w-full"></textarea>
+        </fieldset>
+
+        <fieldset class="mt-3">
+          <div class="contract_files">
+            <label for="contract_info"> Upload Contract PDF: </label>
+            <input type="file" class="form-input-small" name="contract[contract_file]" id="contract_file">
+          </div>
+        </fieldset>
+      {%- endcomment -%}
+
+      {%- comment -%}
+      <div class="tab">
+        <fieldset class="mt-16">
+          <h1 class="text-3xl font-bold"> {{ "Next Tab:- Deposit and Payments" }} </h1>
+        </fieldset>
+  
+        <fieldset class="mt-3">
+          <h1 class="text-xl font-bold"> {{ "Deposit Structure" }} </h1>
+        </fieldset>
+  
+        <fieldset class="mt-3">
+          <p> We take an 11% service charge from the guest, which appears rolled into the price. </p>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <p> Select the initial deposit % to be charged through the site. (See Example) </p>
+        </fieldset>
+        
+        <fieldset class="mt-3">
+          <div class="charges_deduct flex flex-col gap-2">
+  
+            <div class="discount charged">
+              <input type="radio" name="payments[discount_charges]" id="deposit_15" value="15_percentage">
+              <label for="deposit_15"> {{ "15% Deposit" }} </label>
+            </div>
+  
+            <div class="discount charged">
+              <input type="radio" name="payments[discount_charges]" id="deposit_30" value="30_percentage">
+              <label for="deposit_30"> {{ "30% Deposit" }} </label>
+            </div>
+  
+            <div class="discount charged">
+              <input type="radio" name="payments[discount_charges]" id="deposit_50" value="50_percentage">
+              <label for="deposit_50"> {{ "50% Deposit" }} </label>
+            </div>
+  
+            <div class="discount charged">
+              <input type="radio" name="payments[discount_charges]" id="deposit_75" value="75_percentage">
+              <label for="deposit_75"> {{ "75% Deposit" }} </label>
+            </div>
+  
+            <div class="discount charged">
+              <input type="radio" name="payments[discount_charges]" id="deposit_100" value="100_percentage">
+              <label for="deposit_100"> {{ "100% Deposit" }} </label>
+            </div>
+  
+          </div>
+        </fieldset>
+        
+        <fieldset class="mt-8">
+          <p> Input the rest of your Payment Structure here. You will be responsible for collecting remaining deposits from your guests. </p>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <textarea name="payments[collect_remaining_deposit]" id="remaining_deposits" cols="30" rows="2" class="w-full"></textarea>
+          <p> Do you require guests to leave a security deposit? If so, clearly state the dollar amount and the instructions below. </p>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <textarea name="payments[special_instructions]" id="instructions" cols="30" rows="2" class="w-full"></textarea>
+          <p> Do you have any special instructions for the guests? If so, clearly state below. </p>
+        </fieldset>
+        
+        <fieldset class="mt-8">
+          <textarea name="payments[payment_deposits]" id="payment_deposits" cols="30" rows="2" class="w-full"></textarea>
+          <p> Payment of deposit will be issued by cheque/EFT to Account (Once Booking are Finalised) </p>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <div class="number_fields w-full">
+            <input type="number" name="payments[transit_number]" id="transit_number" placeholder="Transit Number">
+            <input type="number" name="payments[institutions_number]" id="institutions_number" placeholder="Institution Number">
+            <input type="number" name="payments[account_number]" id="account_number" placeholder="Account Number">
+            
+          </div>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <div class="payment_check">
+            <input type="checkbox" name="payments[payment_cheque]" id="payment_cheque">
+            <label for="payment_cheque"> {{ "Payment Through Cheque" }} </label>
+          </div>
+        </fieldset>
+      </div>
+      {%- endcomment -%}
+
+      <div class="tab">
+        <fieldset class="mt-16">
+          <h1 class="text-3xl font-bold"> {{ "Next Tab:- Introduce Your Room" }} </h1>
+        </fieldset>
+  
+        <fieldset class="mt-3">
+          <p> Do you have separate rooms for rent within the same venue? Please upload each room individually. You will have an opportunity at the end of the application to add additional rooms. </p>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <p> Tip: If your venue is “Venue X” and room name is “Grand Ballroom” your room will show up as “Venue X – Grand Ballroom” to customers. </p>
+        </fieldset>
+  
+        <fieldset class="mt-3">
+          <p> If you just have the one space for rent, do not fill in Venue Room Name. </p>
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <p class="font-semibold"> Venue Room Name (Mandatory Field for Venues with Multiple Rooms) </p>
+          <input type="text" name="venue_rooms[room_name]" id="room_name" class="w-full">
+        </fieldset>
+  
+        <fieldset class="mt-8">
+          <p> Please state your maximum capacity (assuming it is a seated event with a dancefloor - but get confirmation with your client about floorplan prior to event). </p>
+        </fieldset>
+  
+        <fieldset class="mt-3">
+          <label for="maximum_capacity" class="font-semibold"> {{ "Maximum capacity" }} </label>
+          <input type="number" name="venue_rooms[maximum_capacity]" id="maximum_capacity" class="w-full">
+        </fieldset>
+        
+        <div class="mt-3 media_upload">
+          {% include 'theme/simple/media_form/form' %}
+        </div>
+  
+        <!-- <fieldset class="mt-3 flex flex-col">
+          <label for="room_photo" class="font-semibold"> {{ "Upload Photos" }} </label>
+          <input type="file" class="form-input-small" name="venue_rooms[room_photo]" id="room_photo">
+        </fieldset> -->
+        
+        <!-- <fieldset class="mt-3 flex flex-col">
+          <label for="room_video" class="font-semibold"> {{ "Upload Videos" }} </label>
+          <input type="file" class="form-input-small" name="venue_rooms[room_video]" id="room_video">
+        </fieldset> -->
+  
+        <fieldset class="mt-3">
+          <p> You May Upload a maximum of 3 photos that may include a 360 degree photo and a Video. </p>
+        </fieldset>
+      </div>
+      {%- comment -%}
+      {%- endcomment -%}
+
+
+      {%- comment -%}
+      <div class="tab">
+        <fieldset class="mt-16">
+          <h1 class="text-3xl font-bold"> {{ "Next Tab:- Venue Features" }} </h1>
+        </fieldset>
+  
+        <fieldset class="mt-3">
+          <p> What's Included in Each Booking? Let Your Customer Know whats Included in Each Booking and How Much you charge for Extra. </p>
+        </fieldset>
+        
+        <fieldset class="mt-8">
+          <p> Select one Option For Each Feature </p>
+        </fieldset>
+  
+      <div class="features__tabs">
+        <!-- Tabs Form -->
+        <!-- <fieldset class="mt-3 tab__tab">
+        </fieldset> -->
+        
+        <input type="radio" name="tabs_tabs" id="tab__1" class="tab__radio" checked="checked">
+        <label for="tab__1" class="font-semibold"> Event Space- </label>
+  
+        <fieldset class="w-full tab__content">
+  
+          <table id="my_table_data" class="w--90">
+            <tr class="event_space w-full">
+              <th class="event_space_features"> {{ "Features." }} </th>
+              <th class="event_space_base_price tab_field_price"> {{ "Included in Base Price." }} </th>
+              <th class="event_space_na tab_field_na"> {{ "NA" }} </th>
+              <th class="event_space_flat_rate tab_field_flat_rate"> {{ "Flat Rate" }} </th>
+              <th class="event_space_guest_price tab_field_guest_price"> {{ "Price Per Guest" }} </th>
+              <th class="event_space_capacity tab_field_capacity"> {{ "Capacity" }} </th>
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Self Parking On Site" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[self_parking][self_parking]" value="self_parking_base_price"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[self_parking][self_parking_na]" value="self_parking_na"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[self_parking][self_parking_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[self_parking][self_parking_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[self_parking][self_parking_capacity]" class="form-input-small" style="width: 175px;" value="0" > </td>
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Valet Parking On Site" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[valet_parking][valet_parking]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[valet_parking][valet_parking_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[valet_parking][valet_parking_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[valet_parking][valet_parking_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[valet_parking][valet_parking_capacity]" class="form-input-small" style="width: 175px;" value="0" > </td>
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Wheelchair Accessible" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[wheelchair][wheelchair]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[wheelchair][wheelchair_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[wheelchair][wheelchair_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[wheelchair][wheelchair_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="wheelchair_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Separate Pre-Reception Area" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[separate_reception][separate_reception]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[separate_reception][separate_reception_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[separate_reception][separate_reception_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[separate_reception][separate_reception_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="separate_reception_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Exclusive Patio Or Terrace" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[terrance][terrance]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[terrance][terrance_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[terrance][terrance_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[terrance][terrance_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="terrance_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Washrooms" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[washrooms][washrooms]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[washrooms][washrooms_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[washrooms][washrooms_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[washrooms][washrooms_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td> -->
+              <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[washrooms][washrooms_capacity]" class="form-input-small" style="width: 175px;" value="0" > </td>
+            </tr>
+            
+            <tr class="event_space w-full">
+              <td class="features"> {{ "A/C" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[account][account]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[account][account_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[account][account_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[account][account_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="account_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Bridal Suite" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[bridal_suite][bridal_suite]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[bridal_suite][bridal_suite_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[bridal_suite][bridal_suite_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[bridal_suite][bridal_suite_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="bridal_suite_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "On-Site Kitchen" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[on_site_kitchen][on_site_kitchen]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[on_site_kitchen][on_site_kitchen_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[on_site_kitchen][on_site_kitchen_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[on_site_kitchen][on_site_kitchen_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="on_site_kitchen_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Private Entrance" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[private_entrance][private_entrance]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[private_entrance][private_entrance_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[private_entrance][private_entrance_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[private_entrance][private_entrance_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="private_entrance_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "On-Site Lodging Available" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[lodging_available][lodging_available]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[lodging_available][lodging_available_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[lodging_available][lodging_available_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[lodging_available][lodging_available_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="lodging_available_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Designated Smoking Area" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[designated_smoking_area][designated_smoking_area]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[designated_smoking_area][designated_smoking_area_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[designated_smoking_area][designated_smoking_area_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[designated_smoking_area][designated_smoking_area_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="designated_smoking_area_capacity" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "On-Site Ceremony (Outdoor)" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[caremony_outdoor][on_site_ceremony_outdoor]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[caremony_outdoor][on_site_ceremony_outdoor_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[caremony_outdoor][on_site_ceremony_outdoor_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[caremony_outdoor][on_site_ceremony_outdoor_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[on_site_ceremony_outdoor_capacity]" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "On-Site Ceremony (Indoor)" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[on_site_ceremony_indoor][on_site_ceremony_indoor]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[on_site_ceremony_indoor][on_site_ceremony_indoor_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[on_site_ceremony_indoor][on_site_ceremony_indoor_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[on_site_ceremony_indoor][on_site_ceremony_indoor_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[on_site_ceremony_indoor_capacity]" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Foyer" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[foyer][foyer]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[foyer][foyer_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[foyer][foyer_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[foyer][foyer_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[foyer_capacity]" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Fountain" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[fountain][fountain]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[fountain][fountain_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[fountain][fountain_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[fountain][fountain_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[fountain_capacity]" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+            <tr class="event_space w-full">
+              <td class="features"> {{ "Pool" }} </td>
+              <td class="event_space_base_price tab_field_price"> <input type="checkbox" name="features_event-space[Pool][Pool]"> </td>
+              <td class="event_space_na tab_field_na"> <input type="checkbox" name="features_event-space[Pool][Pool_na]"> </td>
+              <td class="event_space_flat_rate tab_field_flat_rate"> <input type="text" name="features_event-space[Pool][Pool_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_guest_price tab_field_guest_price"> <input type="text" name="features_event-space[Pool][Pool_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="event_space_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+              <!-- <td class="event_space_capacity tab_field_capacity"> <input type="number" name="features_event-space[Pool_capacity]" class="form-input-small" style="width: 175px;"> </td> -->
+            </tr>
+  
+  
+          </table>
+          
+        </fieldset>
+  
+        
+        <!-- <fieldset class="mt-3 tab__tab">
+        </fieldset> -->
+        <input type="radio" name="tabs_tabs" id="tab__2" class="tab__radio">
+        <label for="tab__2" class="font-semibold"> Food </label>
+        
+        <fieldset class="tab__content">
+  
+          <table id="my_table_data" class="w--90">
+  
+            <tr class="foods w-full">
+              <th class="foods_features"> {{ "Features." }} </th>
+              <th class="foods_base_price tab_field_price"> {{ "Included in Base Price." }} </th>
+              <th class="foods_na tab_field_na"> {{ "NA" }} </th>
+              <th class="foods_flat_rate tab_field_flat_rate"> {{ "Flat Rate" }} </th>
+              <th class="foods_guest_price tab_field_guest_price"> {{ "Price Per Guest" }} </th>
+              <th class="foods_capacity tab_field_capacity"> {{ "Capacity" }} </th>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Passed Hors D'Oeuvres" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_passed_hors][foods_passed_hors]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_passed_hors][foods_passed_hors_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_passed_hors][foods_passed_hors_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_passed_hors][foods_passed_hors_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Antipasto" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_antipasto][foods_antipasto]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_antipasto][foods_antipasto_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_antipasto][foods_antipasto_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_antipasto][foods_antipasto_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "3-Course Dinner Menu" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_dinner_menu3][foods_dinner_menu3]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_dinner_menu3][foods_dinner_menu3_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_dinner_menu3][foods_dinner_menu3_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_dinner_menu3][foods_dinner_menu3_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "4-Course Dinner Menu" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_dinner_menu4][foods_dinner_menu4]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_dinner_menu4][foods_dinner_menu4_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_dinner_menu4][foods_dinner_menu4_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_dinner_menu4][foods_dinner_menu4_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Late Night: Sweets" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_night_sweets][foods_night_sweets]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_night_sweets][foods_night_sweets_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_night_sweets][foods_night_sweets_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_night_sweets][foods_night_sweets_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Late Night: Savoury Station" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_night_savoury][foods_night_savoury]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_night_savoury][foods_night_savoury_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_night_savoury][foods_night_savoury_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_night_savoury][foods_night_savoury_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Late Night: Seafood" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_night_seafood][foods_night_seafood]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_night_seafood][foods_night_seafood_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_night_seafood][foods_night_seafood_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_night_seafood][foods_night_seafood_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Buffet Style Brunch" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_buffet_brunch][foods_buffet_brunch]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_buffet_brunch][foods_buffet_brunch_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_buffet_brunch][foods_buffet_brunch_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_buffet_brunch][foods_buffet_brunch_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Buffet Style Lunch" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_buffet_lunch][foods_buffet_lunch]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_buffet_lunch][foods_buffet_lunch_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_buffet_lunch][foods_buffet_lunch_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_buffet_lunch][foods_buffet_lunch_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Buffet Style Dinner" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_buffet_dinner][foods_buffet_dinner]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_buffet_dinner][foods_buffet_dinner_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_buffet_dinner][foods_buffet_dinner_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_buffet_dinner][foods_buffet_dinner_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Plated Brunch" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_plated_brunch][foods_plated_brunch]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_plated_brunch][foods_plated_brunch_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_plated_brunch][foods_plated_brunch_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_plated_brunch][foods_plated_brunch_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Plated Lunch" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_plated_lunch][foods_plated_lunch]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_plated_lunch][foods_plated_lunch_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_plated_lunch][foods_plated_lunch_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_plated_lunch][foods_plated_lunch_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Bread For The Table" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_bread_table][foods_bread_table]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_bread_table][foods_bread_table_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_bread_table][foods_bread_table_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_bread_table][foods_bread_table_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Halal (Select In Conjunction With Above Menu Choices)" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_halal_menu][foods_halal_menu]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_halal_menu][foods_halal_menu_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_halal_menu][foods_halal_menu_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_halal_menu][foods_halal_menu_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Kosher (Select In Conjunction With Above Menu Choices)" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_kocher_menu][foods_kocher_menu]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_kocher_menu][foods_kocher_menu_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_kocher_menu][foods_kocher_menu_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_kocher_menu][foods_kocher_menu_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Vegetarian (Select In Conjunction With Above Menu Choicesy" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_vegetarian_menu][foods_vegetarian_menu]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_vegetarian_menu][foods_vegetarian_menu_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_vegetarian_menu][foods_vegetarian_menu_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_vegetarian_menu][foods_vegetarian_menu_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Vegan (Select In Conjunction With Above Menu Choices" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_vegan_menu][foods_vegan_menu]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_vegan_menu][foods_vegan_menu_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_vegan_menu][foods_vegan_menu_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_vegan_menu][foods_vegan_menu_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Wedding Cake Cutting Fee" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_wedding_cake][foods_wedding_cake]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_wedding_cake][foods_wedding_cake_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_wedding_cake][foods_wedding_cake_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_wedding_cake][foods_wedding_cake_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Coffee/Tea Service" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_tea_services][foods_tea_services]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_tea_services][foods_tea_services_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_tea_services][foods_tea_services_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_tea_services][foods_tea_services_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Bridal Shower" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_bridal_shower][foods_bridal_shower]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_bridal_shower][foods_bridal_shower_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_bridal_shower][foods_bridal_shower_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_bridal_shower][foods_bridal_shower_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Baby Shower" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_baby_shower][foods_baby_shower]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_baby_shower][foods_baby_shower_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_baby_shower][foods_baby_shower_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_baby_shower][foods_baby_shower_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Deluxe Bar" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_deluxe_bar][foods_deluxe_bar]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_deluxe_bar][foods_deluxe_bar_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_deluxe_bar][foods_deluxe_bar_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_deluxe_bar][foods_deluxe_bar_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "3-course plated dinner" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_plated_dinner3_course][foods_plated_dinner3_course]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_plated_dinner3_course][foods_plated_dinner3_course_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_plated_dinner3_course][foods_plated_dinner3_course_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_plated_dinner3_course][foods_plated_dinner3_course_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "4-course plated dinner" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_plated_dinner4_course][foods_plated_dinner4_course]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_plated_dinner4_course][foods_plated_dinner4_course_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_plated_dinner4_course][foods_plated_dinner4_course_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_plated_dinner4_course][foods_plated_dinner4_course_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "3-course lunch" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_3_course_lunch][foods_3-course-lunch]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_3_course_lunch][foods_3-course-lunch_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_3_course_lunch][foods_3-course-lunch_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_3_course_lunch][foods_3-course-lunch_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "4-course lunch" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_4_course_lunch][foods_4-course-lunch]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_4_course_lunch][foods_4-course-lunch_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_4_course_lunch][foods_4-course-lunch_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_4_course_lunch][foods_4-course-lunch_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Late Night Stations" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_Late_night_stations][foods_Late-night-stations]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_Late_night_stations][foods_Late-night-stations_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_Late_night_stations][foods_Late-night-stations_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_Late_night_stations][foods_Late-night-stations_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="foods w-full">
+              <td class="foods_features"> {{ "Seafood Antipasto" }} </td>
+              <td class="foods_base_price tab_field_price"> <input type="checkbox" name="features_food[foods_seafood_antipasto][foods_seafood-antipasto]"> </td>
+              <td class="foods_na tab_field_na"> <input type="checkbox" name="features_food[foods_seafood_antipasto][foods_seafood-antipasto_na]"> </td>
+              <td class="foods_flat_rate tab_field_flat_rate"> <input type="text" name="features_food[foods_seafood_antipasto][foods_seafood-antipasto_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_guest_price tab_field_guest_price"> <input type="text" name="features_food[foods_seafood_antipasto][foods_seafood-antipasto_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="foods_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+            
+  
+          </table>
+  
+          
+        </fieldset>
+  
+        
+        <!-- <fieldset class="mt-3 tab__tab">
+        </fieldset> -->
+        <input type="radio" name="tabs_tabs" id="tab__3" class="tab__radio">
+        <label for="tab__3" class="font-semibold"> Bar </label>
+        
+        <fieldset class="tab__content">
+  
+          <table id="my_table_data" class="w--90">
+  
+  
+            <tr class="bars w-full">
+              <th class="bars_features"> {{ "Features." }} </th>
+              <th class="bars_base_price tab_field_price"> {{ "Included in Base Price." }} </th>
+              <th class="bars_na tab_field_na"> {{ "NA" }} </th>
+              <th class="bars_flat_rate tab_field_flat_rate"> {{ "Flat Rate" }} </th>
+              <th class="bars_guest_price tab_field_guest_price"> {{ "Price Per Guest" }} </th>
+              <th class="bars_capacity tab_field_capacity"> {{ "Capacity" }} </th>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Alcohol Is Allowed On Premises" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_alcohol_permises][bars_alcohol_permises]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_alcohol_permises][bars_alcohol_permises_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_alcohol_permises][bar_alcohol_permises_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_alcohol_permises][bars_alcohol_permises_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Sparkling Wine Toast" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_sparkling_wine_toast][bars_sparkling_wine_toast]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_sparkling_wine_toast][bars_sparkling_wine_toast_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_sparkling_wine_toast][bar_sparkling_wine_toast_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_sparkling_wine_toast][bars_sparkling_wine_toast_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Specialty Drink Station" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_specialty_drink_station][bars_specialty_drink_station]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_specialty_drink_station][bars_specialty_drink_station_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_specialty_drink_station][bar_specialty_drink_station_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_specialty_drink_station][bars_specialty_drink_station_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Number Of Bars" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_number_of_bars][bars_number_of_bars]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_number_of_bars][bars_number_of_bars_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_number_of_bars][bar_number_of_bars_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_number_of_bars][bars_number_of_bars_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <input type="number" name="features_bars[bars_number_of_bars][bars_number_of_bars_capacity]" class="form-input-small" value="0" style="width: 175px;"> </td>
+              <!-- <td class="bars_capacity"> <span> {{ "NA" }} </span> </td> -->
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Bar Located Outside Main Reception Area" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_bar_outside_area][bars_bar_outside_area]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_bar_outside_area][bars_bar_outside_area_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_bar_outside_area][bars_bar_outside_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_bar_outside_area][bars_bar_outside_area_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Ability To Bring In Own Alcohol With Special Permit License" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_own_alcohol_permit][bars_own_alcohol_permit]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_own_alcohol_permit][bars_own_alcohol_permit_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_own_alcohol_permit][bar_own_alcohol_permit_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_own_alcohol_permit][bars_own_alcohol_permit_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Standard Open Bar (Up To 5 Hours)" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_standard_open_bar5][bars_standard_open_bar5]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_standard_open_bar5][bars_standard_open_bar5_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_standard_open_bar5][bar_standard_open_bar5_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_standard_open_bar5][bars_standard_open_bar5_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Standard Open Bar (Up To 8 Hours)" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_standard_open_bar8][bars_standard_open_bar8]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_standard_open_bar8][bars_standard_open_bar8_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_standard_open_bar8][bar_standard_open_bar8_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_standard_open_bar8][bars_standard_open_bar8_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Premium Open Bar (Up To 5 Hours)" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_premium_open_bar5][bars_premium_open_bar5]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_premium_open_bar5][bars_premium_open_bar5_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_premium_open_bar5][bar_premium_open_bar5_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_premium_open_bar5][bars_premium_open_bar5_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Premium Open Bar (Up To 8 Hours)" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_premium_open_bar8][bars_premium_open_bar8]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_premium_open_bar8][bars_premium_open_bar8_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_premium_open_bar8][bar_premium_open_bar8_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_premium_open_bar8][bars_premium_open_bar8_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Non-Acoholic Open Bar" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_non-alcohol_open_bar][bars_non-alcohol_open_bar]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_non-alcohol_open_bar][bars_non-alcohol_open_bar_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_non-alcohol_open_bar][bar_non-alcohol_open_bar_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_non-alcohol_open_bar][bars_non-alcohol_open_bar_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Wine-Service During Dinner" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_wine_services_dinner][bars_wine_services_dinner]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_wine_services_dinner][bars_wine_services_dinner_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_wine_services_dinner][bar_wine_services_dinner_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_wine_services_dinner][bars_wine_services_dinner_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="bars w-full">
+              <td class="bars_features"> {{ "Shots Allowed" }} </td>
+              <td class="bars_base_price tab_field_price"> <input type="checkbox" name="features_bars[bars_shots_allowed][bars_shots_allowed]"> </td>
+              <td class="bars_na tab_field_na"> <input type="checkbox" name="features_bars[bars_shots_allowed][bars_shots_allowed_na]"> </td>
+              <td class="bars_flat_rate tab_field_flat_rate"> <input type="text" name="features_bars[bars_shots_allowed][bar_shots_allowed_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_guest_price tab_field_guest_price"> <input type="text" name="features_bars[bars_shots_allowed][bars_shots_allowed_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="bars_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+  
+          </table>
+          
+        </fieldset>
+  
+        
+        <!-- <fieldset class="mt-3 tab__tab">
+        </fieldset> -->
+        <input type="radio" name="tabs_tabs" id="tab__4" class="tab__radio">
+        <label for="tab__4" class="font-semibold"> Extras </label>
+        
+        <fieldset class="tab__content">
+  
+          <table id="my_table_data" class="w--90">
+  
+            
+            <tr class="tab_extras w-full">
+              <th class="tab_extras_features"> {{ "Features." }} </th>
+              <th class="tab_extras_base_price tab_field_price"> {{ "Included in Base Price." }} </th>
+              <th class="tab_extras_na tab_field_na"> {{ "NA" }} </th>
+              <th class="tab_extras_flat_rate tab_field_flat_rate"> {{ "Flat Rate" }} </th>
+              <th class="tab_extras_guest_price tab_field_guest_price"> {{ "Price Per Guest" }} </th>
+              <th class="tab_extras_capacity tab_field_capacity"> {{ "Capacity" }} </th>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Fireworks" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_fireworks][tab_extras_fireworks_base_price]" value="fireworks_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_fireworks][tab_extras_fireworks_na]" value="fireworks_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_fireworks][tab_extras_fireworks_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_fireworks][tab_extras_fireworks_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Wifi" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_wifi][tab_extras_wifi_base_price]" value="wifi_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_wifi][tab_extras_wifi_na]" value="wifi_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_wifi][tab_extras_wifi_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_wifi][tab_extras_wifi_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Microphone" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_microphone][tab_extras_microphone_base_price]" value="microphone_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_microphone][tab_extras_microphone_na]" value="microphone_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_microphone][tab_extras_microphone_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_microphone][tab_extras_microphone_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Podium" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_podium][tab_extras_podium_base_price]" value="podium_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_podium][tab_extras_podium_na]" value="podium_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_podium][tab_extras_podium_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_podium][tab_extras_podium_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Audio (Speakers)" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_audio_speakers][tab_extras_audio_speaker_base_price]" value="audio_speaker_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_audio_speakers][tab_extras_audio_speaker_na]" value="audio_speaker_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_audio_speakers][tab_extras_audio_speaker_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_audio_speakers][tab_extras_audio_speaker_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Dry-Ice" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_dry_ice][tab_extras_dry_ice_base_price]" value="dry_ice_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_dry_ice][tab_extras_dry_ice_na]" value="dry_ice_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_dry_ice][tab_extras_dry_ice_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_dry_ice][tab_extras_dry_ice_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Chairs + Tables Included" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_chairs_tables][tab_extras_chairs_tablets_base_price]" value="chairs_tablets_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_chairs_tables][tab_extras_chairs_tablets_na]" value="chairs_tablets_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_chairs_tables][tab_extras_chairs_tablets_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_chairs_tables][tab_extras_chairs_tablets_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Tablecloths + Napkins" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_napkins][tab_extras_napkins_base_price]" value="napkins_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_napkins][tab_extras_napkins_na]" value="napkins_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_napkins][tab_extras_napkins_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_napkins][tab_extras_napkins_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Chaircovers" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_chaircovers][tab_extras_chaircovers_base_price]" value="chaircovers_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_chaircovers][tab_extras_chaircovers_na]" value="chaircovers_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_chaircovers][tab_extras_chaircovers_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_chaircovers][tab_extras_chaircovers_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Dishware, Silverware, And Glassware" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_glassware][tab_extras_dishware_glassware_base_price]" value="dishware_glassware_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_glassware][tab_extras_dishware_glassware_na]" value="dishware_glassware_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_glassware][tab_extras_dishware_glassware_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_glassware][tab_extras_dishware_glassware_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Spotlights" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_spotlights][tab_extras_spotlights_base_price]" value="spotlights_base_price"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_spotlights][tab_extras_spotlights_na]" value="spotlights_na"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_spotlights][tab_extras_spotlights_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_spotlights][tab_extras_spotlights_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Security	" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_security][tab_extras_security_base_price]"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_security][tab_extras_security_na]"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_security][tab_extras_security_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_security][tab_extras_security_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Dj" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_dj][tab_extras_dj_base_price]"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_dj][tab_extras_dj_na]"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_dj][tab_extras_dj_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_dj][tab_extras_dj_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Projector" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_projector][tab_extras_projector_base_price]"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_projector][tab_extras_projector_na]"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_projector][tab_extras_projector_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_projector][tab_extras_projector_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Tv Screens" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_tv_screens][tab_extras_tv-screens_base_price]"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_tv_screens][tab_extras_tv-screens_na]"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_tv_screens][tab_extras_tv-screens_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_tv_screens][tab_extras_tv-screens_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Coat Check" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="checkbox" name="features_tab_extras[extras_coat_check][tab_extras_coat-check_base_price]"> </td>
+              <td class="tab_extras_na tab_field_na"> <input type="checkbox" name="features_tab_extras[extras_coat_check][tab_extras_coat-check_na]"> </td>
+              <td class="tab_extras_flat_rate tab_field_flat_rate"> <input type="text" name="features_tab_extras[extras_coat_check][tab_extras_coat-check_flat_rate]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_guest_price tab_field_guest_price"> <input type="text" name="features_tab_extras[extras_coat_check][tab_extras_coat-check_guest_price]" class="form-input-small" style="width: 175px;"> </td>
+              <td class="tab_extras_capacity tab_field_capacity"> <span> {{ "NA" }} </span> </td>
+            </tr>
+            
+            <tr class="tab_extras w-full">
+              <td class="w-full"><p> Other Mandatory Fees </p></td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Room Rental Fee" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="text" name="features_tab_extras[extras_room_rental][tab_extras_room_rental_fee_flat_rate]" class="form-input-small"> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Day of Coordinator" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="text" name="features_tab_extras[extras_day_coordinator][tab_extras_day_of_cordinator_flat_rate]" class="form-input-small"> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Gratuity" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="text" name="features_tab_extras[extras_gratuity][tab_extras_gratuity_flat_rate]" class="form-input-small"> </td>
+            </tr>
+  
+            <tr class="tab_extras w-full">
+              <td class="tab_extras_features"> {{ "Admin Fees" }} </td>
+              <td class="tab_extras_base_price tab_field_price"> <input type="text" name="features_tab_extras[extras_admin_fees][tab_extras_admin_fees_flat_rate]" class="form-input-small"> </td>
+            </tr>
+  
+            
+          </table>
+          
+        </fieldset>
+  
+  
+        
+        <!-- <fieldset class="mt-3 tab__tab">
+        </fieldset> -->
+        <input type="radio" name="tabs_tabs" id="tab__5" class="tab__radio">
+        <label for="tab__5" class="font-semibold"> Venue Type </label>
+        
+        <fieldset class="tab__content">
+  
+          <table id="my_table_data" class="w--90">
+            
+            <tr class="venue_type w-1/2">
+              <th class="venue_type_features" style="width: 250px;"> {{ "Features." }} </th>
+              <th class="venue_type_accept" style="width: 50px;"> {{ "Yes" }} </th>
+              <th class="venue_type_not_accept" style="width: 50px;"> {{ "No" }} </th>
+              <th></th>
+              <th></th>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Banquet Hall" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_banquet][venue_type_accept-banquet_hall]" value="accept-banquet_hall"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_banquet][venue_type_not_accept-banquet_hall]" value="not_accept-banquet_hall"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Barn" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_barn][venue_type_accept-barn]" value="accept-barn"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_barn][venue_type_not_accept-barn]" value="not_accept-barn"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Boat" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_boat][venue_type_accept-boat]" value="accept-boat"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_boat][venue_type_not_accept-boat]" value="not_accept-boat"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Concert venue" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_concert_venue][venue_type_accept-concern_venue]" value="accept-concern_venue"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_concert_venue][venue_type_not_accept-concern_venue]" value="not_accept-concern_venue"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Conference/Convention Centre" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_conference][venue_type_accept-convention_center]" value="accept-convention_center"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_conference][venue_type_not_accept-convention_center]" value="not_accept-convention_center"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Distillery/Brewery" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_distillery][venue_type_accept-brewery]" value="accept-brewery"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_distillery][venue_type_not_accept-brewery]" value="not_accept-brewery"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Estate" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_estate][venue_type_accept-estate]" value="accept-estate"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_estate][venue_type_not_accept-estate]" value="not_accept-estate"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Gallery/Museum" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_gallery][venue_type_accept-gallery]" value="accept-gallery"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_gallery][venue_type_not_accept-gallery]" value="not_accept-gallery"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Golf/Country Club" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_golf_club][venue_type_accept-country_club]" value="accept-country_club"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_golf_club][venue_type_not_accept-country_club]" value="not_accept-country_club"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Hotel" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_hotel][venue_type_accept-hotel]" value="accept-hotel"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_hotel][venue_type_not_accept-hotel]" value="not_accept-hotel"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Lounge" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_lounge][venue_type_accept-lounge]" value="accept-lounge"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_lounge][venue_type_not_accept-lounge]" value="not_accept-lounge"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Meeting Room" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_meeting_room][venue_type_accept-meeting_room]" value="accept-meeting_room"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_meeting_room][venue_type_not_accept-meeting_room]" value="not_accept-meeting_room"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Nightclub" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_nightclub][venue_type_accept-nightclub]" value="accept-nightclub"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_nightclub][venue_type_not_accept-nightclub]" value="not_accept-nightclub"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Party Room" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_party_room][venue_type_accept-party_room"] value="accept-party_room"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_party_room][venue_type_not_accept-party_room"] value="not_accept-party_room"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Resort" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_resort][venue_type_accept-resort]" value="accept-resort"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_resort][venue_type_not_accept-resort]" value="not_accept-resort"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Restaurant" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_restaurant][venue_type_accept-restaurant]" value="accept-restaurant"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_restaurant][venue_type_not_accept-restaurant]" value="not_accept-restaurant"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Warehouse" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_warehouse][venue_type_accept-warehouse]" value="accept-warehouse"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_warehouse][venue_type_not_accept-warehouse]" value="not_accept-warehouse"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Winery" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_winery][venue_type_accept-winery]" value="accept-winery"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_winery][venue_type_not_accept-winery]" value="not_accept-winery"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Industrial" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_industrial][venue_type_accept-industrial]" value="accept-industrial"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_industrial][venue_type_not_accept-industrial]" value="not_accept-industrial"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Lakeview" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_lakeview][venue_type_accept-lakeview]" value="accept-lakeview"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_lakeview][venue_type_not_accept-lakeview]" value="not_accept-lakeview"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Modern" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_modern][venue_type_accept-modern]" value="accept-modern"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_modern][venue_type_not_accept-modern]" value="not_accept-modern"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Nature" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_nature][venue_type_accept-nature]" value="accept-nature"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_nature][venue_type_not_accept-nature]" value="not_accept-nature"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Rustic" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_rustic][venue_type_accept-rustic]" value="accept-rustic"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_rustic][venue_type_not_accept-rustic]" value="not_accept-rustic"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Traditional" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_traditional][venue_type_accept-traditional]" value="accept-traditional"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_traditional][venue_type_not_accept-traditional]" value="not_accept-traditional"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Indoor Venue" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_indoor_venue][venue_type_accept-indoor_venue]" value="accept-indoor_venue"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_indoor_venue][venue_type_not_accept-indoor_venue]" value="not_accept-indoor_venue"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="venue_type w-1/2">
+              <td class="venue_type_features" style="width: 250px;"> {{ "Outdoor Venue" }} </td>
+              <td class="venue_type_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_outdoor_venue][venue_type_accept-outdoor_venue]" value="accept-outdoor_venue"> </td>
+              <td class="venue_type_not_accept" style="width: 50px;"> <input type="checkbox" name="features_venue_type[venue_type_outdoor_venue][venue_type_not_accept-outdoor_venue]" value="not_accept-outdoor_venue"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+  
+          </table>
+  
+        </fieldset>
+  
+  
+        
+        <!-- <fieldset class="mt-3 tab__tab">
+        </fieldset> -->
+        <input type="radio" name="tabs_tabs" id="tab__6" class="tab__radio">
+        <label for="tab__6" class="font-semibold"> Ideal for </label>
+        
+        <fieldset class="tab__content">
+  
+          <table id="my_table_data" class="w--90">
+            
+            <tr class="venue_type w-1/2">
+              <th class="ideal_for_features" style="width: 250px;"> {{ "Features." }} </th>
+              <th class="ideal_for_accept" style="width: 50px;"> {{ "Yes" }} </th>
+              <th class="ideal_for_not_accept" style="width: 50px;"> {{ "No" }} </th>
+              <th></th>
+              <th></th>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Birthdays" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_birthdays][ideal_for_accept-birthdays]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_birthdays][ideal_for_not_accept-birthdays]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Cocktails" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_cocktails][ideal_for_accept-cocktails]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_cocktails][ideal_for_not_accept-cocktails]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Conferences" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_conferences][ideal_for_accept-conferences]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_conferences][ideal_for_not_accept-conferences]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Dinner party" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_dinner_party][ideal_for_accept-dinner_party]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_dinner_party][ideal_for_not_accept-dinner_party]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Reception" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_receptions][ideal_for_accept-reception]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_receptions][ideal_for_not_accept-reception]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Religious Events" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_religious_events][ideal_for_accept-religious_events]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_religious_events][ideal_for_not_accept-religious_events]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+            <tr class="ideal_for w-1/2">
+              <td class="ideal_for_features" style="width: 250px;"> {{ "Wedding Ceremony" }} </td>
+              <td class="ideal_for_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_wedding_ceremony][ideal_for_accept-wedding_ceremony]"> </td>
+              <td class="ideal_for_not_accept" style="width: 50px;"> <input type="checkbox" name="features_ideal_for[ideal_for_wedding_ceremony][ideal_for_not_accept-wedding_ceremony]"> </td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+          </table>
+  
+        </fieldset>
+  
+  
+      </div>
+      </div>
+      {%- endcomment -%}
+
+      {%- comment -%}
+      <div class="tab">
+        <fieldset class="mt-16 tab__tab">
+          <!-- <input type="radio" name="tabs_tabs" id="tab__7" class="tab__radio"> -->
+          <h1 class="text-3xl font-bold"> {{ "Next Tab:- Pricing and Availability" }} </h1>
+        </fieldset>
+
+        <!-- <fieldset class="tab__content"> -->
+        <fieldset class="mt-3">
+          <p class="mt-2"> Step 1: Type in Your Pricing Below. Prices are before Taxes. Prices are in CAD.  </p>
+
+          <table id="my_table_data">
+
+            <tr class="tab_pricing w-full flex flex-row justify-between">
+              <td> Day Per Person : </td>
+              <td> <span> {{ "$" }} </span> <input type="text" name="pricing[tab_pricing_day_per_person]" class="form-input-small"> </td>
+            </tr>
+
+            <tr class="tab_pricing w-full flex flex-row justify-between">
+              <td> Minimum Spend : </td>
+              <td> <span> {{ "$" }} </span> <input type="text" name="pricing[tab_pricing_day_minimum_speed]" class="form-input-small"> </td>
+            </tr>
+
+            <tr class="tab_pricing w-full flex flex-row justify-between">
+              <td> Night Per Person : </td>
+              <td> <span> {{ "$" }} </span> <input type="text" name="pricing[tab_pricing_night_per_person]" class="form-input-small"> </td>
+            </tr>
+
+            <tr class="tab_pricing w-full flex flex-row justify-between">
+              <td> Minimum Spend : </td>
+              <td> <span> {{ "$" }} </span> <input type="text" name="pricing[tab_pricing_night_minimum_speed]" class="form-input-small"> </td>
+            </tr>
+
+            <tr class="tab_pricing w-full flex flex-row justify-between">
+              <td> All Day Per Person : </td>
+              <td> <span> {{ "$" }} </span> <input type="text" name="pricing[tab_pricing_all_day_per_person]" class="form-input-small"> </td>
+            </tr>
+
+            <tr class="tab_pricing w-full flex flex-row justify-between">
+              <td> Minimum Spend : </td>
+              <td> <span> {{ "$" }} </span> <input type="text" name="pricing[tab_pricing_all_day_minimum_speed]" class="form-input-small"> </td>
+            </tr>
+
+          </table>
+          
+          
+          
+          <p class="mt-4"> Step 2: Select Which days you want to apply that price to. Only Select the days. Your Venue is Available to. Putting a price on a date means that date is available. And that Customer can use the date. </p>
+
+          
+          <p class="mt-8"> Apply to Every </p>
+          
+          <div class="mt-8 venue_days flex flex-row gap-4">
+            
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_monday]" class="">
+              <label for="venue_monday"> {{ "Monday" }} </label>
+            </div>
+
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_tuesday]" class="">
+              <label for="venue_tuesday"> {{ "Tuesday" }} </label>
+            </div>
+
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_wednesday]" class="">
+              <label for="venue_wednesday"> {{ "Wednesday" }} </label>
+            </div>
+
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_thursday]" class="">
+              <label for="venue_thursday"> {{ "Thursday" }} </label>
+            </div>
+
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_friday]" class="">
+              <label for="venue_friday"> {{ "Friday" }} </label>
+            </div>
+
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_saturday]" class="">
+              <label for="venue_saturday"> {{ "Saturday" }} </label>
+            </div>
+
+            <div class="day">
+              <input type="checkbox" name="pricing[venue_sunday]" class="">
+              <label for="venue_sunday"> {{ "Sunday" }} </label>
+            </div>
+            
+          </div>
+
+          
+          <div class="mt-16 venue_dates">
+            <span> From </span> <input type="date" name="pricing[venue_start_date]" class="form-input-small">
+            <span> To  </span>
+            <input type="date" name="pricing[venue_end_date]" class="form-input-small">
+            <input type="button" value="Set" class="button button-small" id="set-date">
+          </div>
+        </fieldset>
+      </div>
+      {%- endcomment -%}
+      
+      
+      <!-- <ul class="tab_list">
+        <li>
+          <label for="tab1"> {{ "Tab 1" }} </label>
+          <input type="radio" name="tabs_click" id="tab1" class="tabs">
+
+          
+        </li>
+        <div class="tab_tab">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut repellendus deleniti harum voluptates debitis eligendi cumque, laboriosam, accusantium totam nostrum itaque beatae? Aperiam explicabo voluptas libero consectetur, necessitatibus suscipit?
+          </p>
+        </div>
+        <li>
+          <label for="tab2"> {{ "Tab 2" }} </label>
+          <input type="radio" name="tabs_click" id="tab2" class="tabs">
+
+          
+        </li>
+        <div class="tab_tab">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut repellendus deleniti harum voluptates debitis eligendi cumque, laboriosam, accusantium totam nostrum itaque beatae? Aperiam explicabo voluptas libero consectetur, necessitatibus suscipit?
+          </p>
+        </div>
+        <li>
+          <label for="tab3"> {{ "Tab 3" }} </label>
+          <input type="radio" name="tabs_click" id="tab3" class="tabs">
+
+          
+        </li>
+        <div class="tab_tab">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut repellendus deleniti harum voluptates debitis eligendi cumque, laboriosam, accusantium totam nostrum itaque beatae? Aperiam explicabo voluptas libero consectetur, necessitatibus suscipit?
+          </p>
+        </div>
+      </ul> -->
+
+
+
+
+
+
+
+
+
+<!--     
+    <div class="tab">
+      <fieldset class="mt-3">
+        <label for="first_name">{{ 'app.users.form.first_name' | t }}</label>
+        <input name="profile[first_name]" type="text" id="first_name" value="{{ object.first_name | raw_escape_string }}" class="w-full" autocomplete="given-name" autofocus required pattern="[A-Za-z]{3,}">
+        {% include 'theme/simple/field_error', errors: object.errors.first_name %}
+      </fieldset>
+      
+      <fieldset class="mt-3">
+        <label for="last_name">{{ 'app.users.form.last_name' | t }}</label>
+        <input name="profile[last_name]" type="text" id="last_name" value="{{ object.last_name | raw_escape_string }}" class="w-full" autocomplete="family-name" autofocus required pattern="[A-Za-z]{3,}">
+        {% include 'theme/simple/field_error', errors: object.errors.last_name %}
+      </fieldset>
+    </div>
+   -->
+    <!-- <fieldset class="mt-3">
+      <label for="Gender"> Gender : </label>
+      <div class="users">
+        <div class="user_user mt-2 w-full">
+          <label for="gender_male"> Male </label>
+          <input type="radio" name="profile[user_gender]" id="gender_male" class="user__type" value="male">
+        </div>
+        <div class="user_user mt-2 w-full">
+          <label for="gender_female"> Female </label>
+          <input type="radio" name="profile[user_gender]" id="gender_female" class="user__type" value="female">
+        </div>
+      </div>
+    </fieldset> -->
+    
+    <!-- <fieldset class="mt-3">
+      <label for="user_mobile"> Mobile </label>
+      <input type="number" name="profile[user_mobile]" id="user_mobile" class="user_mobile w-full">
+      {% include 'theme/simple/field_error', errors: object.errors.mobile %}
+    </fieldset> -->
+<!--   
+    <div class="tab">
+      <fieldset class="mt-3">
+        <label for="email">{{ 'app.users.form.email' | t }}</label>
+        <input name="user[email]" type="email" id="email" value="{{ object.email | raw_escape_string }}" class="w-full" autocomplete="email"  autofocus required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+        {% include 'theme/simple/field_error', errors: object.errors.email %}
+      </fieldset>
+  
+      <fieldset class="mt-3">
+        <label for="password">{{ 'app.users.form.password' | t }}</label>
+        <input name="user[password]" type="password" id="password" value="{{ object.password | raw_escape_string }}" class="w-full" autocomplete="new-password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+        {% include 'theme/simple/field_error', errors: object.errors.password %}
+      </fieldset>
+    </div>
+   -->
+
+   <div class="tab">
+     <fieldset class="flex items-center mt-3">
+       <input type="checkbox" name="user[agreed]" id="agreed" required>
+       <div class="ms-2">
+         <label for="agreed" class="block">{{ 'app.users.form.agreed' | t}}</label>
+         {% include 'theme/simple/field_error', errors: object.errors.agreed %}
+       </div>
+     </fieldset>
+     {% include 'hcaptcha', object: object %}
+   </div>
+   {%- comment -%}
+   {%- endcomment -%}
+  
+    <!-- <div class="tab">
+    </div> -->
+    <!-- <fieldset class="mt-5 text-center">
+      <button class="mt-3 button">{{ 'app.users.form.signup' | t }}</button>
+    </fieldset> -->
+  
+      <!-- <button class="mt-3 button" id="button_submit">{{ 'app.users.form.signup' | t }}</button> -->
+      
+      
+  <div style="overflow:auto;" class="mt-3" id="form__btns">
+    <div style="float:right;">
+      <button type="button" class="button form-input-small" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+      <button type="button" class="button form-input-small" id="nextBtn" onclick="nextPrev(1)">Next</button>
+      <button class="button form-input-small" id="button_submit">{{ 'app.users.form.signup' | t }}</button>
+    </div>
+  </div>
+
+  <!-- Circles which indicates the steps of the form: -->
+  <div style="text-align:center;margin-top:40px;" id="steps">
+    <!-- <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span> -->
+  </div>
+
+  </form>
+
+  {% graphql data %}
+  mutation presign {
+    property_upload_presigned_url(
+      table: "form_media_testing",
+      property_name: "testing_media"
+    ) {
+      upload_url
+      upload_url_payload
+    }
+  }
+{% endgraphql %}
+{% assign data = data.property_upload_presigned_url %}
+<!-- {{ data }} -->
+<!-- {{ context }} -->
+
+<!-- File Upload Uppy Form -->
+<form action="{{ data.upload_url }}"
+  data-s3-uppy="form"
+  data-s3-uppy-user-id="{{ context.current_user.id }}"
+  data-s3-uppy-object-uuid="{{ object_uuid }}"
+  data-s3-uppy-photo-type="{{ "Testing Media Upload" }}"
+  data-s3-uppy-max-number-of-files="{{ 3 }}"
+  hidden
+  id="uppy_custom_media_upload">
+  {% for field in data.upload_url_payload %}
+    <input type="hidden" name="{{ field[0] }}" value='{{ field[1] }}'>
+  {% endfor %}
+</form>
+
+
+  {%- comment -%}
+  {%- endcomment -%}  
+
+</div>
+
+<!-- 
+<div class="parent"> 
+  <input></input> 
+  <button> hi</button> 
+</div> 
+<div class="siblings"> 
+  <p class="children"></p> 
+</div> 
+ -->
+
+ <div class="mt-3">
+  
+ </div>
+
+
+
+
+
+<script>
+  // var convertedIntoArray = [];
+  //  $("table#my_table_data tr").each(function() {
+  //     var rowDataArray = [];
+  //     var actualData = $(this).find('td');
+  //     if (actualData.length > 0) {
+  //        actualData.each(function() {
+  //           rowDataArray.push($(this).text());
+  //        });
+  //        convertedIntoArray.push(rowDataArray);
+  //     }
+  //  });
+  //  console.log(convertedIntoArray);
+  // document.addEventListener('alpine:init', () => {
+  //   Alpine.store('main_variant', {{ item }});
+  // });
+
+
+  var tab_count = $('div.tab').length;
+  console.log(tab_count);
+  for(i=1; i<=tab_count; i++){
+    $('#steps').append('<span class="step"></span>');
+  }
+</script>
+
+<script>
+  
+  
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form ...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+  // ... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("prevBtn").style.display = "none";
+  } else {
+    document.getElementById("prevBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    // document.getElementById("nextBtn").innerHTML = "Submit";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("button_submit").style.display = "inline";
+  } else {
+    document.getElementById("nextBtn").style.display = "inline";
+    document.getElementById("nextBtn").innerHTML = "Next";
+    document.getElementById("button_submit").style.display = "none";
+  }
+  // ... and run a function that displays the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form... :
+  if (currentTab >= x.length) {
+    //...the form gets submitted:
+    document.getElementById("regForm").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("tab");
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].value == "") { 
+      // add an "invalid" class to the field:
+      y[i].className += " invalid";
+      // and set the current valid status to false:
+      valid = false;
+    }
+  }
+  // If the valid status is true, mark the step as finished and valid:
+  if (valid) {
+    document.getElementsByClassName("step")[currentTab].className += " finish";
+  }
+  return valid; // return the valid status
+}
+
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class to the current step:
+  x[n].className += " active";
+}
+
+
+function onChange_pass() {
+  const password = document.querySelector('#password');
+  const confirm = document.querySelector('#confirm_password');
+  if (confirm.value === password.value) {
+    confirm.setCustomValidity('');
+    document.querySelector('.pass_span').classList.remove("wrong_pass");
+    password.style.backgroundColor = "#deffe0";
+    confirm.style.backgroundColor = "#deffe0";
+  } else {
+    confirm.setCustomValidity('Passwords do not match');
+    // alert("Passwords do not match");
+    password.style.backgroundColor = "#fce4e3";
+    confirm.style.backgroundColor = "#fce4e3";
+    document.querySelector('.pass_span').classList.add("wrong_pass");
+    // document.querySelector('.wrong_pass').classList.remove("pass_span");
+  }
+}
+</script>
+

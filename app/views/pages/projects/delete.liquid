@@ -1,0 +1,18 @@
+---
+slug: projects/:id
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function project = 'lib/queries/projects/find', id: context.params.id
+  include 'lib/can_do_or_unauthorized', object: project, do: "delete", actor: current_profile
+
+  function object = 'lib/commands/projects/delete', object: project
+  if object.valid
+    include 'redirect_to', url: '/projects/manage', notice: 'app.models.shared.deleted'
+  else
+    include 'redirect_to', url: '/projects/manage', error: 'app.models.shared.delete_failed'
+  endif
+%}

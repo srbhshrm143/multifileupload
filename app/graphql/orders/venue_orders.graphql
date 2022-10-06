@@ -1,0 +1,37 @@
+mutation create(
+  $userId: String!
+  $item_id: String!
+  $guest_count: String!
+  $event_date: String!
+  $event_time: String!
+  $amount_paid: String!
+  $total_amount: String!
+  $base_price: String! 
+  $additonal_features: String
+  $c__status: String!
+  $applied_gst: String!,
+  $payment_type: String!
+) {
+  record: record_create(
+    record: {
+      table: "venue_orders"
+      properties: [
+        { name: "userId", value: $userId }
+        { name: "item_id", value: $item_id }
+        { name: "guest_count", value: $guest_count }
+        { name: "event_date", value: $event_date }
+        { name: "event_time", value_int: $event_time }
+        { name: "amount_paid", value: $amount_paid }
+        { name: "base_price", value: $base_price }
+        { name: "additonal_features", value: $additonal_features }
+        { name: "applied_gst", value: $applied_gst }
+        { name: "total_amount", value: $total_amount }
+        { name: "payment_type", value: $payment_type }
+        { name: "c__status", value: $c__status }
+      ]
+    }
+  ) {
+    id
+
+  }
+}

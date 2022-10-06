@@ -1,0 +1,11 @@
+{% background source_name: 'processes_execute_in_background', object: object %}
+{% liquid
+  assign command = 'lib/commands/' | append: object.command
+  assign payload = object.payload | parse_json
+  function result = command, object: payload, current_profile: object.profile
+  if result.valid != true
+    log result, type: 'ERROR: processes/run/execute_in_background'
+  endif
+%}
+{% endbackground %}
+{% return object %}

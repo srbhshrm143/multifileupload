@@ -1,0 +1,34 @@
+query search(
+  $id: ID,
+  $profile_id: String!,
+  $limit: Int = 1,
+  $page: Int = 1,
+  # $key: String,
+  # $uuid: String,
+  ) {
+
+  data: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "venues" }
+      properties: [
+        { name: "profile_id", value: $profile_id }
+      ]
+    }
+    sort: {
+      created_at: {
+        order:  DESC
+      }
+    }
+  ) {
+    total_entries
+    total_pages
+    results {
+      id
+      properties
+      
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{% graphql r %}
+mutation {
+  autoconfirm: constant_set(name: "ORDER_MERCHANT_AUTO_CONFIRM", value: "true"){
+    name
+    value
+  }
+
+  order_cancel_paid_unconfrimed: constant_set(name: "ORDER_CANCEL_PAID_UNCONFIRMED_AFTER_X_HOURS", value: "336"){
+    name
+    value
+  }
+}
+{% endgraphql %}
+{% log r, type: 'migrations/set_order_merchant_autoconfirm' %}

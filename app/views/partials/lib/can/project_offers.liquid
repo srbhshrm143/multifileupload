@@ -1,0 +1,28 @@
+{% liquid
+  assign can = false
+  if project_offer == blank
+    return false
+  endif
+
+  if project_offer.creator_id == actor.id
+    assign owner = true
+  else
+    assign owner = false
+  endif
+
+  case do
+  when 'view'
+    function can_manage_offers = 'lib/can', actor: actor, do: "manage_offers", object: project_offer.project
+    if owner or can_manage_offers.valid
+      return true
+    endif
+
+  when 'delete'
+    return owner
+
+  when 'edit'
+    return owner
+  endcase
+
+  return can
+%}

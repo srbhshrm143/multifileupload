@@ -1,0 +1,8 @@
+name: contact-us
+properties:
+  - name: subject
+    type: string
+  - name: booking-id
+    type: string
+  - name: text-content
+    type: string

@@ -1,0 +1,88 @@
+<section>
+  <h1 class="pagetitle">{{ 'app.promo_codes.title' | t }}</h1>
+
+  <div class="container">
+
+    {% if list.results.size > 0 %}
+      {% comment %}
+      <form class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+        <fieldset>
+          <label for="filter_category">{{ 'app.codes.list.filters.categories' | t }}</label>
+          <select name="" id="filter_category">
+            <option value="">{{ 'app.promo_codes.list.filters.all' | t }}</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <label for="filter_sort">{{ 'app.promo_codes.list.filters.sort' | t }}</label>
+          <select name="" id="filter_sort">
+            <option value="">{{ 'app.promo_codes.list.filters.popular' | t }}</option>
+            <option value="">{{ 'app.promo_codes.list.filters.newest' | t }}</option>
+            <option value="">{{ 'app.promo_codes.list.filters.oldest' | t }}</option>
+            <option value="">{{ 'app.promo_codes.list.filters.expiring' | t }}</option>
+            <option value="">{{ 'app.promo_codes.list.filters.discount' | t }}</option>
+          </select>
+        </fieldset>
+
+      </form>
+      {% endcomment %}
+
+      <div class="mt-6">
+        {{ 'app.promo_codes.list.total_items' | t }}: {{ list.total_entries }}
+      </div>
+
+      <ul class="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for promo_code in list.results %}
+        <li class="card">
+          <div class="subtitle">{{promo_code.organization.name}} offers</div>
+          <span class="text-interaction bigtitle">{{promo_code.total_discount}}% {{ 'app.promo_codes.off_percent' | t }} - {{promo_code.detail.description }}</span><br>
+          <div class="sidenote mt-2 px-4 py-6 inline-block rounded bg-panel-highlight">{{promo_code.code}}</div>
+
+          {% if promo_code.code_type == 'global' %}
+            {% liquid 
+              assign items_url = '/search'
+            %}
+          {% else %}
+            {% function items_url = 'link_to', object: promo_code.organization %}
+          {% endif %}
+
+          <div class="mt-6">
+            <a href="{{ items_url }}" class="button">{{ 'app.promo_codes.list.see_items' | t }}</a>
+          </div>
+
+          <div class="sidenote mt-2 text-content-sidenote">
+            {{ 'app.promo_codes.list.valid' | t }} <time datetime="">{{promo_code.start_date | to_date}} – {{promo_code.end_date | to_date}}</time>
+          </div>
+
+          {% liquid
+            assign is_past =  promo_code.end_date | to_date | is_date_in_past
+          %}
+          {% if is_past %}
+            <div class="card-overlay">
+              {% render 'theme/simple/ui/badge', class: 'bg-content', label_key: 'app.promo_codes.list.expired' %}
+            </div>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+
+      <section class="md:h-64 card flex flex-col md:flex-row justify-center items-center text-center md:text-start">
+        <div class="max-w-lg order-2 md:order-1">
+          <p class="subtitle">{{ 'app.promo_codes.show.empty.title' | t }}</p>
+          <p>{{ 'app.promo_codes.show.empty.subtitle' | t }}</p>
+          <a href="/search" class="button mt-6">{{ 'app.promo_codes.show.empty.cta' | t }}</a>
+        </div>
+        <div class="w-16 mb-6 md:mb-0 md:w-32 md:ms-10 md:ps-10 md:mt-1 order-1 md:order-last md:border-s">
+          {% render 'theme/simple/ui/icon', icon: 'discountCoupon', class: 'w-full text-interaction-disabled' %}
+        </div>
+      </section>
+
+    {% endif %}
+
+  </div>
+
+  {% render 'theme/simple/ui/pagination', collection: list, current_page: filters.page %}
+
+</section>

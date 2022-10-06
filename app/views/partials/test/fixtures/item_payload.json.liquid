@@ -1,0 +1,63 @@
+{% capture payload %}
+  [
+    {
+       "uuid": "cf60abe2-5d6c-42f4-8cb1-69597faf3e88",
+       "currency": "USD",
+       "details": {
+           "en": {
+               "lang": "en",
+               "name": "EN Lorem ipsum dolor sit amet, consetetur sadipscing eli....",
+               "description": "EN At vero eos et accusam et ... "
+           },
+           "de": {
+               "lang": "de",
+               "name": "DE Stet clita kasd gubergren, no sea t...",
+               "description": "DE Duis autem vel eum iriure dolo ..."
+           }
+       },
+       "photo_ids": "",
+       "price": "101",
+       "original_price": "",
+       "quantity": "10",
+       "max_in_one_order": "5",
+       "category": "jewellery/necklaces_n_chains/chains",
+       "variants": [
+           {
+               "attributes_ids": "4,2",
+               "attributes_json": "[{\"id\":\"4\",\"name\":\"size\",\"value\":\"S\"},{\"id\":\"2\",\"name\":\"color\",\"value\":\"red\"}]",
+               "price": "101",
+               "original_price": "",
+               "quantity": "10",
+               "sku": "s-red-101"
+           },
+           {
+               "attributes_ids": "4,3",
+               "attributes_json": "[{\"id\":\"4\",\"name\":\"size\",\"value\":\"S\"},{\"id\":\"3\",\"name\":\"color\",\"value\":\"blue\"}]",
+               "price": "102",
+               "original_price": "",
+               "quantity": "11",
+               "sku": "s-blue-102"
+           },
+           {
+               "attributes_ids": "5,2",
+               "attributes_json": "[{\"id\":\"5\",\"name\":\"size\",\"value\":\"M\"},{\"id\":\"2\",\"name\":\"color\",\"value\":\"red\"}]",
+               "price": "103",
+               "original_price": "",
+               "quantity": "12",
+               "sku": "m-red-103"
+           },
+           {
+               "attributes_ids": "5,3",
+               "attributes_json": "[{\"id\":\"5\",\"name\":\"size\",\"value\":\"M\"},{\"id\":\"3\",\"name\":\"color\",\"value\":\"blue\"}]",
+               "price": "104",
+               "original_price": "",
+               "quantity": "13",
+               "sku": "m-blue-104"
+           }
+       ],
+       "return_days": "30"
+    }
+  ]
+{% endcapture %}
+
+{% return payload | parse_json %}

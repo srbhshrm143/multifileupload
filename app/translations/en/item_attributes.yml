@@ -1,0 +1,14 @@
+en:
+  app:
+    item_attributes:
+      new:
+        new: New item_attribute
+      edit:
+        edit: Edit item_attribute
+        values: Values
+      list:
+        add: Add item_attribute
+        empty_state: You haven't added any item_attributes yet. <br> Create your first one now!
+      attr:
+        name: Name
+        value: Value

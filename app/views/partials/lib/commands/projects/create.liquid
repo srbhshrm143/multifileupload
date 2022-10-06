@@ -1,0 +1,19 @@
+{%  liquid
+  function object = 'lib/commands/projects/create/build', object: object
+  function object = 'lib/commands/projects/create/check', object: object
+
+  if object.valid
+    assign payload = object
+    function project_group = 'lib/commands/projects/create_project_group', profile: profile
+    hash_assign object['group_id'] = project_group.id
+
+    function object = 'lib/commands/execute', mutation_name: 'projects/create' object: object
+    if object.valid
+      assign now = 'now' | to_time
+      function relation = 'lib/commands/relationships/create', name: 'owner:project', l_id: profile.id, r_id: object.id, l_at: now, r_at: now
+      function status = 'lib/commands/statuses/create', profile_id: profile.id, object_id: object.id, name: payload.status, scope: 'app.statuses.projects'
+    endif
+  endif
+
+  return object
+%}

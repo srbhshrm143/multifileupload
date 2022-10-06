@@ -1,0 +1,15 @@
+{% liquid
+  assign diff = '{}' | parse_json
+  hash_assign diff['all'] = current | hash_diff: incoming
+
+  assign m = diff.all | group_by: 'first'
+
+  assign changes = '{}' | parse_json
+  hash_assign changes['update'] = m['~']
+  hash_assign changes['create'] = m['+']
+  hash_assign changes['delete'] = m['-']
+
+  hash_assign diff['changes'] = changes
+
+  return diff
+%}

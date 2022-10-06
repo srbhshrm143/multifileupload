@@ -1,0 +1,9 @@
+name: item_detail
+properties:
+  - name: lang
+  - name: slug
+  - name: name
+  - name: description
+  - name: tags
+    type: array
+  - name: item_inventory_id

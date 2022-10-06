@@ -1,0 +1,26 @@
+<h1 class="pagetitle"> Create Room </h1>
+
+{% assign venue_id = context.headers.HTTP_REFERER | split: '=' %}
+<!-- {{ venue_id }} -->
+
+<div class="card-lg w-full md:w-96 mx-auto">
+  <form action="/venue_rooms/created" method="POST">
+    <input type="hidden" name="venue_id" class="venue_id" id="venue_id" value="{{ venue_id | last }}">
+    <input type="hidden" name="owner_id" class="owner_id" id="owner_id" value="{{ context.current_user.id }}">
+    <div class="mt-3">
+      <label for="room_name"> Room Name : </label>
+      <input type="text" name="room_name" id="room_name" class="room_name">
+    </div>
+    <!-- <div class="mt-3">
+      <label for="room_media"> Room Media : </label>
+      <input type="file" name="room_media" id="room_media" class="room_media">
+    </div> -->
+    <div class="mt-3">
+      <button class="button mt-3"> Create Room </button>
+    </div>
+  </form>
+</div>
+
+<!-- {{ context.headers.HTTP_REFERER | split: '=' }} -->
+<!-- {{ context.current_user.id }} -->
+{{ context }}

@@ -1,0 +1,20 @@
+{% liquid
+  if uuid == blank and slug == blank and user_type == blank and id == blank and user_id == blank and anonymous_session_id == blank
+    return null
+  endif
+%}
+
+{% graphql r = 'profiles/search', limit: 1, uuid: uuid, user_type: user_type, slug: slug, id: id, user_id: user_id,
+                                  anonymous_session_id: anonymous_session_id,
+                                  followships: followships,
+                                  membership: membership,
+                                  load_organizations: load_organizations,
+                                  load_default_address: load_default_address
+%}
+{% liquid
+  assign profile = r.records.results.first
+
+  function profile = 'lib/queries/profiles/preload_relationships', profile: profile
+
+  return profile
+%}

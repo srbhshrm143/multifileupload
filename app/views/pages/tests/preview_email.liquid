@@ -1,0 +1,10 @@
+---
+layout: mailer
+---
+{% liquid
+  function order = 'lib/queries/orders/find', id: "8228"
+  assign data = '{}' | parse_json
+  hash_assign data['order'] = order
+
+  render 'theme/simple/emails/orders/delivered_buyer', data: data
+%}

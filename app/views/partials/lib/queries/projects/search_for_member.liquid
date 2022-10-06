@@ -1,0 +1,12 @@
+{% liquid
+  if member_id == blank
+    log 'Something went wrong. Member cannot be blank.', type: 'ERROR'
+    return null
+  endif
+
+  assign page = page | to_positive_integer: 1
+
+  graphql r = 'projects/search_for_member', limit: limit, page: page, member_id: member_id, meta_visible: meta_visible, group_type: group_type, without_group_type: without_group_type
+
+  return r.projects
+%}

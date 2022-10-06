@@ -1,0 +1,16 @@
+{%  liquid
+  function object = 'lib/commands/project_offers/update/build', object: object
+  function object = 'lib/commands/project_offers/update/check', object: object
+
+  if object.valid
+    assign payload = object
+    function object = 'lib/commands/execute', mutation_name: 'project_offers/update' object: object
+
+    if object.valid and payload.status
+      function status = 'lib/commands/statuses/create', profile_id: profile.id, object_id: object.id, name: payload.status, scope: 'app.statuses.project_offers'
+      hash_assign object['status'] = status
+    endif
+  endif
+
+  return object
+%}

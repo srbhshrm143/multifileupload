@@ -1,0 +1,9 @@
+{% liquid
+  if id == blank
+    return null
+  endif
+
+  graphql r  = 'processes/search', id: id, limit: 1, with_statuses: with_statuses
+
+  return r.processes.results.first
+%}

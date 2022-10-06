@@ -1,0 +1,84 @@
+en:
+  app:
+    activities:
+      you: you
+      processes:
+        organizations/create_member: create member
+        organizations/update: updating organization
+        items/publish_version: publishing new item version
+        items/publish: publishing item
+        bulk_operations/trigger_import: importing items
+      tables:
+        item: Item
+        line_item_return: Item
+        order: Order
+        group: Group
+        post: Post
+        process: Process
+
+      list: Activities
+      new: new
+      attr:
+        id: ID
+        created_at: Created at
+        object: Object
+        target: Target
+        actor: Actor
+        type: Type
+      types:
+        user_followed_user: 'started following %{target_url}'
+        user_unfollowed_user: 'stopped following <a href="%{url}">%{target}</a>'
+        page_visited: 'visited <a href="%{obj}">%{obj}</a> page'
+
+        order_created: "placed an %{object_url}"
+        order_confirmed: "successfully paid for the %{object_url}"
+        order_cancelled_by_seller: "cancelled the %{target_url}"
+        order_cancelled_by_buyer: "cancelled the %{target_url}"
+        order_status_created: "[S] changed status of the %{url} to <span class=\"font-semibold rounded border\">%{status}</span>"
+        order_delivered: "delivered the %{target_url}"
+        order_completed: "completed the %{object_url}"
+        review_enabled: "you can now <a href='/dashboard/reviews/items'>rate products</a> and <a href='/dashboard/reviews/organizations'>rate merchant</a> for %{target_url}"
+        line_item_return_approved: "accepted returning the %{object_url}"
+        line_item_return_requested: "requested returning the %{object_url}"
+        line_item_return_rejected: "rejected returning the %{object_url}"
+        line_item_return_returned: "got the %{object_url} back"
+
+        process_approval_requested: "requested approval of %{object_url}: %{target_url}"
+        process_accepted: "accepted the approval process of %{object_url}: %{target_url}"
+        process_rejected: "rejected the approval process of %{object_url}: %{target_url}"
+
+        account_created: created an account.
+        authentication_link_created: requested reset password.
+        account_locked: 'account has been locked due to failed login attempts. <a href="#" title="%{meta}">(?)</a>'
+        account_unlocked: 'account has been unlocked <a href="#" title="%{meta}">(?)</a>'
+        profile_updated: updated profile information
+        item_created: 'created a <a href="/items/%{object_id}">%{name}</a>'
+        item_inventory_updated: >-
+          changed item inventory %{item_name} <br/>
+          "quantity" from %{old_quantity} to %{new_quantity} <br/>
+          "max in one order" from %{old_max_in_one_order} to %{new_max_in_one_order}
+        comment_created: 'posted a comment on %{target_url}'
+        post_created: 'posted in %{target_url}'
+        post_created_notification: 'posted in %{target_url} > %{object_url}'
+        post_created_notification_internal: 'posted %{object_url}'
+        post_upvoted: 'liked a post %{object_url}'
+        post_downvoted: 'downvoted a post  %{object_url}'
+        post_voted: 'voted on a post %{object_url}'
+
+        post_answered: 'posted answer to %{target_url} in %{attributed_to_url}'
+        user_joined_group: 'joined to %{target_url}'
+        user_asked_to_join_group: 'asked to join %{object_url}'
+        group_created: 'created a group: <header class="text-xl pt-2">%{object_url}</header>'
+        login_failed: 'failed logging in. <a href="#" title="%{meta}">(?)</a>'
+        group_invite_created: 'invited %{object_url} to %{target_url}'
+
+        project_updated: 'updated %{object_url}'
+    feed:
+      title: Feed
+      see_more: See more
+      see_more_comments: More comments
+      comments:
+        one: '%{count} comment'
+        other: '%{count} comments'
+    notifications:
+      title: Notifications

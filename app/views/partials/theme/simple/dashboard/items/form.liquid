@@ -1,0 +1,64 @@
+{% liquid
+  assign currency = item.currency | default: context.default_currency
+  if item.item_inventory_id
+    assign path = 'create_version'
+  else
+    assign path = 'create'
+  endif
+  assign uuid = '' | uuid
+  assign item_uuid = item.uuid | default: uuid
+  assign photos = photos | default: item.photos
+%}
+
+  <!-- {{ context.presigned_url.upload_url_payload }} -->
+
+<form action="/dashboard/items/{{ path }}" method="post" data-photo-upload-items
+  x-data='{itemType: {{ item.item_type | default: "physical" | json}} }'
+>
+  {% render 'authenticity_token', context: context %}
+
+  {% if item.item_inventory_id %}
+    <input type="hidden" name="item[item_inventory_id]" value="{{ item.item_inventory_id }}">
+  {% endif %}
+  <input type="hidden" name="item[uuid]" value="{{ item_uuid }}">
+  <input type="hidden" name="item[currency]" value="{{ currency }}">
+
+  {% render 'theme/simple/dashboard/items/form/details', lib: lib, item: item %}
+  {% render 'theme/simple/dashboard/items/form/media', photos: photos, item: item %}
+  {% render 'theme/simple/dashboard/items/form/pricing', item: item, currency: currency %}
+  {% render 'theme/simple/dashboard/items/form/inventory', item: item %}
+  {% render 'theme/simple/dashboard/items/form/product_attributes', lib: lib, item: item, item_attributes: context.item_attributes, currency: currency %}
+
+  <div x-show="itemType == 'physical'">
+    <h2 class="title mt-8">{{ 'app.items.returns' | t }}</h2>
+    <div class="card">
+      <fieldset>
+        <label class="block" for="return_days">{{ 'app.items.form.return_days' | t }}:</label>
+        <div class="flex items-center gap-3">
+          <input type="number" id="return_days" name="item[return_days]" value="{{ item.return_days | default: 30 }}">
+          {{ 'app.items.form.days' | t }}
+        </div>
+        {% render 'theme/simple/field_error', errors: item.errors.return_days %}
+      </fieldset>
+    </div>
+  </div>
+
+  <fieldset class="mt-12 text-end">
+    <button class="button" value="{{ path }}">
+      {% render 'theme/simple/ui/icon', icon: 'check' %}
+      {{ 'app.items.form.submit' | t }}
+    </button>
+  </fieldset>
+
+</form>
+
+{% render 'theme/simple/photos/uppy_form',
+  type: 'items',
+  object_uuid: item_uuid,
+  presigned_url: context.presigned_url,
+  user_id: user.id,
+  photo_type: 'photo',
+  note: 'Images only, up to 3 files, 2MB each',
+  max_number_of_files: 3,
+  existing_photos: photos
+%}

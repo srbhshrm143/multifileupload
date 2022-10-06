@@ -1,0 +1,10 @@
+{% parse_json object %}
+  {
+    "id": {{ item_inventory.id | json }},
+    "max_in_one_order": {{ object.max_in_one_order | plus: 0 | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

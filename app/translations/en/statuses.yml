@@ -1,0 +1,95 @@
+en:
+  app:
+    statuses:
+      bulk_operations:
+        import:
+          created: Pending
+          started: In progress
+          done: Ready
+          failure: Error
+          pending_acceptance: Pending acceptance
+          new_item_imported: New items imported
+
+          validation_succeeded: In Progress (2)
+          diff_calculated: In Progress (3)
+          updating_completed: In Progress (4)
+          creating_completed: In Progress (4)
+        export:
+          created: Pending
+          started: In progress
+          done: Ready
+          failure: Error
+      order_deliveries:
+        delivered: delivered
+        shipping_types:
+          delivery: Out for delivery
+          personal_pickup: Ready for pickup
+          digital: Code sent
+      orders_for_role:
+        buyer:
+          confirmed: waiting for payment
+          paid: in progress
+          in_progress: in progress
+          delivered: delivered
+          cancelled_buyer: cancelled by you
+          cancelled_seller: cancelled by merchant
+          returned: returned
+          completed: completed
+        seller:
+          paid: new
+          in_progress: in progress
+          delivered: delivered
+          cancelled_buyer: cancelled by buyer
+          cancelled_seller: cancelled by you
+          returned: returned
+          completed: completed
+        admin:
+          confirmed: waiting for payment
+          paid: in progress
+          in_progress: in progress
+          delivered: delivered
+          cancelled_buyer: cancelled by buyer
+          cancelled_seller: cancelled by merchant
+          returned: returned
+          completed: completed
+      orders:
+        placed: new
+        confirmed: confirmed
+        paid: paid
+        in_progress: in progress
+        delivered: delivered
+        cancelled_seller: cancelled by seller
+        cancelled_buyer: cancelled by buyer
+        returned: returned
+        completed: completed
+      items:
+        published: Published
+        unpublished: Unpublished
+        unavailable: Out of stock
+      transactions:
+        new: New
+        success: Success
+        failed: Failed
+        expired: Expired
+      line_item_returns:
+        requested: Requested
+        approved: Approved
+        rejected: Rejected
+        returned: Returned
+      processes:
+        requested: Requested
+        accepted: Accepted
+        rejected: Rejected
+        cancelled: Cancelled
+      reviews:
+        new: New
+        filled: Filled
+        dismissed: Dismissed
+      projects:
+        open: Open
+        under_evaluation: Under Evaluation
+        closed: Closed
+        draft: Draft
+      project_offers:
+        submitted: Submitted
+        draft: Draft

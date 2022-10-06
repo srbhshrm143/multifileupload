@@ -1,0 +1,45 @@
+{% liquid
+  assign can = false
+
+  if item_inventory == blank
+    return false
+  endif
+
+  if actor.id == item_inventory.owner.id
+    assign owner = true
+  endif
+
+  case do
+  when 'edit':
+    return owner
+
+  when 'follow':
+    return true
+  when 'display'
+    assign status = item_inventory.status.name
+    if status == 'app.statuses.items.published' or status == 'app.statuses.items.unavailable'
+      return true
+    elsif actor.permissions != blank and actor.permissions != '{}'
+      return true
+    else
+     assign orgs = actor.organizations | map: 'r_id'
+     if orgs contains item_inventory.owner.id
+       return true
+      endif
+    endif
+  when 'purchase'
+    if context.constants.ONLY_BUYERS_CAN_PURCHASE == 'true'
+      if actor.organizations.size > 0
+        return false
+      elsif actor.permissions != blank and actor.permissions != '{}'
+        return false
+      else
+        return true
+      endif
+    else
+      return true
+    endif
+  endcase
+
+  return can
+%}

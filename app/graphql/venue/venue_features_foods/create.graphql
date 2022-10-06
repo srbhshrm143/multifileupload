@@ -1,0 +1,72 @@
+mutation create(
+  $venue_id: String!
+  $passed_hors: String!
+  $antipasto: String!
+  $dinner_menu_course3: String!
+  $dinner_menu_course4: String!
+  $late_night_sweets: String!
+  $late_night_savoury: String!
+  $late_night_seafood: String!
+  $buffet_style_brunch: String!
+  $buffet_style_lunch: String!
+  $buffet_style_dinner: String!
+  $plated_brunch: String!
+  $plated_lunch: String!
+  $bread_for_table: String!
+  $halal: String!
+  $kosher: String!
+  $vegetarian: String!
+  $vegan: String!
+  $wedding_cake_cutting_fee: String!
+  $coffee_tea_services: String!
+  $bridal_shower: String!
+  $baby_shower: String!
+  $deluxe_bar: String!
+  $plated_dinner_course3: String!
+  $plated_dinner_course4: String!
+  $lunch_course3: String!
+  $lunch_course4: String!
+  $late_night_stations: String!
+  $seafood_antipasto: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_features_foods"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "passed_hors", value: $passed_hors }
+        { name: "antipasto", value: $antipasto }
+        { name: "dinner_menu_course3", value: $dinner_menu_course3 }
+        { name: "dinner_menu_course4", value: $dinner_menu_course4 }
+        { name: "late_night_sweets", value: $late_night_sweets }
+        { name: "late_night_savoury", value: $late_night_savoury }
+        { name: "late_night_seafood", value: $late_night_seafood }
+        { name: "buffet_style_brunch", value: $buffet_style_brunch }
+        { name: "buffet_style_lunch", value: $buffet_style_lunch }
+        { name: "buffet_style_dinner", value: $buffet_style_dinner }
+        { name: "plated_brunch", value: $plated_brunch }
+        { name: "plated_lunch", value: $plated_lunch }
+        { name: "bread_for_table", value: $bread_for_table }
+        { name: "halal", value: $halal }
+        { name: "kosher", value: $kosher }
+        { name: "vegetarian", value: $vegetarian }
+        { name: "vegan", value: $vegan }
+        { name: "wedding_cake_cutting_fee", value: $wedding_cake_cutting_fee }
+        { name: "coffee_tea_service", value: $coffee_tea_services }
+        { name: "bridal_shower", value: $bridal_shower }
+        { name: "baby_shower", value: $baby_shower }
+        { name: "deluxe_bar", value: $deluxe_bar }
+        { name: "plated_dinner_course3", value: $plated_dinner_course3 }
+        { name: "plated_dinner_course4", value: $plated_dinner_course4 }
+        { name: "lunch_course3", value: $lunch_course3 }
+        { name: "lunch_course4", value: $lunch_course4 }
+        { name: "late_night_stations", value: $late_night_stations }
+        { name: "seafood_antipasto", value: $seafood_antipasto }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

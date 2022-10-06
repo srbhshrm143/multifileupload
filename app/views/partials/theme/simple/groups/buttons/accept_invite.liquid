@@ -1,0 +1,18 @@
+{% assign now = 'now' | to_time | strftime: '%Y-%m-%dT%H:%M:%S.%L%z' %}
+
+<form action="{% render 'link_to', object: group.member %}" method="post">
+  {% render 'authenticity_token', token: context.authenticity_token %}
+  <input type="hidden" name="_method" value="put" />
+  <input type="hidden" name="id" value="{{ group.member.id }}">
+  <input type="hidden" name="l_id" value="{{ current_profile.id }}">
+  <input type="hidden" name="r_id" value="{{ group.id }}">
+  <input type="hidden" name="l_accepted_at" value="{{ now }}">
+  <input type="hidden" name="r_accepted_at" value="{{ group.member.r_accepted_at }}">
+  <input type="hidden" name="name" value="membership">
+  <input type="hidden" name="return_to" value="{% render 'link_to', object: group %}">
+  <input type="hidden" name="notice_key" value="app.groups.joined">
+
+  <button class="button {{ class }}" data-tc="ask-to-join">
+    {{ group.approve_request | t: scope: 'app.groups.accept_and_join'}}
+  </button>
+</form>

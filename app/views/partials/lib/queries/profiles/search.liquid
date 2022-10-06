@@ -1,0 +1,5 @@
+{% liquid
+  graphql r = 'profiles/search', limit: limit, uuid: uuid, id: id, slug: slug, user_id: user_id, not_ids: not_ids
+
+  return r.records
+%}

@@ -1,0 +1,68 @@
+{%liquid
+
+  assign uuid = '' | uuid
+  assign object_uuid = '' | uuid
+%}
+<!-- <h1 class="">
+</h1> -->
+<!-- Get Query String Room Id -->
+<!-- Room ID : {{ context.params.id }} -->
+<!-- {{ context }} -->
+<!-- <br><br> -->
+<!-- {{ context }} -->
+
+{% graphql read = 'venue_rooms/show' %}
+
+{%- comment -%}
+  {{ read.models.results }}
+{%- endcomment -%}
+{% assign rooms = read.models.results %}
+<br><br>
+
+<div class="row">
+  <!-- Find Room From All Rooms Through a Loop -->
+  {% for room in rooms %}
+    {% if room.id == context.params.id %}
+    <!-- {{ room }}   -->
+      <div class="text-xl">
+        <form action="/dashboard/rooms/room_updated" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="object_uuid" value="{{ object_uuid }}">
+          {% include 'theme/simple/venue/rooms/room-feilds' %}
+        </form>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% graphql data %}
+  mutation presign {
+    property_upload_presigned_url(
+      table: "form_media_testing",
+      property_name: "testing_media"
+    ) {
+      upload_url
+      upload_url_payload
+    }
+  }
+{% endgraphql %}
+{% assign data = data.property_upload_presigned_url %}
+<!-- {{ data }} -->
+<!-- {{ context }} -->
+
+<!-- File Upload Uppy Form -->
+<form action="{{ data.upload_url }}"
+data-s3-uppy="form"
+data-s3-uppy-user-id="{{ context.current_user.id }}"
+data-s3-uppy-object-uuid="{{ object_uuid }}"
+data-s3-uppy-photo-type="{{ "Testing Media Upload" }}"
+data-s3-uppy-max-number-of-files="{{ 3 }}"
+hidden
+id="uppy_custom_media_upload">
+{% for field in data.upload_url_payload %}
+  <input type="hidden" name="{{ field[0] }}" value='{{ field[1] }}'>
+{% endfor %}
+</form>
+
+
+{%- comment -%}
+{%- endcomment -%}  

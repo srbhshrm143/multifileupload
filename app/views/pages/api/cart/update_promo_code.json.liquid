@@ -1,0 +1,52 @@
+---
+slug: api/cart/update_promo_code
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile, allow_anonymous: true
+
+  function orders = 'lib/queries/orders/search_by_buyer' limit: 100,  buyer: current_profile.id, status: 'app.statuses.orders.placed'
+  assign seller_ids = orders.results | map: 'seller_id'
+  function promo_codes = 'lib/queries/promo_codes/search_by_code', limit: 1, lang: context.language, code: context.params.code, s_creator_ids: seller_ids
+
+  assign result = '{"valid":false}' | parse_json
+  assign promo_code = promo_codes.results[0]
+  if promo_code
+    if orders.results.size > 0
+      assign orders_promo_ids = orders.results | map: "promo_id" | compact
+      if orders_promo_ids.size == 0
+        if promo_code.max_times_user_can_use > 0 or promo_code.max_discount_amount_per_user > 0
+          function can_be_applied = 'lib/commands/transactions/apply_promo', promo_code: promo_code, buyer: current_profile.id
+        else
+          assign can_be_applied = '{ "valid": true }' | parse_json
+        endif
+        if can_be_applied.valid
+          if promo_code.code_type == 'global'
+            assign orders = orders.results
+          else
+            assign orders = orders.results | select: seller_id: promo_code.creator_id
+          endif
+
+          for order in orders
+            function order_result = 'lib/commands/orders/update_promo', object: order, promo_code: promo_code
+            hash_assign result['valid'] = order_result.valid
+            hash_assign result['error'] = order_result.errors | join: ', '
+
+            hash_assign result['orders'] = order_result
+          endfor
+        else
+          hash_assign result['error'] = can_be_applied.errors.user_validation | join: ', '
+        endif
+      else
+        hash_assign result['error'] = 'app.promo_codes.error.already_applied' | t
+      endif
+    else
+      hash_assign result['error'] = 'app.orders.cart.errors.no_orders' | t
+    endif
+  else
+    hash_assign result['error'] = 'app.promo_codes.error.does_not_exist' | t
+  endif
+
+  echo result
+%}

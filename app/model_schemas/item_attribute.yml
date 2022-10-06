@@ -1,0 +1,8 @@
+name: item_attribute
+properties:
+  - name: name
+    type: string
+  - name: value
+    type: string
+  - name: disabled_at
+    type: datetime

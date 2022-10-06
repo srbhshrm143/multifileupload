@@ -1,0 +1,5 @@
+name: sitemap
+properties:
+  - name: file
+    type: upload
+

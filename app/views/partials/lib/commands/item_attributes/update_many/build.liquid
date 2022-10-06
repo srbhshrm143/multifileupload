@@ -1,0 +1,31 @@
+{% liquid
+  assign data = '{}' | parse_json
+  assign name = object.name | downcase | slugify
+
+  hash_assign data['translations_update'] = object.translations
+  for translation in data.translations_update
+    hash_assign translation['name'] = translation.name | sanitize
+    hash_assign translation['translation_key'] = 'app.item_attributes.' | append: name
+  endfor
+
+  hash_assign data['attributes'] = object.attributes
+  for attribute in data.attributes
+    hash_assign attribute['name'] = name
+    if attribute.disabled_at != null
+      hash_assign attribute['disabled_at'] = 'now' | to_time
+    endif
+
+    for translation in attribute.translations
+      hash_assign translation['name'] = translation.name | sanitize
+      assign value_slug = attribute.value | slugify
+      hash_assign translation['translation_key'] = 'app.item_attributes.' | append: name | append: '_' | append: value_slug
+      if attribute.id
+        assign data.translations_update = data.translations_update | add_to_array: translation
+      else
+        assign data.translations_create = data.translations_create | add_to_array: translation
+      endif
+    endfor
+  endfor
+
+  return data
+%}

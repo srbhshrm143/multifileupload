@@ -1,0 +1,16 @@
+{% liquid
+  assign class = class | default: 'w-20 h-auto rounded'
+%}
+
+{% if photo.m %}
+
+  <picture>
+    <source type="image/avif" srcset="{{ photo.m_avif }}, {{ photo.lg_avif }} 2x">
+    <img src="{{ photo.m }}" srcset="{{ photo.lg }} 2x" width="{{ item.width }}" height="{{ item.height }}" alt="" class="{{ class }}">
+  </picture>
+
+{% else %}
+
+  {% render 'theme/simple/ui/picture-placeholder', class: class %}
+
+{% endif %}

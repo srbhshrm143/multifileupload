@@ -1,0 +1,31 @@
+query search(
+  $limit: Int = 20
+  $event_time: String
+  $sort: RecordsSortInput = { created_at: { order: DESC } }
+  # $lang: String
+) {
+  event_time: records(
+    per_page: $limit
+    filter: {
+      table: {
+        value: "venue_rooms"
+      }
+      or: [
+        { properties: { name: "event_timing", contains: $event_time } }
+      ]
+
+    }
+    sort: [$sort]
+  ) {
+    total_entries
+    results {
+      id
+      created_at
+      type: table
+
+      name: property(name: "venue_room_name")
+      event_timing: property(name: "event_timing")
+    }
+
+  }
+}

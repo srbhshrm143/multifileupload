@@ -1,0 +1,88 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+%}
+ 
+<h1 class="pagetitle"> Manage Venue Rooms </h1>
+
+{%liquid
+  graphql show_rooms = 'venue_rooms/show' | fetch: "models"
+  assign rooms = show_rooms | fetch: "results"
+%}
+
+<!-- {{ rooms }} -->
+<div class="venue_rooms relative mt-4">
+  {% for room in rooms %}
+    {% if room.properties.venue_id == context.params.id %}
+      <!-- {{ room }}<br> -->
+      <div class="card-lg w-full md:w-96">
+        <table>
+          {% if room.id != blank %}
+            <tr>
+              <td> Room Id : </td>
+              <td> {{ room.id }} </td>
+            </tr>
+          {% endif %}
+          {% if room.properties.room_name != blank %}
+            <tr>
+              <td> Room Name : </td>
+              <td> {{ room.properties.room_name }} </td>
+            </tr>
+          {% endif %}
+          <tr>
+            {% if context.exports.current_profile.user_type == "venue_owner" and context.current_user.id == room.properties.owner_id %}
+              <td>
+                <!-- <button class="button button-small delete_room" id="delete_room" onclick="delete_rooma();"> Delete </button> -->
+                <a href="/venue_rooms/delete?id={{ room.id }}" class="button button-small delete_room"> Delete </a>
+              </td>
+              <td>
+                <a href="/venue_rooms/update?id={{ room.id }}" class="button button-small update_room"> Update </a>
+              </td>
+            {% endif %}
+          </tr>
+        </table>
+        <div id="confirm" class="modal hide fade">
+          <div class="modal-body">
+            Are you sure?
+          </div>
+          <div class="modal-footer">
+            <a href="/venue_rooms/delete?id={{ room.id }}" class="button button-small delete_room" id="delete_room"> Delete </a>
+            <button type="button" data-dismiss="modal" class="btn" id="cancel" onclick="cancel();">Cancel</button>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    
+    
+  {% endfor %}
+  {% if context.exports.current_profile.user_type == "venue_owner" %}
+    <a href="/venue_rooms/create" class="new-room-create button button-small"> Create Room </a>
+  {% endif %}
+  {% unless context.exports.current_profile.user_type == "venue_owner" %}
+    <a href="/venue/show_venue?id={{ context.params.id }}" class="new-room-create button button-small"> Return to Venue </a>
+  {% endunless %}
+
+</div>
+<!-- {{ context.exports.current_profile.user_type }} -->
+
+<!-- {{ context }} -->
+<!-- {{ context.exports.current_profile.user_id }} -->
+<!-- {{ context.current_user.id }} -->
+
+<script>
+  function delete_rooma(){
+    // alert("Hi");
+    $('#confirm').show();
+    // $('#delete_room').on('click', function(e){
+    //   alert("Hi");
+    //     var $form=$(this).closest('form');
+    //     e.preventDefault();
+    //     $('#confirm').modal({ backdrop: 'static', keyboard: false })
+    //         .one('click', '#delete', function (e) {
+    //             $form.trigger('click');
+    //         });
+    // });
+  }
+  function cancel(){
+    $('#confirm').hide();
+  }
+</script>

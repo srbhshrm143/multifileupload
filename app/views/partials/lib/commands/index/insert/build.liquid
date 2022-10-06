@@ -1,0 +1,44 @@
+{% liquid
+  assign doc = '{}' | parse_json
+
+  hash_assign doc['id'] = item.id
+  hash_assign doc['main_variant'] = item.main_variant
+  hash_assign doc['price'] = item.price
+  hash_assign doc['original_price'] = item.original_price
+  hash_assign doc['currency'] = item.currency
+  hash_assign doc['category'] = item.category
+  hash_assign doc['created_at'] = item.created_at
+  hash_assign doc['status'] = item.status.name | default: item.c__status
+
+  hash_assign doc['photo'] = '{}' | parse_json
+
+  hash_assign doc['photo']['m'] = item.photos[0].photo.versions.m
+  hash_assign doc['photo']['lg'] = item.photos[0].photo.versions.lg
+  hash_assign doc['photo']['m_avif'] = item.photos[0].photo.versions.m_avif
+  hash_assign doc['photo']['lg_avif'] = item.photos[0].photo.versions.lg_avif
+
+  hash_assign doc['photo']['width'] = item.photos[0].photo_width
+  hash_assign doc['photo']['height'] = item.photos[0].photo_height
+
+  hash_assign doc['owner'] = '{}' | parse_json
+  hash_assign doc['owner']['id'] = item.item_inventory.owner.id
+  hash_assign doc['owner']['name'] = item.item_inventory.owner.name
+  hash_assign doc['owner']['type'] = item.item_inventory.owner.type
+  hash_assign doc['owner']['slug'] = item.item_inventory.owner.slug
+
+  for detail in item['item_details']
+    hash_assign doc[detail.lang] = '{}' | parse_json | hash_merge: name: detail.name, description: detail.description
+    hash_assign doc[detail.lang]['category'] = item.category | prepend: "categories." | t: locale: detail.lang
+
+    assign i18n = "app.item_attributes" | t: locale: locale
+    function list = 'lib/commands/index/insert/inventory_attributes', item: item, i18n: i18n
+    hash_assign doc[detail.lang]['inventory_attributes'] = list
+  endfor
+
+  assign object = '{}' | parse_json
+  hash_assign object['document'] = doc
+  hash_assign object['id'] = item.id
+  hash_assign object['name'] = name
+
+  return object
+%}

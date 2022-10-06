@@ -1,0 +1,12 @@
+{% parse_json object %}
+  {
+    "id":      {{ object.id | json }},
+    "venue_id":              {{ object.venue_id | json }},
+    "booking_before":        {{ object.booking_before | json }},
+    "booking_confirmation":  {{ object.booking_confirmation | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

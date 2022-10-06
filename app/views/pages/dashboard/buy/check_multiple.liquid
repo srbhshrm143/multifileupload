@@ -1,0 +1,78 @@
+---
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_anonymous: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_anonymous: true
+
+  function item = 'lib/queries/items/test_items_find', id: context.params.line_item.item_id, lang: context.language
+  function can_purchase = "lib/can", actor: current_profile, do: "purchase", object: item
+
+  function order = 'lib/commands/line_items/find_or_create_order', item: item, current_profile: current_profile, params: context.params.line_item
+  if order.id and can_purchase.valid
+    unless order.currency
+      hash_assign order['currency'] = item.currency
+    endunless
+    
+    function object = 'lib/commands/line_items/create_or_increment_existing',  item: item, params: context.params.line_item, current_profile: current_profile, order: order
+  endif
+
+
+  function orders = 'lib/queries/orders/search', buyer: current_profile.id, ids: context.params.ids, limit: 200
+  function objects = 'lib/commands/orders/check_multiple', orders: orders
+  if object.valid
+    redirect_to '/dashboard/buy/review'
+  else
+    include 'lib/flash/publish', error: 'app.orders.confirm.errors.order_changed', force_clear: true
+    include 'theme/simple/dashboard/orders/cart', orders: objects.orders
+  endif
+
+
+%}
+
+<br>
+<br>
+  {{ item | json }}
+<br>
+<br>
+  {{ order | json }}
+<br>
+<br>
+  {{ object | json }}
+<br>
+<br>
+  {{ orders | json }}
+<br>
+<br>
+  {{ objects | json }}
+
+
+
+{%- comment -%}
+
+  function orders = 'lib/queries/orders/search', buyer: current_profile.id, ids: context.params.ids, limit: 200
+  function object = 'lib/commands/orders/check_multiple', orders: orders
+  if object.valid
+    redirect_to '/dashboard/buy/review'
+  else
+    include 'lib/flash/publish', error: 'app.orders.confirm.errors.order_changed', force_clear: true
+    include 'theme/simple/dashboard/orders/cart', orders: object.orders
+  endif
+
+  --------------
+
+  function item = 'lib/queries/items/test_items_find', id: context.params.line_item.item_id, lang: context.language
+  function can_purchase = "lib/can", actor: current_profile, do: "purchase", object: item
+
+  function order = 'lib/commands/line_items/find_or_create_order', item: item, current_profile: current_profile, params: context.params.line_item
+  if order.id and can_purchase.valid
+    unless order.currency
+      hash_assign order['currency'] = item.currency
+    endunless
+    
+    function object = 'lib/commands/line_items/create_or_increment_existing',  item: item, params: context.params.line_item, current_profile: current_profile, order: order
+  endif
+
+
+
+{%- endcomment -%}

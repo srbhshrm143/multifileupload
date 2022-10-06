@@ -1,0 +1,32 @@
+mutation update(
+  $Id: ID!,
+  $venue_id: String!
+  $deposit_percentage: String!
+  $remaining_payments: String!
+  $security_deposits: String!
+  $special_instructions: String!
+  $by_cheque_to_account1: String!
+  $by_cheque_to_account2: String!
+  $by_cheque_to_account3: String!
+  $payment_by_cheque: String
+){
+  record_update( 
+     id: $Id
+     record: {
+      table : "venue_payments"
+      	properties: [
+        { name: "venue_id", value: $venue_id }
+        { name: "deposit_percentage", value: $deposit_percentage }
+        { name: "remaining_payments", value: $remaining_payments }
+        { name: "security_deposits", value: $security_deposits }
+        { name: "special_instructions", value: $special_instructions }
+        { name: "by_cheque_to_account1", value: $by_cheque_to_account1 }
+        { name: "by_cheque_to_account2", value: $by_cheque_to_account2 }
+        { name: "by_cheque_to_account3", value: $by_cheque_to_account3 }
+        { name: "payment_by_cheque", value: $payment_by_cheque }
+        ]
+      }
+  ) {
+    id properties
+  }
+}

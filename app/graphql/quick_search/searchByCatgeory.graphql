@@ -1,0 +1,41 @@
+query search(
+  $limit: Int = 10
+  $keyword: String
+  $event_type:String
+) {
+  records(
+    per_page: $limit
+    filter: {table: {value: "venue_event_space"}, properties: {name: "event_type", contains: $event_type}, related_records: {join: {foreign_property: "id", join_on_property: "venue_id"}, filter: {table: {value: "venues"}, properties: {name: "venue_address", contains: $keyword}}}}
+    sort: {created_at: {order: DESC}}
+  ) {
+    total_entries
+    results {
+      properties
+       images:related_records(
+        foreign_property: "media_uuid"
+        join_on_property: "media_uuid"
+        table: "form_media_testing"
+      ) {
+        id
+        imageurl:property(name: "origin_url")
+      }
+      venueDetails:related_record(
+        join_on_property: "venue_id"
+        table: "venues"
+        foreign_property: "id"
+        filter: {properties: {name: "venue_address", contains: $keyword}}
+      ) {
+        id
+        properties
+      }
+       price: related_records(
+        foreign_property: "venue_id"
+        join_on_property: "venue_id"
+        table: "venue_pricing"
+      ) {
+        id
+        properties
+      }
+    }
+  }
+}

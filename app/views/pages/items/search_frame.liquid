@@ -1,0 +1,14 @@
+---
+slug: search_frame
+layout: null
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, followships: true
+  assign statuses = 'published,unavailable' | split: ','
+
+  function use_search_index = 'lib/queries/constants/find' name: "USE_SEARCH_INDEX", type: "boolean"
+  function items = 'lib/queries/items/search', params: context.params, limit: 21, statuses: statuses, lang: context.language, main_variant: true, withAllVariants: true, use_search_index: use_search_index
+  function filters = 'lib/queries/search/filters', query: items.query
+
+  include 'theme/simple/items/search_frame', items: items, filters: filters, current_profile: current_profile
+%}

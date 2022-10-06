@@ -1,0 +1,19 @@
+<section class="my-10 container items-center">
+  <h2 class="bigtitle text-center">{{ 'app.login_form.log_in' | t }}</h2>
+
+  <form action="/sessions/2fa" method="post" class="card md:max-w-lg mx-auto text-center" >
+    {% render 'authenticity_token', context: context %}
+    <input type="hidden" name="2fa[email]" value="{{ object.email }}">
+    <input type="hidden" name="2fa[password]" value="{{ object.password }}">
+
+    <p>{{ 'app.2fa.new.please_confirm' | t }}</p>
+
+
+    {% render 'theme/simple/2fa/otp_code_input', object: object %}
+    {% render 'theme/simple/field_error', errors: object.errors.otp_code %}
+
+    <fieldset class="mt-5 text-center">
+      <button class="button mt-3" x-ref="submit">{{ 'app.2fa.session.login' | t }}</button>
+    </fieldset>
+  </form>
+</section>

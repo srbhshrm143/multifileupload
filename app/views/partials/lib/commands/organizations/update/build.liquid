@@ -1,0 +1,28 @@
+{% liquid
+  function default_currency = 'lib/queries/constants/find' name: "CURRENCY"
+%}
+{% parse_json data %}
+  {
+    "id":             {{ object.id | json }},
+    "name":           {{ object.name | default: uuid | json }},
+    "phone":          {{ object.phone | json }},
+    "address":        {{ object.address | json }},
+    "description":    {{ object.description | json }},
+    "shipping_types": {{ object.shipping_types | json }},
+    "offline_stores": {{ object.offline_stores | default: '' | split: ';' | json }},
+    "contact_emails": {{ object.contact_emails | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  function cities = 'lib/queries/constants/find' name: "DELIVERY_FEES_CITIES", type: 'array'
+  assign delivery_fees = '{}' | parse_json
+  assign cities = cities | add_to_array: 'default'
+  for item in cities
+    assign city = item | downcase | slugify
+    hash_assign delivery_fees[city] = object.delivery_fees_for_cities[city] | plus: 0 | amount_to_fractional: default_currency | default: 0
+  endfor
+  hash_assign data['delivery_fees_for_cities'] = delivery_fees
+
+  return data
+%}

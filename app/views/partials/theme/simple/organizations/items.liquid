@@ -1,0 +1,28 @@
+<section class="container">
+
+  {% if items.total_entries > 0 %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-5" >
+      {% for item in items.results %}
+        {% render 'theme/simple/items/card', item: item, current_profile: current_profile %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="md:h-64 card flex flex-col md:flex-row justify-center items-center text-center md:text-start">
+      <div class="order-2 md:order-1">
+        <p class="subtitle">{{ 'app.organizations.items.empty.title' | t }}</p>
+        <p class="max-w-md">{{ 'app.organizations.items.empty.description' | t }}</p>
+        <a href="{% render 'link_to', search: '' %}" class="button mt-4">{{ 'app.organizations.items.empty.cta' | t }}</a>
+      </div>
+      <div class="w-16 mb-6 md:mb-0 md:w-32 md:ms-10 md:ps-10 md:mt-1 order-1 md:order-last md:border-s">
+        {% render 'theme/simple/ui/icon', icon: 'shoppingCart', class: 'w-full text-interaction-disabled' %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if items.total_entries > 0 %}
+    <footer class="mt-8 text-center">
+      <a href="/search?organization_slugs%5B%5D={{ organization.slug }}" class="button">{{ 'app.items.show_all_from_seller' | t: organization: organization.name }}</a>
+    </footer>
+  {% endif %}
+
+</section>

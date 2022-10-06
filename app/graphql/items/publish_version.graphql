@@ -1,0 +1,37 @@
+mutation publish_version(
+  $new_item_ids: [ID!]!
+  $new_item_status: String!
+  $old_item_status: String!
+  $item_inventory_id: ID!
+) {
+  old_items: records_update_all(
+    table: "item",
+    filter: {
+      properties: [
+        { name: "item_inventory_id", value: $item_inventory_id }
+        { name: "c__status", value_in: ["app.statuses.items.published", "app.statuses.items.unavailable"]  }
+      ]
+    }
+    sync: true
+    record: {
+      properties: { name: "c__status", value: $old_item_status }
+    }
+  ){ count }
+
+  new_items: records_update_all(
+    table: "item",
+    filter: { id: { value_in: $new_item_ids }}
+    sync: true
+    record: {
+      properties: { name: "c__status", value: $new_item_status }
+    }
+  ){ count }
+
+  item_inventory: record_update(
+    id: $item_inventory_id
+    record: {
+      table: "item_inventory"
+      properties: { name: "item_ids", value_array: $new_item_ids }
+    }
+  ) { id }
+}

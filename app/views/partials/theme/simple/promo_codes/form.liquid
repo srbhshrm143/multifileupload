@@ -1,0 +1,191 @@
+{% liquid
+  if object.id
+    assign method = 'put'
+  else
+    assign method = 'post'
+  endif
+%}
+
+{% liquid
+  if object.code_type == 'global'
+    assign is_global = true
+  else
+    assign is_global = false
+  endif
+%}
+
+<div x-data="{ is_global: {{ is_global }}, merchantName: '{{ profile.name }}', totalDiscount: {{ object.total_discount | default: 0 }}, campaignCode: '{{ object.campaign_code | escape }}' }" class="mt-8">
+  <form action="{% render 'link_to', promo_code: true, namespace: namespace %}" method="post">
+    {% render 'authenticity_token', context: context %}
+    <input type="hidden" name="_method" value="{{method}}">
+
+    {% if object.id %}
+      <input type="hidden" name="promo_code[id]" value="{{ object.id }}">
+    {% endif %}
+
+    <h3 class="subtitle">{{ 'app.promo_codes.cards.details' | t }}</h3>
+
+      <div class="card" x-data="{ 'activeTab': 0 }">
+        <ul class="-mx-4 mb-8 flex border-b-2 justify-center">
+          {% for lang in context.available_languages %}
+            <li
+              class="max-w-sm mb-[-2px] pt-2 pb-4 px-4 flex-grow border-b-2 cursor-pointer text-center uppercase transition-colors"
+              :class="activeTab=={{ forloop.index0 }} ? 'text-interaction border-interaction font-semibold' : 'text-content-sidenote hover:text-content hover:border-interaction-disabled'"
+              @click="activeTab = {{forloop.index0}}"
+            >
+              {{ 'languages.' | append: lang | t }}
+              {% if object.details[lang].valid == false %}
+                <span class="sidenote text-danger">
+                  ({{ 'app.promo_codes.form.invalid' | t }})
+                </span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+
+        {% for lang in context.available_languages %}
+          {% assign detail = object.details[lang] %}
+          <input type="hidden" name="promo_code[details][{{lang}}][lang]" value="{{lang}}">
+          <div x-show="activeTab=={{forloop.index0}}">
+            <fieldset>
+              <label class="block" for="description_{{lang}}">{{ 'app.promo_codes.attr.description' | t }} *</label>
+              <input class="w-full lg:w-1/2" type="text" id="description_{{lang}}" name="promo_code[details][{{lang}}][description]" value="{{detail.description}}" {% if filled %} disabled {% else %} autofocus {% endif %}>
+              {% render 'theme/simple/field_error', errors: detail.errors.description %}
+              {% render 'theme/simple/ui/form-tip', content_key: 'app.promo_codes.form.description_tip'  %}
+            </fieldset>
+          </div>
+        {% endfor %}
+      </div>
+
+      <h3 class="subtitle mt-8">{{ 'app.promo_codes.cards.valid' | t }}</h3>
+      <div class="card">
+        <div class="flex flex-col md:flex-row md:items-center gap-8">
+          <fieldset>
+            <label class="block" for="start_date">{{ 'app.promo_codes.attr.start_date' | t }}</label>
+            <input type="date" id="start_date" name="promo_code[start_date]" value="{{ object.start_date }}" required {% if filled %} disabled {% endif %}>
+            {% render 'theme/simple/field_error', errors: object.errors.start_date %}
+          </fieldset>
+          <fieldset>
+            <label class="block" for="end_date">{{ 'app.promo_codes.attr.end_date' | t }}</label>
+            <input type="date" id="end_date" name="promo_code[end_date]" value="{{ object.end_date }}" required {% if filled %} disabled {% endif %}>
+            {% render 'theme/simple/field_error', errors: object.errors.end_date %}
+          </fieldset>
+          <fieldset>
+            <label class="block" for="max_available">{{ 'app.promo_codes.attr.max_available' | t }}</label>
+            <input type="number" id="max_available" name="promo_code[max_available]" value="{{ object.max_available }}" min="1" max="100000" required {% if filled %} disabled {% endif %}>
+            {% render 'theme/simple/field_error', errors: object.errors.max_available %}
+          </fieldset>
+        </div>
+        <div class="mt-4 pt-4 border-t">
+          <fieldset class="flex items-center gap-2">
+            <label class="md:w-1/3" for="max_times_user_can_use">
+              {{ 'app.promo_codes.attr.max_times_user_can_use' | t }}:
+            </label>
+            <input type="number" id="max_times_user_can_use" name="promo_code[max_times_user_can_use]" value="{{ object.max_times_user_can_use }}" required min="1" {% if filled %} disabled {% endif %} class="w-20">
+            {% render 'theme/simple/field_error', errors: object.errors.max_times_user_can_use %}
+          </fieldset>
+          <fieldset class="mt-2 flex items-center gap-2">
+            <label class="md:w-1/3" for="max_discount_amount_per_user">
+              {{ 'app.promo_codes.attr.max_discount_amount_per_user' | t }}:
+            </label>
+            <input type="number" id="max_discount_amount_per_user" name="promo_code[max_discount_amount_per_user]" value="{{ object.max_discount_amount_per_user }}" required min="1" {% if filled %} disabled {% endif %} class="w-20">
+            {% render 'theme/simple/field_error', errors: object.errors.max_discount_amount_per_user %}
+          </fieldset>
+        </div>
+      </div>
+
+    <h3 class="subtitle mt-8">{{ 'app.promo_codes.cards.discount' | t }}</h3>
+    <div class="card flex flex-col md:flex-row md:items-center gap-8">
+      <fieldset>
+        <label class="block" for="total_discount">{{ 'app.promo_codes.attr.total_discount' | t }}</label>
+        <input x-model="totalDiscount" type="number" id="total_discount" name="promo_code[total_discount]" value="{{ object.total_discount }}" min="1" max="100" required {% if filled %} disabled {% endif %}> %
+        {% render 'theme/simple/field_error', errors: object.errors.total_discount %}
+      </fieldset>
+      <fieldset>
+        <label class="block" for="upper_limit">{{ 'app.promo_codes.attr.upper_limit' | t }}</label>
+        <input type="number" id="upper_limit" name="promo_code[upper_limit]" value="{{ object.upper_limit }}" min="1" max="10000" required {% if filled %} disabled {% endif %}> {{ context.default_currency }}
+        {% render 'theme/simple/field_error', errors: object.errors.upper_limit %}
+      </fieldset>
+    </div>
+
+    {% if namespace == 'admin' %}
+      <h3 class="subtitle mt-8">{{ 'app.promo_codes.cards.obligation' | t }}</h3>
+      <div class="card flex flex-col md:flex-row md:items-center gap-8">
+        <fieldset>
+          <label class="block" for="mpo_cost_percent">{{ 'app.promo_codes.attr.mpo_cost_percent' | t }}</label>
+          <input x-bind:required="!is_global" x-bind:disabled="is_global" type="number" id="mpo_cost_percent" name="promo_code[mpo_cost_percent]" x-bind:value="is_global ? '100' : '{{ object.mpo_cost_percent }}'" min="0" max="100" required autocomplete="off"
+            {% if filled %} disabled {% endif %}> %
+          {% render 'theme/simple/field_error', errors: object.errors.mpo_cost_percent %}
+        </fieldset>
+
+        <fieldset>
+          {% unless object.code_type == 'global' %}
+            <label class="block" for="creator_id">{{ 'app.promo_codes.attr.creator_id' | t }}</label>
+            <select x-bind:required="!is_global" x-bind:disabled="is_global" id="category" name="promo_code[creator_id]" {% if filled %} disabled {% endif %}>
+                {% if filled %}
+                  <option selected value="{{object.organization.id}}">{{object.organization.name}}</option>
+                {% else %}
+                  <option selected value=""></option>
+                  {% for organization in organizations %}
+                    <option {% if organization.id == object.creator_id %}selected {% endif %} value="{{organization.id}}">{{organization.name}}</option>
+                  {% endfor %}
+                {% endif %}
+            </select>
+            {% render 'theme/simple/field_error', errors: object.errors.creator_id %}
+          {% endunless %}
+
+          <label for="is_global">{{ 'app.promo_codes.attr.is_global' | t }}</label>
+          <input x-model="is_global" type="checkbox" id="is_global" name="promo_code[is_global]" {% if filled %} disabled {% endif %}>
+
+        </fieldset>
+        <input type="hidden" name="promo_code[code_type]" value="mpo">
+      </div>
+    {% else %}
+      <input type="hidden" name="promo_code[code_type]" value="merchant">
+    {% endif %}
+
+    <h3 class="subtitle mt-8">{{ 'app.promo_codes.cards.generation' | t }}</h3>
+    <div class="card">
+      {% unless filled %}
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <fieldset>
+            <label class="block" for="merchant_name">{{ 'app.promo_codes.attr.merchant_name' | t }}</label>
+            {% if namespace == 'admin' and filled == blank %}
+              <input x-model="merchantName" type="text" id="merchant_name" value="{{profile.name}}" />
+            {% else %}
+              <input x-ref="merchantName" type="text" id="merchant_name" value="{{profile.name}}" disabled />
+            {% endif %}
+          </fieldset>
+          <span class="pt-5 hidden md:block">—</span>
+          <fieldset>
+            <label class="block" for="total_discount_gen">{{ 'app.promo_codes.attr.total_discount' | t }}</label>
+            <input x-model="totalDiscount" type="text" disabled>
+          </fieldset>
+          <span class="pt-5 hidden md:block">—</span>
+          <fieldset>
+            <label class="block" for="campaign_code">{{ 'app.promo_codes.attr.campaign_code' | t }}</label>
+            <input x-model="campaignCode" value="{{ object.campaign_code }}" type="text" id="campaign_code" name="promo_code[campaign_code]" required {% if filled %} disabled {% endif %}>
+            {% render 'theme/simple/field_error', errors: object.errors.campaign_code %}
+          </fieldset>
+        </div>
+      {% endunless %}
+
+      <fieldset>
+        <input
+          {% if filled %} disabled{% else %}x-bind:value="merchantName.replace(/\s/g, '') + totalDiscount + campaignCode"{% endif %}
+          type="text"
+          name="promo_code[code]"
+          value="{{ object.code }}"
+          required
+          class="sidenote {% unless filled %}mt-8{% endunless %} px-2 py-6 rounded border-0 bg-panel-highlight uppercase"
+        >
+        {% render 'theme/simple/field_error', errors: object.errors.code %}
+      </fieldset>
+    </div>
+
+
+    {% unless filled %}
+      <button class="mt-8 button">{{ 'app.models.shared.submit' | t }}</button>
+    {% endunless %}
+  </form>
+</div>

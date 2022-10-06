@@ -1,0 +1,29 @@
+{% assign tokenized_names = '[]' | parse_json |
+  add_to_array: object.first_name |
+  add_to_array: object.last_name |
+  compact |
+  uniq |
+  join: ' ' |
+  downcase
+%}
+
+{% parse_json object %}
+  {
+    "uuid":           {{ object.uuid | json }},
+    "user_id":        {{ object.user_id | default: object.id | json }},
+    "first_name":     {{ object.first_name | json }},
+    "last_name":      {{ object.last_name | json }},
+    "user_type":      {{ object.user__type | json }},
+    "user__mobile":   {{ object.phoneNumber | json }},
+    "referral_code":  {{ object.ReferralCode | json }},
+    "c__names":       {{ tokenized_names | json }},
+    "company_name":       {{ object.company_name | json }},
+    "company_phoneNumber":{{ object.company_phoneNumber | json }},
+    "above18":            {{ object.above18 | json }},
+    "language":       {{ profile.language | default: 'en' | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

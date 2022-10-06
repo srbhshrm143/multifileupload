@@ -1,0 +1,28 @@
+<h1 class="pagetitle"> Room Updated </h1>
+
+
+<!-- {{ context }}<br> -->
+<!-- {{ context.params }} -->
+{% assign room_id = context.params.room_id %}
+{% assign room_name = context.params.room_name %}
+{% assign room_media = context.params.room_media %}
+
+<!-- {{ room_id }}<br>
+{{ room_name }}<br>
+{{ room_media }}<br> -->
+
+{%- comment -%}
+{%- endcomment -%}
+{%liquid
+  graphql room_upd = 'venue_rooms/update', Id: room_id, room_name: room_name
+%}
+
+
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue_rooms/manage_rooms?id={{ context.params.venue_id }}";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

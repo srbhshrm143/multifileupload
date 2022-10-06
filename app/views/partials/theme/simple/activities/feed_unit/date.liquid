@@ -1,0 +1,5 @@
+{% if payload.date %}
+  <a href="{% render 'link_to', object: payload, type: 'activity' %}">
+    <time title="{{ payload.date }}" datetime="{{ payload.date }}" class="block mt-1 sidenote text-content-sidenote timeago">{{ payload.date | l: 'compact' }}</time>
+  </a>
+{% endif %}

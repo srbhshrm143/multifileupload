@@ -1,0 +1,26 @@
+---
+slug: api/groups/:group_id/content/:post_id/vote
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign group_id = context.params.group_id | split: '-' | last
+  function group = 'lib/queries/groups/find', id: group_id, with_owner: true
+  include 'lib/can_do_or_unauthorized', object: group, do: "vote", actor: current_profile
+
+  assign post_id = context.params.post_id | split: '-' | last
+  function post = 'lib/queries/posts/find', id: post_id, group_id: group_id
+  include 'lib/present_or_404', property:  post.id
+
+  function object = 'lib/commands/posts/vote', object: context.params, current_profile: current_profile, post: post
+  if object.valid
+    function _event = 'lib/commands/events/create', type: 'post_voted', actor_id: current_profile.id, object_id: object.id
+    if context.params.type == 'up'
+      function _event = 'lib/commands/events/create', type: 'post_upvoted', actor_id: current_profile.id, object_id: object.id
+    endif
+  endif
+
+  render 'theme/json/shared/show', object: object
+%}

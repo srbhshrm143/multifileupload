@@ -1,0 +1,21 @@
+<h1>This Delete Page</h1>
+{% assign dynamic_ids = context.params.id %}
+{{ dynamic_ids }}
+
+{% graphql upd_gql = 'venue_owner/delete', Id: dynamic_ids %}
+
+{%- comment -%}
+{%liquid
+  graphql dlt_data = 'venue_owner/delete', Id: dynamic_id
+%}
+{%- endcomment -%}
+
+{{ dlt_data }}
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue_owner/show";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

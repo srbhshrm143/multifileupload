@@ -1,0 +1,5 @@
+{% liquid
+  graphql r = 'users/token', email: email
+
+  return r.user
+%}

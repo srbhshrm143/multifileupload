@@ -1,0 +1,603 @@
+.cst-arrow {
+  background: url(../images/event-hound/drop-arrow.svg) no-repeat right;
+  background-position: 90%;
+}
+
+.bg-hero-image1 {
+  background: url(../images/event-hound/home-banner.png) no-repeat right;
+}
+.bg-join-bg1 {
+  background: url(../images/event-hound/join-bg.png) no-repeat right;
+}
+.bg-profile-bg1 {
+  background: url(../images/event-hound/profile-bg.png) no-repeat right;
+}
+.bg-hero-image2 {
+  background: url(../images/event-hound/vendor/h-banner.png) no-repeat right;
+}
+.bg-venue_bg1 {
+  background: url(../images/event-hound/vendor/venue_bg.png) no-repeat right;
+}
+.bg-add-venue1 {
+  background: url(../images/event-hound/vendor/add-venue-bg.jpg) no-repeat right;
+}
+.bg-frequently-bg-image1 {
+  background: url(../images/event-hound/faq.png) no-repeat right;
+}
+.bg-guest-terms1 {
+  background: url(../images/event-hound/guest-terms.jpg) no-repeat right;
+}
+.bg-about-bg1 {
+  background: url(../images/event-hound/about-bg.png) no-repeat right;
+}
+.bg-venue-detail_new1 {
+  background: url(../images/event-hound/venue-detail-bg.png) no-repeat right;
+}
+.bg-profile-bg1 {
+  background: url(../images/event-hound/profile-bg.png) no-repeat right;
+}
+.bg-venue-bg_new1 {
+  background: url(../images/event-hound/venue1-bg.png) no-repeat right;
+}
+.cst-calender {
+  background: url(../images/event-hound/calendar.svg) no-repeat right;
+  background-position: 90%;
+}
+
+.cst-placeholder::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #626262 !important;
+  opacity: 1;
+  /* Firefox */
+}
+
+.cst-placeholder:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #626262;
+}
+
+.cst-placeholder::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #626262;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
+.mm img.active {
+  display: none;
+}
+
+.mm img {
+  display: block;
+}
+
+/* narinder */
+
+
+.venue-date-picker .shadow-lg {
+  box-shadow: none;
+  padding: 0;
+}
+
+.venue-date-picker .datepicker-main {
+  background-color: #F9F9F9;
+
+}
+
+.venue-date-picker .days-of-week {
+  background-color: #28B8DC !important;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 10px;
+}
+
+.venue-date-picker .days-of-week span {
+  color: #fff;
+}
+
+.venue-date-picker .bg-blue-700 {
+  background-color: #28B8DC !important;
+  border-radius: 100%;
+}
+
+.venue-date-picker .datepicker-controls .text-sm {
+  font-size: 16px !important;
+}
+
+.datepicker-picker.inline-block.rounded-lg.bg-white.dark\:bg-gray-700.shadow-lg.p-4,
+.days,
+.datepicker-grid.w-64.grid.grid-cols-7 {
+  width: 100%;
+}
+
+.venue-date-picker .bg-blue-700 {
+  background-color: #28B8DC !important;
+  border-radius: 100%;
+  min-width: 37px;
+  min-height: 37px;
+  display: inline-block;
+}
+
+.slider-venue .slick-list.draggable {
+  padding: 0 !important;
+}
+
+.slider-venue .slick-slide img {
+  display: block;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.slider-venue .slider-for .slick-slide {
+  overflow: hidden;
+  max-height: 400px;
+}
+
+.slider-venue .slider-for .slick-slide {
+  height: 100%;
+}
+
+.mm img.active {
+  display: none;
+}
+
+.mm img {
+  display: block;
+}
+
+#search {
+  background-position: 96% !important;
+}
+
+.intl-tel-input.separate-dial-code .selected-flag,
+.intl-tel-input.allow-dropdown .flag-container:hover .selected-flag {
+  background-color: transparent;
+}
+
+.intl-tel-input {
+  width: 100%;
+}
+
+.intl-tel-input.separate-dial-code .selected-dial-code {
+  font-family: Work Sans;
+}
+
+.close.open .main-tab {
+  max-width: 83% !important;
+}
+
+.profile-btn .close.open .fav-tabs,
+.close.open {
+  max-width: 100% !important;
+}
+
+.profile-btn.close.open {
+  display: none;
+}
+
+.profile-btn.open {
+  display: block;
+}
+
+.profile-btn.close {
+  display: block;
+}
+
+.linked {
+  background-position: 92% !important;
+}
+select{
+  background-image: none !important;
+}
+
+.focus\:outline-themeBlue:focus {
+
+  box-shadow: none!important;
+  outline: 0;
+}
+
+ul.user__list {
+  display: none;
+  border: 1px solid;
+}
+.user__buttons {
+  position: relative;
+}
+input#dropdown_exp:checked+ .user__list {
+  display: block;
+  position: absolute;
+  top: 100%;
+  /* left: 12px; */
+  background: #ffffff;
+  z-index: 99999;
+  width: 200px;
+  /* width: 100%; */
+  text-align: left;
+}
+input#dropdown_exp {
+  display: none;
+}
+.user__list li {
+  padding: 2px 5px;
+}
+/* .user__links {
+  padding-right: 60%;
+}
+.user__list li:last-child .user__links {
+  padding-right: 40%;
+} */
+
+.user__list li:hover {
+  border: 1px solid;
+  background-color: #1D4ED8;
+  color: #ffffff;
+}
+.user__login {
+  display: none;
+}
+.venue_rooms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+a.new-room-create {
+  position: absolute;
+  top: -45px;
+  right: 35px;
+}
+
+.user_user {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid;
+  align-items: center;
+  flex-direction: row;
+  padding: 5px;
+}
+img.venue_image {
+  width: 100%;
+  height: 20%;
+}
+
+.venue_card {
+  width: 30%;
+  display: inline-block;
+  margin: 0 auto;
+}
+.display_venues {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+
+div#confirm {
+  display: none;
+  margin: 0 auto;
+  background: #cfbbbb;
+  padding: 30px;
+}
+button#delete {
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20px;
+}
+button.btn {
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 10px;
+}
+.modal-body {
+  text-align: center;
+  padding: 10px;
+}
+
+
+
+.time-slots {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.time_slot-selects select {
+  line-height: 1.3;
+  border-radius: 10px;
+  background-color: #dadad8;
+}
+.time-slots-type {
+  flex: 20%;
+}
+.time_slot-selects {
+  flex: 60%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+.time_slot-last {
+  flex: 20%;
+}
+.menu_list label {
+  flex: 1 30%;
+}
+.menu_list input {
+  flex: 1 60%;
+}
+.menu_list {
+  display: flex;
+  flex-direction: row;
+}
+input#menu_file {
+  flex: 1 70%;
+}
+.contract_files {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.contract_files label {
+  flex: 1 30%;
+}
+
+input#contract_file {
+  flex: 1 70%;
+}
+.number_fields {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+input#transit_number {
+  flex: 1 35%;
+}
+input#institutions_number {
+  flex: 1 20%;
+}
+input#account_number {
+  flex: 1 45%;
+}
+.tab_tab, .tabs {
+  display: none;
+}
+
+ul.tab_list {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.tabs:checked + .tab_tab {
+  display: block;
+}
+
+.tab_list label {
+  border: 1px solid;
+  padding: 5px 10px;
+}
+/* td.features {
+  width: 20%;
+}
+
+td.event_space_base_price {
+  width: 10%;
+}
+
+td.event_space_na {
+  width: 10%;
+}
+
+td.event_space_capacity {
+  width: 20%;
+}
+
+td.event_space_guest_price {
+  width: 20%;
+}
+
+td.event_space_flat_rate {
+  width: 20%;
+}
+.w--90 {
+  width: 90%;
+} */
+
+
+
+
+
+
+
+/* Venue Owner Register Form Tabs */
+.features__tabs {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.features__tabs > .tab__content {
+  order: 999;
+  width: 100%;
+  display: none;
+  padding: 10px;
+}
+
+.features__tabs > .tab__radio {
+  opacity: 0;
+  position: absolute;
+}
+
+.features__tabs > .tab__radio:checked+ label {
+  background: #798f99;
+  /* border: 1px solid #000000; */
+  padding: 5px;
+}
+
+.features__tabs > .tab__radio:checked+ label + .tab__content {
+  display: unset;
+}
+.features__tabs .tab__content {
+  border: 1px solid #798f99;
+  border-top: 5px solid #798f99;
+}
+.features__tabs > label {
+  margin: 5px 0px 0px;
+  background-color: #b4d5e4;
+  border-right: 1px solid #798f99;
+}
+
+.features__tabs > .tab__radio+ label {
+  padding: 5px;
+}
+
+/* Style the form */
+#regForm {
+  background-color: #ffffff;
+  /* margin: 100px auto; */
+  margin: 50px auto;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
+}
+
+/* Style the input fields */
+input {
+  padding: 10px;
+  width: 100%;
+  font-size: 17px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+}
+
+/* Mark input boxes that gets an error on validation: */
+.invalid {
+  background-color: #ffdddd;
+}
+
+/* Hide all steps by default: */
+.tab {
+  display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step.active {
+  opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #04AA6D;
+}
+
+/* Compare Password Fields */
+.user__pass {
+  position: relative;
+}
+span.pass_span {
+  display: none;
+}
+span.wrong_pass {
+  display: block;
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  transform: translate(50% 0);
+}
+img.listing_imgs {
+  height: 100%;
+  margin: 5px;
+  width: 100%;
+  border: 1px solid #000;
+  padding: 5px;
+}
+.m--auto {
+  margin: 0 auto;
+}
+.border_1 {
+  border: 1px solid;
+  margin: 40px 0;
+  height: 400px;
+  padding: 10px;
+
+}
+
+
+
+.contain {
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.item {
+  align-items: center;
+  background-color: tomato;
+  color: white;
+  /* display: flex; */
+  height: 300px;
+  justify-content: center;
+}
+
+.page__dots {
+  /* height: 25px;
+  width: 25px; */
+  padding: 10px 25px;
+  background-color: #bbb;
+  border-radius: 5px;
+  display: inline-block;
+}
+.circles {
+  margin: 0 auto;
+  width: 30%;
+  text-align: center;
+}
+.circles_active {
+  background-color: #4CAF50;
+}
+
+.cust-cart-product-quantity {
+  color: #000000;
+}
+
+.hide_header_footer {
+  display: none;
+}
+
+#pass_clickConfirm, #pass_click {
+  width: 20px;
+}
+#email_Invalid, #password_Invalid, #password_minSixChar, #confirmPassword_minSixChar, #newPassword_Invalid, #confirmNewPassword_Invalid, #cnf_passwordLike {
+  display: none;
+  color: #fb5050;
+  font-size: 14px;
+  /* position: absolute;
+  top: 50%;
+  right: 0; */
+  /* text-align: right; */
+}

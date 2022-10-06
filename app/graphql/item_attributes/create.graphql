@@ -1,0 +1,22 @@
+mutation create_item_attribute(
+  $name: String!
+  $value: String!
+) {
+  record: record_create(
+    record: {
+      table: "item_attribute"
+      properties: [
+              { name: "name" value: $name }
+              { name: "value" value: $value }
+            ]
+    }
+  ){
+    id
+    created_at
+    deleted_at
+    type: table
+
+    name: property(name: "name")
+    value: property(name: "value")
+     }
+}

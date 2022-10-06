@@ -1,0 +1,83 @@
+{% liquid
+  assign transaction = transactions.first
+  for t in transactions
+    if t.status.name == 'app.statuses.transactions.success'
+      assign transaction = t
+      break
+    endif
+  endfor
+
+  if role == 'seller'
+    assign back_url = '/dashboard/sell/orders/'
+    assign user = order.buyer
+    assign name = user.first_name | append: ' ' | append: user.last_name
+  elsif role == 'buyer'
+    assign back_url = '/dashboard/buy/orders/'
+    assign user = order.seller
+    assign name = user.name
+  endif
+  assign cancelled = false
+  if order.status.name == 'app.statuses.orders.cancelled_seller' or order.status.name == 'app.statuses.orders.cancelled_buyer'
+    assign cancelled = true
+    assign cancel_date = order.status.created_at | l: 'compact'
+  endif
+  assign payment_type_label = transaction.gateway | t: scope: 'app.orders.payment_types'
+%}
+
+<div>
+  <a class="flex items-center underline gap-1" href="{{ back_url }}">
+    {% render 'theme/simple/ui/icon', icon: 'dashLeft' %}
+    {{'app.orders.order_history' | t }}
+  </a>
+
+  <h2 class="bigtitle">
+    {{ 'app.orders.show.order' | t }} {{ order.id }}
+  </h2>
+
+  <div class="flex items-center">
+    {{ name }}
+
+    {% liquid
+      if current_profile.id != user.id and chat_enabled
+        render "modules/chat/theme/simple/message_button", to_id: user.id, label: '', button: true, class: 'button-small button-compact ml-2'
+      endif
+    %}
+  </div>
+
+  <hr class="border-t-2 mt-4 mb-4">
+
+  {% if cancelled %}
+    {% render 'theme/simple/dashboard/orders/show/cancelled_info', order: order, role: role, cancel_date: cancel_date %}
+  {% endif %}
+
+  {% if role == 'buyer' and order.status.name == 'app.statuses.orders.confirmed' %}
+    {% render 'theme/simple/dashboard/orders/show/buyer_not_finished', order: order, transaction: transaction, context: context %}
+  {% endif %}
+
+  <div class="{% if cancelled %}bg-gray-200{% endif %}">
+    {% if role == 'buyer' and order.status.name == 'app.statuses.orders.completed' and order.reviews.size > 0 %}
+      {% render 'theme/simple/dashboard/orders/show/add_review' %}
+    {% endif %}
+    {% render 'theme/simple/dashboard/orders/show/contact_details', order: order %}
+    {% render 'theme/simple/dashboard/orders/show/payment', order: order, payment_type_label: payment_type_label, transaction: transaction, role: role, cancelled: cancelled, context: context %}
+    {% render 'theme/simple/dashboard/orders/show/digital_code', order: order, transaction: transaction, role: role %}
+    {% render 'theme/simple/dashboard/orders/show/items', order: order, role: role, current_profile: current_profile %}
+    {% if role == 'seller' or order.shipping_type != 'digital' %}
+      {% render 'theme/simple/dashboard/orders/show/delivery_info', order: order, transaction: transaction, role: role, cancelled: cancelled, context: context %}
+    {% endif %}
+    {% if order.shipping_type != 'digital' %}
+      {% render 'theme/simple/dashboard/orders/show/delivery_details', order: order %}
+    {% endif %}
+
+    {% if role == 'seller' and order.order_delivery.status.name != 'app.statuses.order_deliveries.delivered' %}
+      {% if order.status.name == 'app.statuses.orders.in_progress' or order.status.name == 'app.statuses.orders.paid'  %}
+        <hr class="border-t-2 mt-4 mb-4">
+        {% render 'theme/simple/dashboard/orders/show/cancel', order: order, context: context %}
+      {% endif %}
+    {% endif %}
+
+    <div class="mt-10 flex justify-end">
+      {% render 'theme/simple/dashboard/orders/show/summary', object: order %}
+    </div>
+  </div>
+</div>

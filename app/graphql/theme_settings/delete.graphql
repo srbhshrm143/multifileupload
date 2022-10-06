@@ -1,0 +1,8 @@
+mutation ($name: String!) {
+  record: records_delete_all(
+    table: "theme_settings"
+    filter: { properties: [{ name: "name", value: $name }] }
+  ) {
+    count
+  }
+}

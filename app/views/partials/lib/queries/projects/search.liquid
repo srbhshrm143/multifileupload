@@ -1,0 +1,4 @@
+{% liquid
+  graphql r = 'projects/search', limit: limit, page: page, promoted: promoted, tags: tags, sort: sort, keyword: keyword, status: status
+  return r.projects
+%}

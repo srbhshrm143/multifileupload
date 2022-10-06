@@ -1,0 +1,47 @@
+{% liquid
+
+  assign count = reviews.total_entries
+
+  if count > 0 and reviews.results[0].type == 'organization_review'
+    assign type = 'organization_review'
+  endif
+
+
+  if count > 0
+    assign score = reviews.results | map: 'score' | sum_array | plus: 0.0 | divided_by: count
+    if type == 'organization_review'
+      assign recommedned = reviews.results | select: recommend: true | size
+      assign disadvised = reviews.results | select: recommend: false | size
+      assign description = reviews.results | map: 'description_score' | sum_array | plus: 0.0 | divided_by: count
+      assign delivery = reviews.results | map: 'delivery_score' | sum_array | plus: 0.0 | divided_by: count
+      assign service = reviews.results | map: 'service_score' | sum_array | plus: 0.0 | divided_by: count
+    endif
+  else
+    assign score = 0
+  endif
+
+  assign object = '{}' | parse_json
+  hash_assign object['id'] = record_id
+  hash_assign object['c__rating_count'] = count
+  hash_assign object['c__rating_score'] = score | round: 1
+
+  if type == 'organization_review'
+    hash_assign object['c__recommended_count'] = recommedned | default: 0
+    hash_assign object['c__disadvised_count'] = disadvised | default: 0
+    hash_assign object['c__rating_description'] = description | round: 1 | default: 0
+    hash_assign object['c__rating_delivery'] = delivery | round: 1 | default: 0
+    hash_assign object['c__rating_service'] = service | round: 1 | default: 0
+  endif
+
+  if type == 'organization_review'
+    function object = 'lib/commands/reviews/update_organization_rating', object: object
+  else
+    function object = 'lib/commands/reviews/update_item_rating', object: object
+  endif
+
+  if object.valid != true
+    log object, type: 'ERROR: reviews/update_rating'
+  endif
+
+  return object
+%}

@@ -1,0 +1,18 @@
+---
+method: delete
+slug: admin/reviews
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_superadmin'
+
+  function object = 'lib/queries/item_reviews/find', id: context.params.id, withAllLangs: true
+
+  function object = 'lib/commands/item_reviews/delete', object: object
+  if object.valid
+    include 'redirect_to', url: '/admin/reviews', notice: 'app.models.shared.deleted'
+  else
+    include 'redirect_to', url: '/admin/reviews', error: 'app.models.shared.delete_failed'
+  endif
+%}

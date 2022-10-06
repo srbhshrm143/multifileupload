@@ -1,0 +1,6 @@
+name: venue_contract
+properties:
+  - name: venue_id
+  - name: media_uuid
+  - name: venue_contract1
+  - name: venue_contract2

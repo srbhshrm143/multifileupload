@@ -1,0 +1,27 @@
+{% liquid
+  for line in order.line_items
+    assign line_object = line
+    assign cl = '{ "errors": {}, "valid": true }' | parse_json
+
+    if line.item.quantity < line.quantity or line.item.quantity == null
+      if line.item.quantity == 0 or line.item.quantity == null
+        include 'lib/register_error', contract: cl, field_name: 'base', key: 'app.orders.line-items.errors.quantity-no-items'
+      else
+        include 'lib/register_error', contract: cl, field_name: 'base', key: 'app.orders.line-items.errors.quantity-too-big'
+      endif
+    endif
+    unless line.item.item_inventory.item_ids contains line.item.id
+      include 'lib/register_error', contract: cl, field_name: 'base', key: 'app.orders.line-items.errors.item-changed'
+    endunless
+
+    hash_assign line_object['valid'] = cl.valid
+    hash_assign line_object['errors'] = cl.errors
+
+    if line_object.valid == false
+      hash_assign c['valid'] = false
+      hash_assign c['errors'] = line_object['errors'] | hash_merge: c['errors']
+    endif
+  endfor
+
+  return c
+%}

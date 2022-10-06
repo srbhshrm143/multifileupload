@@ -1,0 +1,19 @@
+{% parse_json object %}
+  {
+    "venue_owner_id":      {{ profile.id | json }},
+    "venue_name":          {{ object.venue_name | json }},
+    "corporate_name":      {{ object.corprate_name | json }},
+    "company_name":        {{ object.company_name | json }},
+    "business_number":     {{ object.business_number | json }},
+    "venue_address":       {{ object.venue_address | json }},
+    "venue_phone_number":  {{ object.venue_phoneNumber | json }},
+    "venue_email":         {{ object.venue_publicEmail | json }},
+    "venue_contact_person":{{ object.contactPerson | json }},
+    "contact_email":       {{ object.contactEmail | json }},
+    "contact_phone_number":{{ object.venue_contactNumber | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

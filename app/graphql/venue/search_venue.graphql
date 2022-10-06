@@ -1,0 +1,42 @@
+query search(
+  $id: ID,
+  $limit: Int = 1
+) {
+  venues: records(
+    per_page: $limit
+    filter: {
+      id: { value: $id }
+      table: { value: "venue_event_space" }
+      # properties: [
+      #   { name: "buyer", value: $buyer }
+      #   { name: "item_id", value: $item_id }
+      #   { name: "seller", value: $seller }
+      #   { name: "c__status", value_in: $status }
+      #   { name: "seller", value_in: $organizations }
+      # ]
+      # created_at: { lte: $to, gte: $from }
+    }
+    sort: {
+      created_at: {
+        order:  DESC
+      }
+    }
+  ) {
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      venues: related_records(
+        join_on_property: "venue_id"
+          foreign_property: "id"
+          table: "venues"
+        ) {
+          id
+          # properties
+        	profile_id: property(name: "profile_id")
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+mutation create(
+  $venue_id: String!
+  $birthdays: String!
+  $cocktails: String!
+  $conferences: String!
+  $dinner_party: String!
+  $reception: String!
+  $religious_events: String!
+  $wedding_ceremony: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_features_ideal_for"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "birthdays", value: $birthdays }
+        { name: "cocktails", value: $cocktails }
+        { name: "conferences", value: $conferences }
+        { name: "dinner_party", value: $dinner_party }
+        { name: "reception", value: $reception }
+        { name: "religious_events", value: $religious_events }
+        { name: "wedding_ceremony", value: $wedding_ceremony }
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+  
+}

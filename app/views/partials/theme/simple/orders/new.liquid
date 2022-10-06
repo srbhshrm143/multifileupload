@@ -1,0 +1,745 @@
+<style>
+   #card-element .__PrivateStripeElement {
+    margin: 0px !important;
+    padding: 0px !important;
+    border: none !important;
+    display: block !important;
+    background: transparent !important;
+    position: relative !important;
+    opacity: 1 !important;
+    border: 1px solid grey !important;
+    padding: 20px  !important;
+    margin: 20px 20px !important;
+    border-radius: 15px;
+    /* margin-bottom: 30px !important; */
+}
+.error{
+    color: red;
+    font-size: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+ </style>
+
+ <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            Railway: ['Raleway', 'sans-serif'],
+            Work: ['Work Sans', 'sans-serif'],
+          },
+
+          fontSize: {
+            'xxs': '13px',
+            'text-head': '24px'
+          },
+
+          colors: {
+            themeBlue: {
+              DEFAULT: '#28B8DC',
+              500: '#0da5cb',
+            },
+            primaryRed: {
+              DEFAULT: '#FD4851',
+              500: '#e7444c',
+            },
+            primaryPink: {
+              DEFAULT: '#CF4DFA',
+              500: '#af41d3',
+            },
+            primaryYellow: {
+              DEFAULT: '#FBAF2A',
+              500: '#df9d29',
+            },
+            primaryLightGreen: {
+              DEFAULT: '#3ED376',
+              500: '#2da158',
+            },
+            primaryBlue: {
+              DEFAULT: '#5C79F4',
+              500: '#4e65c5',
+            },
+            primaryRed: {
+              DEFAULT: '#D80027',
+            },
+            badgeGreen: {
+              DEFAULT: '#7EC144',
+              500: '#EBF6E2',
+            },
+            badgeBlue: {
+              DEFAULT: '#28B8DC',
+              500: '#D4F1F8',
+            },
+            badgeRed: {
+              DEFAULT: '#BE0000',
+              500: '#EDCCCC',
+            },
+            badgelightGreen: {
+              DEFAULT: '#59987B',
+              500: '#8AB7A2',
+            },
+            borderColor: '#dddddd',
+            primaryGrey: '#585858',
+            primaryBlack: '#000000',
+            primaryLightBlue: '#8995A2',
+            primaryCream: '#E7DBCD',
+            primaryGreen: '#00C857',
+            primaryFieldBlue: '#8C87A6',
+            primaryOverlay: '#11111175',
+            primaryDarkGreen: '#4E9172',
+            linkColor: '#2680EB',
+            paragraphTextColor: '#5B5675',
+            placeholderColor: '#626262',
+            formBg: '#FAF9F5',
+            grayBack: '#F3F3F3',
+            debitBack: '#E7FFEF',
+            greenBorderColor: '#4EB774',
+            ConfirmGrayBack: '#F9F9F9',
+            footerBg: '#0D0D0D',
+            footerGrey: '#8A8A8A',
+            footerborderGrey: '#232323',
+            tableBlue: '#FAF9FD',
+            descriptionText: '#606060',
+            textLightPurple: '#8C87A6',
+            bgLightBlue: '#F3F7F7',
+          },
+
+          boxShadow: {
+            'box': '0 3px 20px 0 rgb(0 0 0 / 11%)',
+            'box-top': '0 2px 20px 0 rgb(0 0 0 / 7%)',
+          },
+
+          screens: {
+            sm: '320px',
+            md: '768px',
+            lg: '1200px',
+            xl: '1600px',
+            'max-xxl': { 'max': '1600px' },
+            'max-xl': { 'max': '1279px' },
+            'max-lg': { 'max': '1023px' },
+            'max-md': { 'max': '767px' },
+            'max-sm': { 'max': '575px' },
+            'max-xs': { 'max': '320px' },
+          },
+
+          backgroundImage: {
+            'featured-bg': "url('/assets/images/event-hound/featured-bg.png')",
+            'featured-bg_new': "url('/assets/images/event-hound/featured_bg.png')",
+            'booking-confirmed-bg': "url('/assets/images/event-hound/boking-confirm.jpg')",
+            'booking-request-bg': "url('/assets/images/event-hound/boking-request.jpg')",
+            'booking-detail-bg': "url('/assets/images/event-hound/boking-detail.jpg')",
+          }
+        }
+      }
+    }
+  </script>
+   {% assign hst_percentage = items.item_price | times: 13 | divided_by: 100 %}
+  {% for venues in itemDetails %}
+    {% if venues.venue_features[0] and venues.venue_features[0].properties.space_features %}
+      {% assign event_features = venues.venue_features[0].properties.space_features | parse_json
+    %}
+    {% endif %}
+    {% assign venueDetails = venues %}
+  {% endfor %}
+  <section
+    class="bg-booking-detail-bg bg-no-repeat bg-cover bg-blend-multiply bg-PrimaryOverlay py-36 max-xxl:py-20 max-md:py-14 max-sm:py-8">
+    <div class="container mx-auto max-md:px-10 max-lg:max-w-full max-lg:px-5">
+      <div class="text-center">
+        <h2 class="text-white text-4xl max-xxl:text-text-head font-Railway font-semibold pb-2">
+          Booking Details
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- Banner end -->
+
+  <div class="container mx-auto max-xl:max-w-full md:my-16 sm:my-5">
+    <div class="md:flex sm:block h-full m-3 md:gap-10 lg:gap-x-14">
+      <!-- left Side -->
+      <div class="lg:w-1/2 md:w-1/2 md:mx-0 sm:w-full xs:h-auto sm:mb-5">
+        <div class="">
+          <div class="flex sm:py-4 md:px-4 md:py-6 md:px-5 borderColor border rounded-t-md justify-between sm:px-3 ">
+            <div class="md:w-1/2 sm:text-sm lg:text-2xl font-bold font-Work">Payment Options</div>
+            <div class="md:w-1/2 sm:text-sm lg:text-2xl font-medium font-Work text-right">Total $500</div>
+          </div>
+<form id="paymentForm">
+          <div class="border border-greenBorderColor border-solid rounded-t-md mb-2.5">
+            <div class="bg-debitBack rounded-t-md border-b border-greenBorderColor border-solid">
+              <div class="flex px-5 py-4 items-center sm:px-3">
+                <div class="md:w-1/2 flex items-start">
+                  <img class="mt-2 mr-2 w-6 h-6 sm:w-3 sm:h-3" src="/assets/images/event-hound/active-dot.png" />
+                  <div>
+                    <div class="sm:text-sm md:text-sm lg:text-xl text-colorBlack font-Work">Debit
+                      Cards</div>
+                    <p class="sm:text-xs md:text-base font-medium font-Work text-paragraphTextColor">
+                      Transaction
+                      fee may aplly</p>
+                  </div>
+                </div>
+                <div class="md:w-1/2">
+                  <div class="flex md:flex-wrap justify-end">
+                    <img class="ml-2 sm:w-6 md:w-10 lg:w-14 h-8.5" src="/assets/images/event-hound/visa-icon.png" />
+                    <img class="ml-2 sm:w-6 md:w-10 lg:w-14 h-8.5" src="/assets/images/event-hound/maestro-icon.png" />
+                    <img class="ml-2 sm:w-6 md:w-10 lg:w-14 h-8.5" src="/assets/images/event-hound/master-card-icon.png" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 pt-6 sm:px-3 sm:pt-3">
+              <div class="rounded mb-6 sm:mb-3 relative">
+                <label for="cardholder-name"
+                  class="text-base block mb-2.5 font-Work sm:text-xs md:text-sm lg:text-lg md:font-medium text-blackColor">Cardholder Name</label>
+                  {%- comment -%} <input type="hidden" name="itemPrice" value="{{hst_percentage | round }}">
+                  <input type="hidden" name="guest_count" value="{{items.guest }}">
+                  <input type="hidden" name="selected_time" value="{{items.selected_time }}">
+                  <input type="hidden" name="booking_date" value="{{items.booking_date }}">
+                  <input type="hidden" name="item_id" value="{{items.item_id }}"> {%- endcomment -%}
+                   <input type="hidden" name="userId" value="{{context.current_user.id}}"> 
+                  
+                <input id="cardName" name="cardName" type="text" autocomplete="name" placeholder="Rolwin reevan"
+                  class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-lg font-Work sm:text-sm md:text-lg md:h-11"
+                  placeholder="mail@website.com" required>
+              </div>
+              <div class="rounded mb-6 sm:mb-3 relative">
+                <label for="card-number"
+                  class="text-base block mb-2.5 font-Work sm:text-xs md:text-sm  lg:text-lg md:font-medium text-blackColor">Card
+                  Number</label>
+                <input id="cardNumber" name="cardNumber" type="number" autocomplete="name"
+                  placeholder="4122   2321   2121   6598"
+                  class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-lg font-Work sm:text-sm md:text-lg md:h-11" onkeypress="return onlyNumberKey(event)"
+                  placeholder="mail@website.com" required>
+                <img class="absolute z-10 right-3 bottom-2 sm:w-8 md:w-10 lg:w-14"
+                  src="/assets/images/event-hound/visa-rounded-icon.png" />
+              </div>
+            </div>
+
+            <div class="">
+              <div class="md:flex sm:block px-5 py-4 md:items-start lg:items-center justify-between sm:px-3 ">
+                <div class="sm:w-full md:w-1/2 ">
+                  <label
+                    class="text-base block mb-2.5 font-Work sm:text-xs md:text-sm lg:text-lg md:font-medium text-blackColor">End
+                    Date</label>
+                  <div class="md:flex items-start sm:block">
+                    <div class="sm:w-full md:w-1/2 mr-1.5 lg:mr-3.5">
+                       <select name="cardMonth" class="text-black border font-medium rounded-3xl px-4 py-3 text-center inline-flex items-center text-lg font-Work sm:text-sm md:text-sm sm:w-full sm:mb-2 justify-between md:h-11" required>
+                          <option value="01">January</option>
+                          <option value="02">February</option>
+                          <option value="03">March</option>
+                          <option value="04">April</option>
+                          <option value="05">May</option>
+                          <option value="06">June</option>
+                          <option value="07">July</option>
+                          <option value="08">August</option>
+                          <option value="09">September</option>
+                          <option value="10">October</option>
+                          <option value="11">November</option>
+                          <option value="12">December</option>
+                      </select> 
+                      {%- comment -%} <button id="cardMonth" data-dropdown-toggle="dropdown"
+                        class="text-black border font-medium rounded-3xl px-4 py-3 text-center inline-flex items-center text-lg font-Work sm:text-sm md:text-sm sm:w-full sm:mb-2 justify-between md:h-11"
+                        type="button" name="cardMonth">mm<svg class="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor"
+                          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                          </path>
+                        </svg></button>
+                      <div id="dropdown"
+                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Jan</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Feb</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mar</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Apr</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">May</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">June</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">July</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Aug</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sept</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Oct</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Nov</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dec</a>
+                          </li>
+                        </ul>
+                      </div> {%- endcomment -%}
+                    </div>
+                    <div class="sm:w-full md:w-1/2 sm:mb-2">
+                    <select name="cardYear" class="text-black border font-medium rounded-3xl px-4 py-3 text-center inline-flex items-center text-lg font-Work sm:text-sm md:text-sm sm:w-full sm:mb-2 justify-between md:h-11" required>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select> 
+                      {%- comment -%} <button id="cardYear" data-dropdown-toggle="dropdowns"
+                        class="text-black border font-medium rounded-3xl px-4 py-3 text-center inline-flex items-center text-lg font-Work sm:text-sm md:text-sm sm:w-full placeholder-placeholderColor justify-between md:h-11"
+                        type="button" name="cardYear">yyyy<svg class="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor"
+                          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                          </path>
+                        </svg></button>
+                      <div id="dropdowns"
+                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaults">
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2022</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2023</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2024</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2025</a>
+                          </li>
+                          <li><a href="#"
+                              class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2026</a>
+                          </li>
+                        </ul>
+                      </div> {%- endcomment -%}
+                    </div>
+                  </div>
+                </div>
+                <div class="sm:w-full md:w-1/2 md:ml-2">
+                  <label
+                    class="text-base block mb-2.5 font-Work sm:text-xs md:text-sm lg:text-lg md:font-medium text-blackColor">CVV</label>
+                  <div class="md:flex flex-wrap sm:block">
+                    <div class="sm:w-full lg:w-1/2 items-center sm:mb-2">
+                      <input id="cardCVV" name="cardCVV" type="text" autocomplete="name" placeholder=""
+                        class="rounded-3xl appearance-none w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-lg font-Work sm:text-sm md:text-lg md:h-11"
+                        placeholder="mail@website.com" onkeypress="return onlyNumberKey(event)" required>
+                    </div>
+                    
+                    <div class="sm:w-full md:w-1/2">
+                      <button data-tooltip-target="tooltip-animation" data-tooltip-placement="bottom" type="button"
+                        class="mb-2 md:mb-0 text-black text-center ml-2 flex h-full items-center font-medium font-Work whitespace-nowrap text-base sm:text-sm">
+                        <img class="pr-1 " src="/assets/images/event-hound/icon-1.png" /> 3 digits</button>
+                      <div id="tooltip-animation" role="tooltip"
+                        class="max-w-xs inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium font-Work text-primaryFieldBlue bg-white rounded-lg border border-gray-200 shadow-sm duration-300 opacity-0 tooltip">
+                        Cancellation of booking will lead to loss of initial deposit. Lorem Ipsum dolor sit amet.
+                        <div class="tooltip-arrow " data-popper-arrow></div>
+                      </div>
+
+                      <!-- Show tooltip on left -->
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-7 px-5 ">
+              <div class="flex items-center sm:items-start ">
+                <input id="remember-me" name="remember-me" type="checkbox"
+                  class="sm:mt-1 h-4 w-4 text-badgeGreen text-badgeGreen-600 focus:outline-none border-badgeGreen-300 rounded">
+                <label for="remember-me" class="ml-2 block md:text-base text-gray-900 text-base font-Work sm:text-xs ">I
+                  have read and accept the <a class="text-themeBlue" href="#">terms of use</a> and <a
+                    class="text-themeBlue" href="#">privacy policy</a></label>
+              </div>
+            </div>
+            <div id="submitPay" class="px-5 pb-10">
+              <button type="submit" class="group relative w-full rounded-3xl flex items-center justify-center py-3 px-2 border text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 text-base uppercase font-Work sm:text-sm md:text-base md:font-medium sm:py-2 md:py-4 mt-10" >pay
+                now <img class="pl-2" src="/assets/images/event-hound/right-arrow.png" /></button>
+                <div class="error"></div>
+            </div> 
+          </div>
+</form>
+          {%- comment -%} <div class="bg-grayBack rounded-t-md">
+            <div class="flex px-5 py-4 items-center ">
+              <div class="md:w-1/2 flex items-start">
+                <img class="mt-2 mr-2 w-6 h-6" src="/assets/images/event-hound/unactive-dot.png" />
+                <div>
+                  <div class="sm:text-sm md:text-base lg:text-lg text-colorBlack">Credit Cards</div>
+                  <p class="sm:text-xs md:text-sm lg:text-base text-paragraphTextColor">Transaction
+                    fee
+                    may aplly</p>
+                </div>
+              </div>
+              <div class="md:w-1/2">
+                <div class="flex flex-wrap justify-end">
+                  <img class="ml-2 sm:w-6 md:w-10 lg:w-14 h-8.5 mb-1" src="/assets/images/event-hound/visa-icon.png" />
+                  <img class="ml-2 sm:w-6 md:w-10 lg:w-14 h-8.5 mb-1" src="/assets/images/event-hound/maestro-icon.png" />
+                  <img class="ml-2 sm:w-6 md:w-10 lg:w-14 h-8.5 mb-1" src="/assets/images/event-hound/master-card-icon.png" />
+                </div>
+              </div>
+            </div>
+          </div> {%- endcomment -%}
+        </div>
+      </div>
+      <!-- left Side end -->
+      <!-- right Side -->
+      <div class="md:w-1/2 sm:w-full top-0 right-0 xs:h-auto">
+        <div class="borderColor border rounded-md md:pt-5 pr-6 md:pb-8 pl-5 sm:pt-3 sm:pb-3">
+          <div class="text-xl color-black font-semibold lg:text-xl sm:text-sm">Booking Details</div>
+          <div class="w-9 h-px bg-colorBlack mt-4 mb-7 sm:mb-2 sm:mt-2"></div>
+     
+          <img class="w-full h-48 mb-5" src="{{venueDetails.venue_media[0].testing_media.url}}" />
+          <div class="flex mb-7">
+            <div class="md:w-1/2 sm:w-full">
+              <div
+                class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-base">
+                Name
+              </div>
+              <p
+                class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-base">
+                {{ venueDetails.properties.event_space_name }}</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full">
+              <div
+                class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-base">
+                TYPE OF
+                EVENT</div>
+              <p class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                {{ venueDetails.properties.event_type }}</p>
+            </div>
+          </div>
+          <div class="flex mb-7">
+            <div class="md:w-1/2 sm:w-full">
+              <div class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                GUEST COUNT
+              </div>
+              <p class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                {{items.guest}}</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full">
+              <div class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                DATE</div>
+              <p class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                {{items.booking_date}}</p>
+            </div>
+          </div>
+          <div class="flex mb-7">
+            <div class="md:w-1/2 sm:w-full">
+              <div class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                TIMING</div>
+              <p class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                {{items.selected_time}}</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full">
+              <div class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                INitial deposit (%)</div>
+              <p class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                15%</p>
+            </div>
+          </div>
+          <div class="flex mb-5">
+            <div class="md:w-1/2 sm:w-full">
+              <div class="md:text-sm lg:text-base text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                address
+              </div>
+              <p class="md:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                {{ venueDetails.venue[0].venue_address }}</p>
+            </div>
+          </div>
+
+          <div class="border bg-paragraphTextColor mt-3.5 mb-3.5"></div>
+
+          <div>
+            <div class="flex">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p class="md:text-sm lg:text-base text-colorBlack font-Work font-bold sm:text-xs md:font-lg ">
+                  Base Price :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  ${{items.base_price}}</p>
+              </div>
+            </div>
+            <div class="md:text-sm lg:text-base text-colorBlack font-Work font-bold sm:text-xs md:font-lg mb-3.5">
+              Rooms
+            </div>
+            <div class="flex">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  Luxury Suite ($9x5 Rooms)</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  $45.82</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="">
+            <div class="md:text-sm lg:text-base text-colorBlack font-Work font-bold sm:text-xs md:font-lg mb-3.5">
+              Additional Features
+            </div>
+            <div class="flex">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  Projector :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  $90</p>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  Coat Check :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  $10.2</p>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  Security :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                  $3.82</p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-colorBlack font-Work font-semibold sm:text-xs md:font-lg">
+                  Subtotal :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Work font-semibold sm:text-xs md:font-lg">
+                  ${{items.item_price | round:2}}</p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-colorBlack font-Work font-semibold sm:text-xs md:font-lg">
+                  HST 13% :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Work font-semibold sm:text-xs md:font-lg">
+                 
+                  ${{ hst_percentage | round:2}}
+                  </p>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div class="md:w-1/2 sm:w-full">
+                <p
+                  class="md:text-sm lg:text-base text-left text-colorBlack font-Work font-semibold sm:text-xs md:font-lg">
+                  Discount :</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full">
+                <p
+                  class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Work font-semibold sm:text-xs md:font-lg">
+                  -$10</p>
+              </div>
+            </div>
+          </div>
+          <div class="border bg-paragraphTextColor mt-3.5 mb-3.5"></div>
+
+          <div class="flex items-center">
+            <div class="md:w-1/2 sm:w-full">
+              <p
+                class="md:text-sm lg:text-base text-left text-colorBlack font-Work font-semibold sm:text-xs md:font-lg">
+                Total :</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full">
+              <p
+                class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Work font-semibold sm:text-xs md:font-lg">
+                ${{items.item_price | round:2}}</p>
+            </div>
+          </div>
+          <div class="flex">
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                Price per guest(500/500)</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-right text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                $1</p>
+            </div>
+          </div>
+
+          <div class="border bg-paragraphTextColor mt-3.5 mb-3.5"></div>
+
+          <div class="flex items-center">
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-left text-colorBlack font-Work font-semibold sm:text-xs md:font-lg">
+                Initial Deposit to be paid 15% :</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full">
+              <p
+                class="md:text-sm lg:text-base text-right text-badgelightGreen font-Work font-semibold sm:text-xs md:font-lg">
+                ${% assign hst_percentages = items.item_price | times: 15   | divided_by: 100 %}
+                  ${{ hst_percentages }}</p>
+            </div>
+          </div>
+          <div class="flex">
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                35% to be paid 30 days before :</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-right text-badgelightGreen font-Railway font-semibold sm:text-xs md:font-lg">
+                $175.00</p>
+            </div>
+          </div>
+          <div class="flex">
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold sm:text-xs md:font-lg">
+                50% to be paid 15 days before :</p>
+            </div>
+            <div class="md:w-1/2 sm:w-full mb-3">
+              <p
+                class="md:text-sm lg:text-base text-right text-badgelightGreen font-Railway font-semibold sm:text-xs md:font-lg">
+                $250.00</p>
+            </div>
+          </div>
+
+          <div class="">
+            <div class="flex items-center">
+              <div class="md:w-1/2 sm:w-full mb-3">
+                <p
+                  class="md:text-sm lg:text-base text-left text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                  Cancellaiton policy</p>
+              </div>
+              <div class="md:w-1/2 sm:w-full mb-3 text-right">
+                <a href="#"
+                  class="md:text-sm lg:text-base text-themeBlue underline font-Work font-medium sm:text-xs md:font-lg">
+                  Click here</a>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <div class="md:w-1/2 sm:w-full">
+                <p
+                  class="md:text-sm lg:text-base text-left text-colorBlack uppercase font-Work font-bold sm:text-xs md:font-lg">
+                  Deposit policy </p>
+              </div>
+              <div class="md:w-1/2 sm:w-full text-right">
+                <a href="#"
+                  class="md:text-sm lg:text-base text-themeBlue underline font-Work font-medium sm:text-xs md:font-lg">
+                  Click here</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- right Side end -->
+    </div>
+    <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
+      x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100"
+      x-transition:leave-end="opacity-0 scale-95" class="relative z-10 hidden paymentSuccess" aria-labelledby="modal-title"
+      role="dialog" aria-modal="true">
+      <div class=" fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+      <div class="fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+          <div
+            class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-sm sm:w-full">
+            <div class="bg-white px-4 md:pt-12 md:pb-12 sm:p-6 sm:pb-4">
+              <div class="text-center flex flex-col items-center">
+                <img class="w-12 h-12 mb-5" src="/assets/images/event-hound/success-check.png" />
+                <p class="mb-5 text-xl font-Railway font-semibold  text-paragraphTextColor">
+                  Payment Successful.</p>
+                <button onclick="location.href='/customer/bookings';"
+                  class="bg-themeBlue px-6 py-2 text-base text-sm text-white font-medium rounded-3xl uppercase">CONTINUE</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="loaderPopup" x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
+      x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100"
+      x-transition:leave-end="opacity-0 scale-95" class="relative z-10 hidden loaderPopup" aria-labelledby="modal-title"
+      role="dialog" aria-modal="true">
+      <div class=" fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+      <div class="fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+          <div
+            class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-sm sm:w-full">
+            <div class="bg-white px-4 md:pt-12 md:pb-12 sm:p-6 sm:pb-4">
+              <div class="text-center flex flex-col items-center">
+                <p class="mb-5 text-xl font-Railway font-semibold  text-paragraphTextColor">
+                  Checking Authorization.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+       function onlyNumberKey(evt) {
+          
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+    $(document).ready(function () {
+      $('#paymentForm').on('submit', function(e) {
+          e.preventDefault();
+          $(".error").text(''); 
+          $(".loaderPopup").css("display", "block");
+          var jsonArray1 = $(this).serialize().concat({{items}});
+          $.get('/orders/pay',
+             jsonArray1
+            , // data to be submit
+            function(data) {   // success callback function
+             $(".loaderPopup").css("display", "none");
+              if(data){
+                var data = JSON.parse(data);
+              }
+              if(data.error && data.error.message){
+                $(".error").text(data.error.message);
+              }else{
+                 $(".paymentSuccess").css("display", "block");
+              }
+          });
+
+      });
+  });
+  </script>

@@ -1,0 +1,13 @@
+<a href="{% render 'link_to', object: organization %}" class="flex items-center gap-5">
+  {% if organization.logo.photo.versions.sm %}
+    <picture class="w-20 rounded">
+      <source type="image/avif" srcset="{{ organization.logo.photo.versions.sm_avif }}">
+      <img src="{{ organization.logo.photo.versions.sm }}" width="{{ organization.logo.photo_width }}" height="{{ organization.logo.photo_height }}" alt="" class="w-full h-auto">
+    </picture>
+  {% else %}
+    {% render 'theme/simple/ui/picture-placeholder', class:"w-20 rounded" %}
+  {% endif %}
+  <span>
+    {{ organization.name }}
+  </span>
+</a>

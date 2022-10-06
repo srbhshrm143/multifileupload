@@ -1,0 +1,4 @@
+{% liquid
+  graphql r = 'theme_settings/search', per_page: per_page, page: page, name: name
+  return r.records
+%}

@@ -1,0 +1,44 @@
+name: venue_features_extras
+properties:
+  - name: venue_id
+    type: string
+  - name: fireworks
+    type: string
+  - name: wifi
+    type: string
+  - name: microphone
+    type: string
+  - name: podium
+    type: string
+  - name: audio_speakers
+    type: string
+  - name: dry_ice
+    type: string
+  - name: chair_tables
+    type: string
+  - name: napkins
+    type: string
+  - name: chaircovers
+    type: string
+  - name: glassware
+    type: string
+  - name: spotlights
+    type: string
+  - name: security
+    type: string
+  - name: dj
+    type: string
+  - name: projector
+    type: string
+  - name: tv_screens
+    type: string
+  - name: coat_check
+    type: string
+  - name: room_rental_fee
+    type: string
+  - name: day_of_coordinator
+    type: string
+  - name: gratuity
+    type: string
+  - name: admin_fees
+    type: string

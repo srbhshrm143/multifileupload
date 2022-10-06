@@ -1,0 +1,15 @@
+{% liquid
+  function relationship = 'lib/queries/relationships/find_by_id', id: event.object.id
+  if relationship.r.type == 'group'
+    assign group_id = relationship.r.id
+    function relationships = 'lib/queries/relationships/count', r_id: group_id, name: 'membership'
+
+    assign object = '{}' | parse_json
+    hash_assign object['id'] = group_id
+    hash_assign object['c__members_count'] = relationships.total_entries
+    function res = 'lib/commands/groups/update_count_cache', object: object
+    if res.valid != true
+      log res, type: 'ERROR: relationship_created/update_group_counter'
+    endif
+  endif
+%}

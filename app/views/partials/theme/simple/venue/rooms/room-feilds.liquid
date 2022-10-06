@@ -1,0 +1,70 @@
+<div class="w-full mx-auto card-lg md:w-96" id="regForm">
+  <fieldset class="mt-16">
+    <h1 class="text-3xl font-bold"> {{ "Update Your Room" }} </h1>
+  </fieldset>
+
+  {% if room.id %}
+    <input type="hidden" name="venue_rooms[hidden_room_id]" class="hidden_room_id" value="{{ room.id }}">
+  {% endif %}
+
+  <fieldset class="mt-3">
+    <p> Do you have separate rooms for rent within the same venue? Please upload each room individually. You will have an opportunity at the end of the application to add additional rooms. </p>
+  </fieldset>
+
+  <fieldset class="mt-8">
+    <p> Tip: If your venue is “Venue X” and room name is “Grand Ballroom” your room will show up as “Venue X – Grand Ballroom” to customers. </p>
+  </fieldset>
+
+  <fieldset class="mt-3">
+    <p> If you just have the one space for rent, do not fill in Venue Room Name. </p>
+  </fieldset>
+
+  <fieldset class="mt-8">
+    <p class="font-semibold"> Venue Room Name (Mandatory Field for Venues with Multiple Rooms) </p>
+    <input type="text" name="venue_rooms[room_name]" id="room_name" class="w-full" value="{% if room.id %} {{ room.properties.venue_room_name }} {% endif %}">
+  </fieldset>
+
+  <fieldset class="mt-8">
+    <p> Please state your maximum capacity (assuming it is a seated event with a dancefloor - but get confirmation with your client about floorplan prior to event). </p>
+  </fieldset>
+
+  <fieldset class="mt-3">
+    <label for="maximum_capacity" class="font-semibold"> {{ "Maximum capacity" }} </label>
+    <input type="number" name="venue_rooms[maximum_capacity]" id="maximum_capacity" class="w-full" value="{% if room.id %}{{ room.properties.venue_room_capacity }}{% endif %}">
+  </fieldset>
+
+  <fieldset class="mt-3 row flex">
+    <!-- {{ room.properties.media_ids }} -->
+    {% for media_id in room.properties.media_ids %}
+      {% graphql media_search = 'venue/media_search', id: media_id %}
+      <!-- {{ media_id }}<br> -->
+      <!-- {{ media_search.photos.results }}<br> -->
+      {% for media in media_search.photos.results %}
+        <!-- {{ media.testing_media.extension }} -->
+        <div class="w-1/2">
+          {% if media.testing_media.extension == "jpeg" or media.testing_media.extension == "jpg" or media.testing_media.extension == "png" or media.testing_media.extension == "webp" %}
+            <img src="{{ media.testing_media.url }}" alt="{{ media.testing_media.url }}" class="room_media_images listing_imgs">
+          {% elsif media.testing_media.extension == "mp4" %}
+            <video controls class="listing_imgs">
+              <source src="{{ media.testing_media.url }}" type="video/mp4">
+            </video>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </fieldset>
+  
+  <div class="mt-3 media_upload">
+    {% include 'theme/simple/media_form/form' %}
+  </div>
+
+  <fieldset class="mt-3">
+    <p> You May Upload a maximum of 5 photos that may include a 360 degree photo and a Video. </p>
+  </fieldset>
+
+  <fieldset class="mt-3">
+    <button class="button form-input-small">
+      Update
+    </button>
+  </fieldset>
+</div>

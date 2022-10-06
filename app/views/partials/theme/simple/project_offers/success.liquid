@@ -1,0 +1,36 @@
+<div class="container my-auto">
+  <section class="card-lg max-w-lg mx-auto">
+
+    <div class="mb-6 md:px-16 relative">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 74" class="w-20 hidden md:block absolute left-2.5 -bottom-3.5"><path d="M0,74H79V0H0L25.5,38Z" fill="#006344"/><path d="M79,60V74L53,60Z" fill="#0b513b"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 74" class="w-20 hidden md:block absolute right-2.5 -bottom-3.5"><path d="M53.5,38,79,0H0V74H79Z" fill="#006344"/><path d="M26,60,0,74V60Z" fill="#0b513b"/></svg>
+      <div class="w-full p-4 md:flex items-center gap-4 relative rounded md:rounded-none bg-confirmation-hover text-content-inverted">
+        <i class="p-2 inline-block rounded-full bg-content-inverted text-confirmation">
+          {% render 'theme/simple/ui/icon', icon: 'check' %}
+        </i>
+        <div>
+          <h2 class="subtitle !mb-0">{{ 'app.project_offers.new.contgratulation' | t }}</h2>
+          {{ 'app.project_offers.new.contgratulation_desc' | t }}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 text-center">
+      {{ 'app.project_offers.new.content' | t | markdown }}
+    </div>
+
+    <nav class="mt-6 pt-7 flex flex-wrap justify-between gap-4 border-t text-center">
+      <a href="{% render 'link_to', object: project_offer.project %}" class="button button-secondary">{{ 'app.project_offers.new.visit_challenge' | t }}</a>
+      <a href="/offers/manage" class="button">{{ 'app.project_offers.new.check_applications' | t }}</a>
+    </nav>
+
+  </section>
+</div>
+
+
+
+<section class="container !max-w-2xl">
+
+
+
+</section>

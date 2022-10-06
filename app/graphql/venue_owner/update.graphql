@@ -1,0 +1,25 @@
+mutation update(
+  $Id: ID!,
+  $Fname: String!,
+  $Lname: String!,
+  $Gender: String!,
+  $Mobile: String!,
+  $Email: String!,
+  # $Password: String!
+){
+  record_update(
+     id: $Id
+     record: {
+      	properties: [
+        { name: "owner_fname", value: $Fname }
+        { name: "owner_lname", value: $Lname }
+        { name: "owner_gender", value: $Gender }
+        { name: "owner_mobile", value: $Mobile }
+        { name: "owner_email", value: $Email }
+        # { name: "owner_password", value: $Password }
+        ]
+      }
+  ) {
+    id properties
+  }
+}

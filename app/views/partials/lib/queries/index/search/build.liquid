@@ -1,0 +1,77 @@
+{% assign sort = '[]' | parse_json %}
+{% parse_json sort_options %}
+{
+   "price_desc": { "name": "price", "order": "DESC" },
+   "price_asc": { "name": "price", "order": "ASC" },
+   "discount": { "name": "original_price", "order": "DESC" },
+   "name_desc": { "name": "name", "order": "DESC" },
+   "name_asc": { "name": "name", "order": "ASC" },
+   "created_at_desc": { "name": "created_at", "order": "DESC" },
+   "created_at_asc": { "name": "created_at", "order": "ASC" }
+}
+{% endparse_json %}
+
+{% assign sort = sort | add_to_array: sort_options[params.sort_by] | compact %}
+
+{% parse_json query %}
+{
+  "limit":        {{ limit | default: 20 }},
+  "keyword":      {{ params.keyword | slugify | replace: '-', ' ' | json }},
+  "sort_by":      {{ params.sort_by | json }},
+  "sort":         {{ sort | json }},
+  "page":         {{ params.page | to_positive_integer: 1 }},
+  "owner_id":     {{ owner_id | json }},
+  "category":     {{ category | default: params.category | json }},
+  "organizations": {{ params.organizations | json }},
+  "owners":       {{ params.organization_slugs | json }},
+  "lang":         {{ lang | json }},
+  "withOrders":   {{ withOrders | default: false }},
+  "withStatuses": {{ withStatuses | default: false }},
+  "promoted":     {{ promoted | json }},
+  "ids":          {{ params.ids | default: ids | json }},
+  "not_ids":      {{ not_ids | json }}
+}
+{% endparse_json %}
+
+{% liquid
+  if main_variant
+    hash_assign query['main_variant'] = main_variant
+  endif
+
+  if withAllVariants
+    hash_assign query['withAllVariants'] = withAllVariants
+  endif
+
+  if params.with_results
+    hash_assign query["withResults"] = true
+  endif
+
+  if withAllLangs
+    hash_assign query['withAllLangs'] = withAllLangs
+  endif
+
+  if params.price_min != blank
+    hash_assign query['price_min'] = params.price_min | to_positive_integer: 0 | amount_to_fractional: context.constants.CURRENCY | append: ''
+  elsif params.sort_by == 'price_asc' or params.sort_by == 'price_desc'
+    hash_assign query['price_min'] = 1 | append: ''
+  endif
+  if params.price_max != blank
+    hash_assign query['price_max'] = params.price_max | to_positive_integer: 0 | amount_to_fractional: context.constants.CURRENCY | append: ''
+  endif
+
+  assign status = params.status | default: status
+  if status
+    hash_assign query['status'] = 'app.statuses.items.' | append: status
+  endif
+  if statuses
+    assign full_statuses = '[]' | parse_json
+    for name in statuses
+      assign full_name = 'app.statuses.items.' | append: name
+      assign full_statuses =  full_statuses | add_to_array: full_name
+    endfor
+    hash_assign query['status'] = full_statuses
+    hash_assign query['statuses'] = full_statuses
+  endif
+%}
+
+{% return query %}

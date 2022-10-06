@@ -1,0 +1,17 @@
+{% comment %}
+  Required params:
+    amount_cents: integer
+    currency: string
+  Options for pricify_cents:
+    with_currency: boolean (whether or not to display currency text like USD, AUD etc.)
+    symbol: boolean (whether or not to display currency symbol like $)
+    no_cents_if_whole: boolean (whether or not to display cents if there are none, i.e. 10$ vs 10.00$)
+
+{% endcomment %}
+{% liquid
+  assign options = '{ "with_currency": false, "symbol": true, "no_cents_if_whole": true }' | parse_json
+  assign price_text = amount_cents | round | pricify_cents: currency, options
+
+  echo price_text
+  return price_text
+%}

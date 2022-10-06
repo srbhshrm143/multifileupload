@@ -1,0 +1,25 @@
+{% liquid
+  function process = 'lib/queries/processes/find', id: event.object.id
+  function audience = 'lib/commands/audience/build'
+
+  case process.name
+
+  when 'organizations/update'
+    function organization = 'lib/queries/activities/organizations/audience', id: process.payload.id
+
+  when 'items/publish_version', 'items/publish'
+    assign item_id = process.payload.item | default: process.payload.new_item | dig: 'id'
+    function item = 'lib/queries/activities/items/audience', id: item_id
+    assign organization = item.organization
+  endcase
+
+  if organization
+    hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | concat: organization['members']
+    hash_assign audience['private']['profile'] = audience['private']['profile'] | concat: organization['members']
+  endif
+
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | add_to_array: event.actor.id
+  hash_assign audience['private']['profile'] = audience['private']['profile'] | add_to_array: event.actor.id
+
+  return audience
+%}

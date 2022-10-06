@@ -1,0 +1,17 @@
+{% liquid
+  assign quantity = params.quantity | to_positive_integer: 1
+%}
+{% parse_json object %}
+  {
+    "item_id": "{% print item.id %}",
+    "order_id": "{% print order.id %}",
+    "currency": {{ order.currency | json }},
+    "price_cents": {{ params.item_price | times: 1 | json }},
+    "quantity": {{ quantity | json }},
+    "total_price_cents": {{ params.item_price | times: quantity | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

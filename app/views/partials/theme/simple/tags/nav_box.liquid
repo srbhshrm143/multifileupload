@@ -1,0 +1,66 @@
+{% if tags %}
+
+  <section class="mt-12 sidenote uppercase">
+
+    <header class="mb-2 text-content-sidenote font-semibold">
+      {{ 'app.tags.followed' | t }}
+    </header>
+
+    <div class="flex flex-wrap uppercase gap-2">
+      {% for tag in tags.results %}
+        <form
+          action="#"
+          x-data="relationship('tagIds')"
+          x-ref="form"
+          x-on:submit.prevent
+          data-id="{{ tag.id }}"
+          x-on:data-ready.window="initManual()"
+          x-show.transition="exists"
+          x-cloak
+        >
+          <input type="hidden" name="r_id" value="{{ tag.id }}">
+          <input type="hidden" name="name" value="followship:tag">
+          <button
+            class="px-2 py-1 uppercase bg-panel-highlight hover:line-through"
+            x-on:click="toggle()"
+            title="{{ "app.relationships.posts.title" | t }}"
+          >#{{ tag.name }}</button>
+        </form>
+      {% endfor %}
+    </div>
+
+  </section>
+
+
+  <section class="mt-8 sidenote uppercase">
+
+    <header class="mb-2 text-content-sidenote font-semibold">
+      {{ 'app.tags.followable' | t  }}
+    </header>
+
+    <div class="flex flex-wrap uppercase gap-2">
+      {% for tag in tags.results %}
+        <form
+          action="#"
+          x-data="relationship('tagIds')"
+          x-ref="form"
+          x-on:submit.prevent
+          data-id="{{ tag.id }}"
+          x-on:data-ready.window="initManual()"
+          x-show.transition="exists === false"
+          x-cloak
+        >
+          <input type="hidden" name="r_id" value="{{ tag.id }}">
+          <input type="hidden" name="name" value="followship:tag">
+          <button
+            class="px-2 py-1 uppercase border rounded hover:bg-panel-highlight hover:border-interaction-hover transition-colors"
+            x-on:click="toggle()"
+            title="{{ "app.relationships.posts.title" | t }}"
+          >#{{ tag.name }}</button>
+        </form>
+      {% endfor %}
+    </div>
+
+  </section>
+
+{% endif %}

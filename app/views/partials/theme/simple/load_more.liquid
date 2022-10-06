@@ -1,0 +1,26 @@
+<div
+  x-data='frames()'
+  x-frames-target="comments"
+>
+  <div class="flex items-center justify-center"
+    x-show="spinner"
+    x-cloak
+  >
+    {% render 'theme/simple/ui/spinner', size: 8 %}
+  </div>
+
+  <div class="w-full text-center"
+    x-show="!spinner">
+    <form action="{{url}}" method="GET"
+      class="button button-small button-secondary"
+      x-ref="form"
+    >
+      <input type="hidden" name="page" value="{{page | plus: 1}}" />
+      <button
+        x-on:click.prevent="replace({where: 'afterbegin', target: 'comments'})">
+        {{ 'app.feed.see_more' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'dashDown' %}
+      </button>
+    </form>
+  </div>
+</div>

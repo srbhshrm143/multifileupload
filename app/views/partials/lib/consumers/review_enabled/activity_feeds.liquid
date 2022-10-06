@@ -1,0 +1,11 @@
+{% include 'lib/commands/activities/publish', uuid: event.uuid, type: "system", ids: "1" %}
+
+{% liquid
+  function audience = 'lib/commands/audience/build'
+  function order_audience = 'lib/queries/activities/orders/audience', id: event.target.id
+
+  hash_assign audience['private']['profile'] = audience['private']['profile'] | add_to_array: order_audience['buyer']
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | add_to_array: order_audience['buyer']
+
+  render 'lib/commands/activities/publish_to_many', uuid: event.uuid, audience: audience, meta: 'review_enabled'
+%}

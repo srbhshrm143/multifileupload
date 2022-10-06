@@ -1,0 +1,35 @@
+en:
+  app:
+    organizations:
+      attr:
+        name: Name
+        created_at: Joined
+        contact_emails: Contact emails
+        phone: Contact phone
+        address: Address
+        description: Description
+        description_tip: A few words about your company that we’ll show on your company page
+        promoted: Promoted
+        offline_stores: Offline stores
+        shipping_types: Shipping types
+        delivery_fee: "Delivery fee"
+        delivery_fee_for: "Delivery fee for %{for}"
+        delivery_fee_default: "Default delivery fee"
+        logo: Logo
+      about:
+        title: About the seller
+      errors:
+        user_already_in_organization: Selected email is already used by user that belongs to organization
+      edit:
+        update: Update
+        updated: Updated
+        need_to_be_accepted: Change needs to be accepted
+        edit: Edit organization
+        contact_emails_tip: Separate with comma (person@example.com,seller@example.com)
+      empty:
+        filtering: We didn’t found a seller with that name. Please rephrase.
+      items:
+        empty:
+          title: This merchant does not offer any products currently
+          description: Let us encourage you to browse through other items we have in stock. We are sure you’ll find what you need!
+          cta: Browse other products

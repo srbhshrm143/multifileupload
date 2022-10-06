@@ -1,0 +1,8 @@
+{{ 'app.emails.orders.return.returned.buyer.greeting' | t: name: data.line_item_return.order.buyer.name }}<br/>
+<br/>
+{{ 'app.emails.orders.return.returned.buyer.info' | t: seller_name: data.line_item_return.order.seller.name }}<br/>
+<br/>
+<a href="{{ data.line_item_return.return_url }}">{{ 'app.emails.orders.return.returned.buyer.return_link' | t }}</a>
+
+<h2>{{ 'app.emails.orders.return.returned.buyer.details' | t }}</h2>
+<i>{{ data.line_item_return.line_item.item.item_detail.name }}</i> qty: {{ data.line_item_return.quantity }}, {% render 'theme/simple/price', amount_cents: data.line_item_return.amount, currency: data.line_item_return.line_item.currency %}<br/>

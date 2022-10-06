@@ -1,0 +1,16 @@
+{% liquid
+  case order.shipping_type
+  when 'delivery'
+    assign city = order.shipping_address.city | downcase | slugify
+    assign cost = order.seller.delivery_fees_for_cities[city]
+    if cost == null
+      assign cost = order.seller.delivery_fees_for_cities['default'] | default: 0
+    endif
+  when 'personal_pickup'
+    assign cost = 0
+  else
+    assign cost = 0
+  endcase
+
+  return cost
+%}

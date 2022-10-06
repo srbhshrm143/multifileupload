@@ -1,0 +1,38 @@
+<h2 class="title mt-8">{{ 'app.items.product_attributes' | t }}</h2>
+<div class="card"
+ x-data="{ hasVariants: {% if item.variants.size > 1 %}true{% else %}false{% endif %}}">
+  <div class="flex flex-col md:flex-row gap-4 md:gap-12">
+    <fieldset>
+      <label class="block" for="category">{{ 'app.items.form.category' | t }}:</label>
+      <select class="w-full" id="category" name="item[category]">
+        {% for category in lib.categories %}
+          {% assign ident = category | split: '/' | size | minus: 1 | times: 2 %}
+          <option value="{{ category }}" {% if item.category == category %}selected{% endif %}>
+              {% for step in (1..ident) %} {% print "&nbsp;" %} {% endfor %}
+              {{ 'categories.' | append: category | t }}
+          </option>
+        {% endfor %}
+      </select>
+      {% render 'theme/simple/field_error', errors: item.errors.category %}
+    </fieldset>
+    <fieldset
+      x-show="!hasVariants">
+      <label class="block" for="sku">{{ 'app.items.form.sku' | t }}</label>
+      <input class="w-2/3" type="text" id="sku" name="item[sku]" value="{{ item.sku }}" {% if item.id %}disabled{% endif %}>
+      {% assign main_variant = item.variants | select: main_variant: true | first %}
+      {% render 'theme/simple/field_error', errors: main_variant.errors.sku %}
+    </fieldset>
+  </div>
+
+  <div>
+    <div class="mt-6 flex items-center gap-2">
+      <input type="checkbox" name="variants" id="item_variants" autocomplete="off"
+        x-model="hasVariants">
+      <label for="item_variants" class="cursor-pointer">{{ 'app.items.has_variants' | t }}</label>
+    </div>
+    <fieldset class="-mx-4 mt-4 pt-4 px-4 border-t"
+      x-show="hasVariants" x-bind:disabled="!hasVariants">
+      {% render 'theme/simple/dashboard/items/form/attributes', item: item, currency: currency, item_attributes: item_attributes %}
+    </fieldset>
+  </div>
+</div>

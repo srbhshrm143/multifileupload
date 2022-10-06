@@ -1,0 +1,19 @@
+<section class="card mt-8 p-4">
+
+  <h3 class="sidenote w-full uppercase">{{ 'app.admin.processes.report.title' | t }}</h3>
+
+  {% liquid
+    if processes.total_entries > 10
+      assign counter_class = 'text-danger'
+    elsif processes.total_entries > 0
+      assign counter_class = 'text-warning'
+    else
+      assign counter_class = 'text-confirmation'
+    endif
+  %}
+  <strong class="title {{ counter_class }}">
+    {{ processes.total_entries }}
+  </strong>
+
+  {% render 'theme/simple/admin/widgets/footer', path: '/admin/processes', filters: filters, cta: 'app.admin.processes.report.cta' %}
+</section>

@@ -1,0 +1,12 @@
+---
+slug: offers/:id/success
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function project_offer = 'lib/queries/project_offers/find', id: context.params.id
+  include 'lib/can_do_or_unauthorized', object: project_offer, do: "view", actor: current_profile
+
+  render 'theme/simple/project_offers/success', project_offer: project_offer, context: context, current_profile: current_profile
+%}

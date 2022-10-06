@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/reviews/update_item_rating/build', object: object
+  function object = 'lib/commands/reviews/update_item_rating/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'reviews/update_item_rating' object: object
+  endif
+
+  return object
+%}

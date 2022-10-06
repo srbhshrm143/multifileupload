@@ -1,0 +1,297 @@
+en:
+  app:
+    marketplace_setup:
+      mpo_fee_percent: Marketplace Owner Fee (percent)
+      stripe_pk_key: Stripe Publishable Key
+      stripe_sk_key: Stripe Secret Key
+      stripe_client_id: Stripe Owner Connect Account client ID
+    admin:
+      categories:
+        title: Categories
+        category: Category
+        generated: Category Details have been generated.
+        list:
+          add: Add Category
+          properties: Properties
+          name: Category
+          generate: Generate
+        new:
+          new_category: New Category
+          save: Save
+        edit:
+          edit_category: Edit Category
+      item_attributes:
+        title: Item Attributes
+        category: Category
+        list:
+          add: Add Attribute
+          properties: Properties
+          name: Item Attribute
+        new:
+          new_item_attribute: New Attribute
+          save: Save
+        edit:
+          edit_item_attribute: Edit Attribute
+          disable: Disable
+        errors:
+          minimum_one: At least one value is required
+      reviews:
+        title: Reviews
+        review: Review
+      organizations:
+        title: Registered Merchants
+        organization: Merchant
+        items: Items
+        search: Search
+        merchant_admins: Merchant Admins
+        invite_merchant_admin: Invite merchant admin
+        list:
+          properties: Properties
+          name: Merchant name
+          apply: Apply
+          add: Add Organization
+        show:
+          invited_at: Invited At
+          accepted_at: Accepted At
+          not_accepted_yet: Not accepted yet
+        new:
+          new_organization: New Organization
+          save: Save
+          offline_stores: "Offline stores names"
+          offline_stores_tip: "Separate with semicolon: ‘Store One;Store Two’"
+          created: Made request to create new organization. Now it must be accepted.
+          promote: Promote organization
+        edit:
+          promote: Promote organization
+          promoted: Promoted
+          save: Save
+        members:
+          new:
+            invite_member_for: Invite member for
+            email: Member email
+            first_name: First Name
+            last_name: Last Name
+            save: Send invitation
+            created: Invitation request made. Now it must be accepted.
+          requested_for_delete: Requested for delete
+      processes:
+        title: Approval Processes
+        attr:
+          description: Description
+          name: Name
+          status: Status
+          changed_at: changed at
+        show:
+          title: Approval Process
+          accept: Accept
+          reject: Reject
+          approve_or_reject: Approve or reject request
+          old: Old
+          new: New
+          property: Property
+          items_unpublish: 'Unpublish Item: <a href="%{item_url}" target="_blank">%{item_name}</a>'
+          item_detail: 'Preview the item: <a href="%{item_url}" target="_blank">%{item_name}</a>'
+          item_variant: "Variant:"
+        list:
+          by: by
+        update:
+          run_succeeded: Request accepted and executed
+          run_failed: Request accepted but can't execute, please contact support.
+          rejected: Request was rejected
+          failed: Can't update request
+        report:
+          title: Pending requests for approval
+          cta: Show requests list
+      promo_codes:
+        list:
+          add: Add promo code
+        title: Promo codes
+      users:
+        name: Customer
+        unlocking:
+          success: Successfully unlocked selected user’s account
+          failure: An error prevented the user’s account from being unlocked
+          locked: "Account locked: %{date}"
+          unlock: Unlock
+        list:
+          permissions: Permissions
+        permissions:
+          actions:
+            admin: Admin - can access reports
+            superadmin: Superadmin - can access everything
+            maker: Maker
+            checker: Checker
+          update:
+            changed: Permissions changed
+        new:
+          password: Set Password
+        password:
+          update:
+            changed: Password changed
+        show:
+          otp_configured: OTP enabled
+          reset_otp: Reset OTP authorization
+          reset_otp_confirm: Are you sure? We will remove OTP authorization for this user.
+      setup:
+        enable: Enable
+        disable: Disable
+        save: Save
+        saved: Saved
+        sections:
+          marketplace: Marketplace
+          login_and_auth: Login and authentication
+          community: Community
+          seo: Search Engine Optimization
+        currency:
+          title: Site’s default currency
+        cancel_unpaid_after:
+          title: Cancel unpaid order after (in hours)
+        buyers_can_purchase:
+          title: Allow only Buyers to purchase items
+        inventory_acceptance:
+          title: Require acceptance for item inventory changes
+        sitemap:
+          create: Generate Sitemap
+          last_updated: Last updated on %{created_at}
+          unavailable: Sitemap not generated yet.
+        stripe:
+          title: Stripe
+          setup: Setup Stripe
+          register: >-
+            Please visit <a href="https://stripe.com" target="_blank" rel="external noopener">https://stripe.com</a> and register your <span class="font-semibold">Stripe Connect</span> account.
+          copy_and_add: Copy and add this redirect URL in your <a href="https://dashboard.stripe.com/settings/applications" target="_blank" rel="external noopener">stripe settings</a>
+          public_key: Enter your Stripe public key, secret key, and connect account client ID in the form below
+        2fa:
+          title: Two Factor Authentication
+          desc: on login for merchants and admin
+          enabled: Required
+          disabled: Not required
+          checker_users: Users that can accept processes
+        hcaptcha:
+          title: Require hCaptcha
+        search_index:
+          title: Use Custom Search Index instaed of DB
+        password_policy:
+          title: Require complex password
+          desc: Complex passwords require lowercase and uppercase letters and number
+        login_attempts:
+          title: Restrict the number of login attempts
+          desc: Lock account after X failed attempts. To disable the funcionality set this to 0.
+        unlock_after:
+          title: Unlock locked accounts after (in minutes)
+          desc: Minumium is 1 minute.
+        after_login_redirect:
+          title: After logging in redirect the user to
+          homepage: Homepage
+          feed: User’s feed
+        slack:
+          title: Slack notifications
+        chat:
+          title: Chat
+      items:
+        edit:
+          promote: Promote item on main page
+          promoted: Promoted
+        list:
+          filter_name: Item Name
+  admin:
+    check_all: Check all
+    uncheck_all: Uncheck all
+    navigation:
+      dashboard: Dashboard
+      sales: Sales
+      stock: Stock
+      users: Users
+      orders: Orders
+      organizations: Merchants
+      categories: Categories
+      close_admin: Back to homepage
+      activities: Activities
+      conversations: Conversations
+      processes: Approval Processes
+      settings: Settings
+      reviews: Reviews
+      item_attributes: Edit item attributes
+      promo_codes: Promo Codes
+      themes: Themes
+    sales:
+      title: Income
+      orders: Orders
+      items: Items
+    items:
+      title: Created items
+    stock:
+      title: Items
+    users:
+      title: Registered users
+      profile:
+        orders: User's order list
+    conversations:
+      title: Threads
+      filter: Filter
+      message: Message
+      participants: Participants
+      last_message_at: Last message At
+      view: View
+    since_yesterday: Since yesterday
+    view_report: View report
+    activities:
+      filters:
+        header: Feed
+    themes:
+      title: Theme settings
+      edit_title: Edit "%{theme}" theme settings
+      current_theme: "Current theme"
+      customize_theme: "Customize theme"
+      reset_theme: "Reset color scheme to default"
+      logo: Custom logo
+      theme_select: Select your theme
+      colors:
+        title: Custom colors
+        labels:
+          pos-color-page: Page
+          pos-color-panel: Panel
+          pos-color-panel-highlight: Panel - highlight
+          pos-color-frame: Frame
+          pos-color-accent-dark: Accent - dark
+          pos-color-logo: Logo
+          pos-color-pageheader-from: Page header gradient (start)
+          pos-color-pageheader-to: Page header gradient (end)
+          pos-color-content: Content
+          pos-color-content-inverted: Content - inverted
+          pos-color-content-sidenote: Content - sidenote
+          pos-color-interaction: Interaction
+          pos-color-interaction-hover: Interaction - hover
+          pos-color-interaction-disabled: Interaction - disabled
+          pos-color-danger: Danger
+          pos-color-danger-hover: Danger - hover
+          pos-color-danger-disabled: Danger - disabled
+          pos-color-confirmation: Confirmation
+          pos-color-confirmation-hover: Confirmation - hover
+          pos-color-confirmation-disabled: Confirmation - disabled
+          pos-color-warning: Warning
+          pos-color-warning-hover: Warning - hover
+          pos-color-warning-disabled: Warning - disabled
+          pos-color-alternative: Alternative
+          pos-color-alternative-hover: Alternative - hover
+          pos-color-alternative-disabled: Alternative - disabled
+          pos-color-alternative-text: Alternative - text
+          pos-color-alternative-text-hover: Alternative - text hover
+  admin_old:
+    menu:
+      activities:
+        name: Activities
+        following: 'following:'
+        list:
+          public: public
+          audit: audit all events
+          all: all
+          comments: comments
+          user: 'user: '
+          user_id: 'id: '
+          group: 'group: '
+          group_id: 'id: '
+          apply: Apply
+          questions: questions
+          answers: answers
+          item_inventory_updates: Item inventory updates

@@ -1,0 +1,53 @@
+{% liquid
+  if document_presign
+    function presigned_url = 'lib/queries/document_presigned_url'
+    hash_assign context['presigned_url'] = presigned_url
+  endif
+
+  if photo_presign
+    function presigned_url = 'lib/queries/presigned_url'
+    hash_assign context['presigned_url'] = presigned_url
+  endif
+
+  if tags
+    function tags = 'lib/queries/tags/search', limit: 20
+    hash_assign context['tags'] = tags
+    hash_assign context['tag_names'] = tags.results | map: 'name'
+  endif
+
+  if post_templates
+    function post_templates = 'lib/queries/posts/post_templates'
+    hash_assign context['post_templates'] = post_templates
+  endif
+
+  if group_templates
+    function group_templates = 'lib/queries/groups/group_templates', group: group
+    assign removed = group_templates | remove_hash_key: 'profile_group'
+    assign removed = group_templates | remove_hash_key: 'project_group'
+    hash_assign context['group_templates'] = group_templates
+  endif
+
+  if item_attributes
+    function item_attributes = 'lib/queries/item_attributes/search_grouped', disabled_exists: false
+    hash_assign context['item_attributes'] = item_attributes
+  endif
+
+  if default_currency
+    function currency = 'lib/queries/constants/find' name: "CURRENCY", context: context
+    hash_assign context['default_currency'] = currency
+  endif
+
+  if available_languages
+    function available_languages = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array"
+    hash_assign context['available_languages'] = available_languages
+  endif
+
+  if order_settings
+    function order_cancel_hours = 'lib/queries/constants/find' name: "ORDER_CANCEL_UNPAID_AFTER_X_HOURS", type: "integer", context: context
+    function order_payment_lock_minutes = 'lib/queries/constants/find' name: "ORDER_PAYMENT_LOCK_MINUTES", type: "integer", context: context
+    hash_assign context['order_cancel_hours'] = order_cancel_hours
+    hash_assign context['order_payment_lock_minutes'] = order_payment_lock_minutes
+  endif
+
+  return true
+%}

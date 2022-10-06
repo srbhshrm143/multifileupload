@@ -1,0 +1,16 @@
+<header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+  <h2 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'user', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'admin.navigation.activities' | t }}
+  </h2>
+</header>
+
+{{ selected.name }} {{ selected.id }}
+
+<div class="flex min-h-screen">
+  {% render 'theme/simple/admin/activities/filters', filters: filters %}
+
+  <div class="w-full">
+    {% render 'theme/simple/admin/activities/activity', list: list, current_profile: current_profile, page: page %}
+  </div>
+</div>

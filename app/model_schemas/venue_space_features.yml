@@ -1,0 +1,11 @@
+name: venue_event_features
+properties:
+  - name: venue_id
+  - name: event_space
+    type: string
+  - name: food
+    type: string
+  - name: bar
+    type: string
+  - name: extras
+    type: string

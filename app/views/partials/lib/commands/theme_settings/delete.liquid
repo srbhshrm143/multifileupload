@@ -1,0 +1,9 @@
+{% liquid
+  function object = 'lib/commands/theme_settings/delete/check',  object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'theme_settings/delete', object: object
+  endif
+
+  return object
+%}

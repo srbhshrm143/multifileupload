@@ -1,0 +1,17 @@
+<header class="mb-4 flex items-center justify-between">
+  {{ 'app.notifications.title' | t }}
+  <a href="/notifications" class="button button-small"> {{ 'app.see_all' | t }} {% render 'theme/simple/ui/icon', icon: 'userAdd' %} </a>
+</header>
+
+<div class="flex flex-col gap-4">
+
+  {% if list.total_entries > 0 %}
+    {% liquid
+      for activity in list.results
+        render 'theme/simple/activities/notifications/feed_unit', payload: activity.payload, current_profile: current_profile, namespace: namespace, context: context
+      endfor
+    %}
+  {% else %}
+    <p class="container my-8 text-lg">{{ 'app.search.no_items_found.title' | t }}</p>
+  {% endif %}
+</div>

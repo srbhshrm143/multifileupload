@@ -1,0 +1,15 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  if object.promo_code.max_times_user_can_use > 0
+    function c = 'lib/validations/number', c: c, object: object.promo_code, field_name: 'user_validation', number: object.used_by_user, lt: object.promo_code.max_times_user_can_use, message_lt: 'app.promo_codes.error.max_number_of_times'
+  endif
+  if object.promo_code.max_discount_amount_per_user > 0
+    function c = 'lib/validations/number', c: c, object: object.promo_code, field_name: 'user_validation', number: object.total_discounted_amount, lt: object.promo_code.max_discount_amount_per_user, message_lt: 'app.promo_codes.error.max_amount'
+  endif
+
+  hash_assign object['valid'] = c.valid
+  hash_assign object['errors'] = c.errors
+
+  return object
+%}

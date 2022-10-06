@@ -1,0 +1,27 @@
+{% render 'theme/simple/ui/avatar', profile: user, size: 128, class: 'w-32 h-32 -mt-20 mb-4 inline-flex text-3xl' %}
+
+{% liquid
+  assign name = user.first_name | append: ' ' | append: user.last_name
+  unless name
+    assign name = user.name
+  endunless
+%}
+<h2 class="bigtitle !m-0" data-tc="user-name"><a href="{% render 'link_to', profile: user %}">{{ name }}</a></h2>
+{% if user.first_name and user.name %}
+  <div class="text-content-sidenote">@{{ user.name }}</div>
+{% endif %}
+{% if user.bio %}
+  <div class="md:subtitle md:max-w-3xl md:mx-auto mt-4">{{ user.bio }}</div>
+{% endif %}
+
+<div class="mt-4 md:mt-0 flex justify-center flex-wrap gap-2 md:absolute md:top-4 md:right-4">
+  {% if user != blank and user.id == current_profile.id %}
+    <a href="/dashboard/profile/edit" class="button button-small button-secondary">{{ 'app.edit' | t }}</a>
+  {% else %}
+    {% liquid
+      render 'theme/simple/follow_button', current_profile: current_profile, profile: user, big: true, text: true
+
+      render "modules/chat/theme/simple/message_button", to_id: user.id, button: true, class: "button-small button-secondary"
+    %}
+  {% endif %}
+</div>

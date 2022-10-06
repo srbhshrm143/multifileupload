@@ -1,0 +1,17 @@
+{% liquid
+  function item_attributes = 'lib/queries/item_attributes/search'
+  function data = 'lib/commands/items/import/csv/read_file', url: operation.files.first.file.url
+
+  function current_state = 'lib/commands/items/export/current_state', profile_id: current_profile.id
+
+  function import = 'lib/commands/items/import/csv/v1', data: data, item_attributes: item_attributes.results, owner_uuid: current_profile.id, owner: current_profile, dry_run: true, current_state: current_state
+
+  function incoming = 'lib/commands/items/export/group_by_primary_key', list: data
+%}
+
+<h1 class="bigtitle">{{ 'app.bulk_operations.title' | t }}</h1>
+
+{% render 'theme/simple/bulk_operations/reports/import', import: import %}
+
+{% function diff = 'lib/commands/items/import/csv/calculate_diff', current: current_state.data, incoming: incoming  %}
+{% render 'theme/simple/bulk_operations/reports/diff', import: import, diff: diff %}

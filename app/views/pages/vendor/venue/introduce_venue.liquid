@@ -1,0 +1,30 @@
+---
+  slug: venue/create
+  method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  
+  function object = 'lib/commands/vendor/venue/create', object: context.params.introduce_venue, profile: current_profile.user
+  hash_assign context.params['venue_id'] = object.id
+  hash_assign context['venue_id'] = object.id
+  assign venue_id = object.id
+  include 'redirect_to', venue_create: context.params.introduce_venue, venue_id: object.id, context: context, notice: 'venue created'
+  comment
+  endcomment
+%}
+
+
+{{ context.params }}
+<br><br>
+{{ context }}
+<br><br>
+{{ current_profile.user.id }}
+<br><br>
+{{ object }}
+<br><br>
+{{ object.id }}
+<br><br>
+{{ venue_id }}
+<br><br>
+{{ context.params.venue_id | json }}

@@ -1,0 +1,15 @@
+{% parse_json object %}
+  {
+    "id":          {{ object.id | json }},
+    "space_name":        {{ object.space_name | json }},
+    "category":          {{ object.category | json }},
+    "min_space_capacity":{{ object.min_space_capacity | json }},
+    "max_space_capacity":{{ object.max_space_capacity | json }},
+    "space_about_msg":   {{ object.space_about_msg | json }},
+    "included_amenities":{{ object.included_amenities | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

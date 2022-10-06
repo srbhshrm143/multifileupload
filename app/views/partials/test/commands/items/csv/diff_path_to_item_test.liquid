@@ -1,0 +1,15 @@
+{% liquid
+  function path = 'lib/commands/items/import/csv/diff_path_to_item', path: "0ece51a6-3fe5-42ff-9aea-0d3c4dbdce84___SKU-405[0].en_column"
+
+  function contract = 'test/assertions/equal', contract: contract, given: path.product_uuid, expected: '0ece51a6-3fe5-42ff-9aea-0d3c4dbdce84'
+  function contract = 'test/assertions/equal', contract: contract, given: path.sku, expected: 'SKU-405'
+  function contract = 'test/assertions/equal', contract: contract, given: path.column, expected: 'en_column'
+%}
+
+{% liquid
+  function path = 'lib/commands/items/import/csv/diff_path_to_item', path: "0ece51a6-3fe5-42ff-9aea-0d3c4dbdce84___SKU-405"
+
+  function contract = 'test/assertions/equal', contract: contract, given: path.product_uuid, expected: '0ece51a6-3fe5-42ff-9aea-0d3c4dbdce84'
+  function contract = 'test/assertions/equal', contract: contract, given: path.sku, expected: 'SKU-405'
+  function contract = 'test/assertions/equal', contract: contract, given: path.column, expected: null
+%}

@@ -1,0 +1,14 @@
+{%  liquid
+  function object = 'lib/commands/items/unpublish_version/build', object: object
+  function object = 'lib/commands/items/unpublish_version/check', object: object
+
+  if object.valid and skip_execution != true
+    function res = 'lib/commands/execute', mutation_name: 'items/publish_version' object: object, selection: 'new_items'
+
+    function status = 'lib/commands/statuses/create', object_id: object.item_inventory_id, name: object.new_item_status, profile_id: current_profile.id
+    function _event = 'lib/commands/events/create', type: 'status_created', actor_id: current_profile.id, object_id: status.id, target_id: status.object_id
+    function _event = 'lib/commands/events/create', type: 'version_unpublished', actor_id: current_profile.id, object_id: status.object_id
+  endif
+
+  return object
+%}

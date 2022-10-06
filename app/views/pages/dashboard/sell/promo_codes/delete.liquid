@@ -1,0 +1,18 @@
+---
+slug: dashboard/sell/promo_codes/:id
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function object = 'lib/queries/promo_codes/find', id: context.params.id, creator_ids: current_profile.id, withAllLangs: true, code_types: 'merchant'
+  function object = 'lib/commands/promo_codes/disable', object: object
+
+  if object.valid
+    include 'redirect_to', url: '/dashboard/sell/promo_codes', notice: 'app.models.shared.deleted'
+  else
+    log object, type: 'ERROR: promo_codes/delete'
+    include 'redirect_to', url: '/dashboard/sell/promo_codes', error: 'app.models.shared.delete_failed'
+  endif
+%}

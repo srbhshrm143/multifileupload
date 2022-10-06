@@ -1,0 +1,25 @@
+mutation create_bulk_operation(
+  $operation_type: String!
+  $uuid: String!
+  $profile_id: String!
+) {
+  record: record_create(
+    record: {
+      table: "bulk_operation"
+      properties: [
+        { name: "operation_type" value: $operation_type }
+        { name: "uuid" value: $uuid }
+        { name: "profile_id" value: $profile_id }
+      ]
+    }
+  ){
+    id
+    created_at
+    deleted_at
+    type: table
+
+    operation_type: property(name: "operation_type")
+    uuid: property(name: "uuid")
+    profile_id: property(name: "profile_id")
+  }
+}

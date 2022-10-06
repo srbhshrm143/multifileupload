@@ -1,0 +1,72 @@
+{% liquid
+  function langs = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array"
+
+  assign main = items[0]
+  assign result = '{}' | parse_json
+
+  hash_assign result['_row_ids'] = items | map: '_row_id'
+  hash_assign result['_primary_key'] =     main['_primary_key']
+  hash_assign result['uuid'] =             main['product_uuid'] | append: ":" | append: owner_uuid
+  hash_assign result['product_uuid'] =     main['product_uuid']
+  hash_assign result['category'] =         main['category']
+  hash_assign result['currency'] =         main['currency']
+  hash_assign result['max_in_one_order'] = main['max_in_one_order']
+  hash_assign result['original_price'] =   main['original_price']
+  hash_assign result['photo_ids'] =        main['photo_ids']
+  hash_assign result['return_days'] =      main['return_days']
+  hash_assign result['price'] =            main['price']
+  hash_assign result['quantity'] =         main['quantity']
+  hash_assign result['item_inventory_id'] = item_inventory.id
+  hash_assign result['item_ids'] = item_inventory.item_ids
+  hash_assign result['item_type'] =        main['item_type']
+  hash_assign result['published'] =        main['published'] | default: 'true' | downcase
+
+  hash_assign result['details'] = '{}' | parse_json
+  for lang in langs
+    assign detail = '{}' | parse_json
+
+    assign detail_name = 'detail_name_' | append: lang
+    assign detail_description = 'detail_description_' | append: lang
+
+    hash_assign detail['lang'] = lang
+    hash_assign detail['name'] = main[detail_name]
+    hash_assign detail['description'] = main[detail_description]
+
+    hash_assign result['details'][lang] = detail
+  endfor
+
+  hash_assign result['variants'] = '[]' | parse_json
+  for one in items
+    assign item = '{}' | parse_json
+    hash_assign item['_row_id'] = one['_row_id']
+
+    hash_assign item['item_inventory_id'] = item_inventory_id
+
+    hash_assign item['sku']            = one['sku']
+    hash_assign item['quantity']       = one['quantity']
+    hash_assign item['price']          = one['price']
+    hash_assign item['original_price'] = one['original_price']
+    hash_assign item['_photo_urls']    = one['_photo_urls']
+
+    hash_assign item['attributes_ids']  = '[]' | parse_json
+    hash_assign item['attributes_json'] = '[]' | parse_json
+
+    for i in (1..3)
+      assign attr_name_key   = 'attribute_' | append: i | append: '_name'
+      assign attr_value_key  = 'attribute_' | append: i | append: '_value'
+      assign attr = item_attributes | detect: name: one[attr_name_key], value: one[attr_value_key]
+
+      if attr
+        hash_assign item['attributes_ids']  = item['attributes_ids'] | add_to_array: attr.id
+        hash_assign item['attributes_json'] = item['attributes_json'] | add_to_array: attr
+      endif
+    endfor
+
+    hash_assign item['attributes_ids'] = item['attributes_ids'] | join: ','
+    hash_assign item['attributes_json'] = item['attributes_json'] | json
+
+    hash_assign result['variants'] = result['variants'] | add_to_array: item
+  endfor
+%}
+
+{% return result %}

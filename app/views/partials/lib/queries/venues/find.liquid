@@ -1,0 +1,11 @@
+{% liquid
+  unless id
+    return null
+  endunless
+
+  assign lang = lang | default: context.language
+  graphql r  = 'venue/search_venue', id: id, limit: 1, lang: lang, owner: owner, withOrders: withOrders, withInventoryItem: withInventoryItem, withAllLangs: withAllLangs, withAllVariants: withAllVariants
+  assign venue = r.venues.results.first
+
+  return venue
+%}

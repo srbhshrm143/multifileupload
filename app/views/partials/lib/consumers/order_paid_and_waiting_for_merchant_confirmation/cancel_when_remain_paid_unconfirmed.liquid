@@ -1,0 +1,15 @@
+{% liquid
+  assign order_id = object.object.id
+  assign delay_minutes = context.constants.ORDER_CANCEL_PAID_UNCONFIRMED_AFTER_X_HOURS | default: 336 | plus: 0 | times: 60
+%}
+{% background source_name: 'cancel_order_when_remain_paid_unconfirmed', order_id: order_id, delay: delay_minutes %}
+  {% liquid
+    function order = 'lib/queries/orders/find', id: order_id
+    if order.status.name == 'app.statuses.orders.paid'
+      function object = 'lib/commands/orders/cancel', order: order, role: 'seller', current_profile: order.seller
+      if object.valid != true
+        log object, type: 'ERROR: cancel_order_when_remain_paid_unconfirmed'
+      endif
+    endif
+  %}
+{% endbackground %}

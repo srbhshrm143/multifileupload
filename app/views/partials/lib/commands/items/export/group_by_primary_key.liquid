@@ -1,0 +1,8 @@
+{% liquid
+  for i in list
+    assign item = i
+    hash_assign item['_primary_key'] = item['product_uuid'] | append:  '___' | append: item['sku']
+  endfor
+
+  return list | group_by: '_primary_key'
+%}

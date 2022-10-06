@@ -1,0 +1,16 @@
+name: line_item_return
+properties:
+  - name: order_id
+  - name: line_item_id
+  - name: quantity
+    type: integer
+  - name: reason
+  - name: reason_details
+  - name: shipping_type
+  - name: shipping_pickup_point
+  - name: shipping_address_id
+  - name: reject_reason
+  - name: amount
+    type: integer
+
+  - name: c__status

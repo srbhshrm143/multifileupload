@@ -1,0 +1,69 @@
+{% liquid
+  if context.tests
+    return true
+  endif
+
+  assign delay = delay | default: 0.01
+  if context.constants.DEBUG == "true"
+    if object
+      log object, type: 'WARNING: please use object_id instead of passing whole object'
+    endif
+    if actor
+      log actor, type: 'WARNING: please use actor_id instead of passing whole actor'
+    endif
+    if target
+      log target, type: 'WARNING: please use target_id instead of passing whole target'
+    endif
+  endif
+%}
+
+{% background "bg-task-name", priority: 'low', type: type, object_id: object_id, actor_id: actor_id, actor: actor, target_id: target_id, object: object, delay: delay %}
+  {% liquid
+    if actor_id
+      for i in (0..10)
+        function actor  = 'lib/queries/activities/model', id: actor_id, meta: "actor"
+        if actor
+          break
+         endif
+      else
+        unless actor
+          log 'actor could not be found', type: 'ERROR'
+        endunless
+      endfor
+    endif
+
+    if target_id
+      function target = 'lib/queries/activities/model', id: target_id, meta: "target"
+    endif
+
+    if target.item_id and attributed_to == blank
+      function attributed_to = 'lib/queries/activities/model', id: target.item_id, meta: "attributed_to"
+    endif
+
+    if object_id
+      function object = 'lib/queries/activities/model', id: object_id, meta: "object"
+    endif
+
+    if object.group_id and attributed_to == blank
+      function attributed_to = 'lib/queries/activities/model', id: object.group_id, meta: "attributed_to"
+      if attributed_to.related.size > 0
+        assign attributed_to = attributed_to.related.first
+      endif
+    endif
+
+    function event = 'lib/commands/events/create/build', type: type, actor: actor, object: object, target: target, attributed_to: attributed_to
+    function event = 'lib/commands/events/create/check', object: event
+
+    if event.valid
+      function event = 'lib/commands/events/create/execute', object: event
+
+      if event.valid
+        include 'lib/commands/events/broadcast/execute', object: event
+      endif
+    else
+      log event, type: 'errors.events.invalid'
+    endif
+  %}
+
+{% endbackground %}
+{% return true %}

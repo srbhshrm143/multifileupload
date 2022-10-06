@@ -1,0 +1,46 @@
+en:
+  app:
+    project_offers:
+      application: Application
+      application_desc: Add application description
+      application_tip: Describe how users can apply to this challenge.
+      my_applications: My applications
+      description: Fill out this 2 step application form to apply for this challenge.
+      search_in_applications: Search in applications
+      solution_title: Solution title
+      empty: Currently there are no applications to this project
+      form:
+        save_next: Next
+        collaborators_email: Teammates email
+        collaborators_email_desc: If you have team mates add their email address to this list below. If they are not part of the NEOM community we send an invitation to them.
+        email_address_creator: Email address of the solution creator
+        add_email: Add more email addresses
+        no_emails: You’ve provided no e-mails
+        your_solution: Your solution
+        your_solution_desc: Upload your presentation and anything extra you found important to introduce your solution.
+        documents: Documents
+        documents_desc: >-
+          Load your presentation in a PDF format and other PDF files to attach to your application.
+
+          Files should be smaller than 2MB.
+        gallery: Image gallery
+        gallery_desc: >-
+          Load one or more images to create an image gallery for your application.
+
+          Must be a .jpg, .gif or .png file smaller than 2MB.
+        videos: Videos
+        URL: URL
+        add_urls: Add more URLs
+        agree_terms: I agree to the Terms and Conditions od the %{name} challenge
+        save_draft: Save as draft
+        send: Send application
+        solution_name: Solution name (required)
+        solution_name_desc: This is only for you to identify your project
+        draft_saved: Draft saved
+      new:
+        contgratulation: Contgratulation
+        contgratulation_desc: You successfully applied!
+        content: Your application is **saved**, you can check it on your application page.
+        visit_challenge: Visit challenge page
+        check_applications: Check my applications
+

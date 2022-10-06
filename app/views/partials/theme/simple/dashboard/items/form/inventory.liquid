@@ -1,0 +1,51 @@
+<h2 class="title mt-8">{{ 'app.items.inventory' | t }}</h2>
+<div class="card flex flex-col md:flex-row gap-4 md:gap-12">
+  <fieldset>
+    <label class="block" for="quantity">{{ 'app.items.form.quantity' | t }}:</label>
+    <input class="w-3/4" type="number" id="quantity" name="item[quantity]" value="{{ item.quantity | default: 1 }}" class="md:w-36">
+    {% render 'theme/simple/field_error', errors: item.errors.quantity %}
+  </fieldset>
+
+  <fieldset>
+    <label class="block" for="max_in_one_order">{{ 'app.items.form.max_quantity' | t }}:</label>
+    <input type="number" id="max_in_one_order" name="item[max_in_one_order]" value="{{ item.max_in_one_order | default: 5 }}" class="md:w-36">
+    {% render 'theme/simple/field_error', errors: item.errors.max_in_one_order %}
+  </fieldset>
+
+  <div>
+    <fieldset>
+      <label class="block" for="item_type">{{ 'app.items.attr.item_type' | t }}:</label>
+      {% if item.item_inventory_id %}
+        {{ item.item_type | t: scope: 'app.items.item_types' }}
+      {% else %}
+        {% assign item_types = 'app.items.item_types' | t %}
+        <select name="item[item_type]" id="item_type"
+          x-model="itemType"
+        >
+          {% for type in item_types %}
+            <option value="{{type[0]}}">{{type[1]}}</option>
+          {% endfor %}
+        </select>
+        {% render 'theme/simple/field_error', errors: item.errors.item_type %}
+      {% endif %}
+    </fieldset>
+  </div>
+</div>
+
+
+<div x-show="itemType == 'affiliate'">
+  <h2 class="title mt-8">{{ 'app.items.item_types.affiliate' | t }}</h2>
+  <div class="card flex flex-col md:flex-row gap-4 md:gap-12">
+    <fieldset>
+      <label class="block" for="affiliate_redirect_url">{{ 'app.items.form.affiliate_redirect_url' | t }}:</label>
+      <input class="w-3/4" type="url" id="affiliate_redirect_url" name="item[affiliate_redirect_url]" value="{{ item.affiliate_redirect_url }}" class="md:w-36">
+      {% render 'theme/simple/field_error', errors: item.errors.affiliate_redirect_url %}
+    </fieldset>
+
+    <fieldset>
+      <label class="block" for="affiliate_redirect_url_terms_and_service">{{ 'app.items.form.affiliate_redirect_url_terms_and_service' | t }}:</label>
+      <input class="w-3/4" type="url" id="affiliate_redirect_url_terms_and_service" name="item[affiliate_redirect_url_terms_and_service]" value="{{ item.affiliate_redirect_url_terms_and_service }}" class="md:w-36">
+      {% render 'theme/simple/field_error', errors: item.errors.affiliate_redirect_url_terms_and_service %}
+    </fieldset>
+  </div>
+</div>

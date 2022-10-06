@@ -1,0 +1,17 @@
+{% liquid
+  function object = 'lib/queries/relationships/find', name: object.name, l_id: object.l_id, r_id: object.r_id
+  if object
+    hash_assign object['valid'] = true
+  else
+    assign object = '{ "valid": false }' | parse_json
+  endif
+
+  if object.valid and skip_execution != true
+    function object = 'lib/commands/relationships/delete', object: object
+    if object.valid
+      function _event = 'lib/commands/events/create', type: 'relationship_deleted', actor_id: object.l_id, target_id: object.r_id
+    endif
+  endif
+
+  return object
+%}

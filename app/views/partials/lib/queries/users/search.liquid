@@ -1,0 +1,10 @@
+{% liquid
+  if filters
+    graphql r = 'users/search', args: filters
+  else
+    assign skip_profile_ids = skip_profile_ids | split: ","
+    graphql r = 'users/search_with_profiles', limit: limit, query: query, emails: emails, profile: profile, skip_profile_ids: skip_profile_ids
+  endif
+
+  return r.users
+%}

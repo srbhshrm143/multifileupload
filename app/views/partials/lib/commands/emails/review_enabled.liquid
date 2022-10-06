@@ -1,0 +1,46 @@
+{% comment %}
+  Required params:
+    - order
+    - most_expensive_item_review
+    - most_expensive_line_item
+{% endcomment %}
+
+{% liquid
+  context_rc language: line_item_return.order.buyer.language | default: 'en'
+  assign site_name = 'app.title' | t
+
+  function review_url = 'link_to', item_review: most_expensive_item_review
+
+  assign url_object = '{}' | parse_json
+  hash_assign url_object['host'] = context.location.host
+  hash_assign url_object['review_url'] = review_url
+
+  assign faq_url = 'https://{host}/faq' | expand_url_template: url_object
+  assign contact_us_url = 'https://{host}/contact-us' | expand_url_template: url_object
+  function review_url = 'link_to_url', object: most_expensive_item_review, type: 'item_review'
+%}
+
+{% parse_json object %}
+  {
+    "to":      {{ order.buyer.user.email | json }},
+    "from":    {{ 'app.support_email' | t | json }},
+    "subject": {{ 'app.emails.orders.review_enabled.buyer.subject' | t: name: order.buyer.first_name | json }},
+    "most_expensive_line_item": {{ most_expensive_line_item | json }},
+    "most_expensive_item_review": {{ most_expensive_item_review | json }},
+    "order": {{ order | json }},
+    "purchase_date": {{ order.created_at | l: 'compact' | json }},
+    "site_name": {{ site_name | json }},
+    "faq_url": {{ faq_url | json }},
+    "review_url": {{ review_url | json }},
+    "contact_us_url": {{ contact_us_url | json }},
+    "partial": "theme/simple/emails/orders/review_enabled"
+  }
+{% endparse_json %}
+
+{% liquid
+  function object = 'lib/commands/emails/send', object: object
+  unless object.valid
+    log object, type: 'ERROR when sending review enabled notification email to the buyer'
+  endunless
+  return object
+%}

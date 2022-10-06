@@ -1,0 +1,21 @@
+---
+layout: admin
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_superadmin'
+
+  assign ids = '["19107"]' | parse_json
+  assign ids = params.ids | default: ids
+
+  if params.index == 'db' or params.index == 'all'
+    function rebuild_keywords = 'lib/commands/items/rebuild_keywords', ids: params.ids
+    print rebuild_keywords
+  endif
+
+  if params.index == 'es' or params.index == 'all'
+    function rebuild_keywords = 'lib/commands/index/reindex', ids: params.ids
+    print rebuild_keywords
+  endif
+%}

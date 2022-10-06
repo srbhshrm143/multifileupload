@@ -1,0 +1,69 @@
+<h1 class="pagetitle"> Venues </h1>
+
+{%liquid graphql read_gql = "venue/read" | fetch: "models"
+  assign read_data = read_gql | fetch: "results"
+%}
+
+<!-- {{ read_data }} -->
+<div class="display_venues">
+  {% for data in read_data %}
+      <div class="venue_card">
+        <table class="card-lg w-full md:w-96">
+          <!-- <p>{{ data }}</p><br> -->
+          <tr>
+            <img class="venue_image" src="https://t3.ftcdn.net/jpg/04/34/72/82/360_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="no-image">
+          </tr>
+            {% if data.id != blank %}
+              <!-- <tr class="bigtitle">
+                <td> Id : </td>
+                <td> {{ data.id }} </td>
+              </tr> -->
+            {% endif %}
+            {% if data.properties.venue_name %}
+              <tr>
+                <!-- <td> Venue Name : </td> -->
+                <td>
+                  <a href="/venue/show_venue?id={{ data.id }}">
+                    {{ data.properties.venue_name }}
+                  </a>
+                </td>
+              </tr>
+            {% endif %}
+            {% if data.properties.venue_address %}
+              <tr>
+                <!-- <td> Venue Address : </td> -->
+                <td> {{ data.properties.venue_address }} </td>
+              </tr>
+            {% endif %}
+            {% if data.properties.venue_contact %}
+              <tr>
+                <!-- <td> Venue Contact : </td> -->
+                <td> {{ data.properties.venue_contact }} </td>
+              </tr>
+            {% endif %}
+            <tr>
+              <!-- <td>
+                <a href="/venue/update?id={{ data.id }}" class="button button-small"> Venue Update </a>
+              </td> -->
+              {%- comment -%}
+                {% if context.constants.superadmins == context.current_user.email %}
+                  <td>
+                    <a href="/venue/delete?id={{ data.id }}" class="button button-small"> Delete Venue </a>
+                  </td>
+                {% endif %}
+              {%- endcomment -%}
+              <td>
+                <a href="/venue/venue_home?id={{ data.id }}" class="button button-small mt-2"> Show Venue </a>
+              </td>
+            </tr>
+            <!-- <tr>
+              {% if context.constants.superadmins == context.current_user.email %}
+                <td>
+                  <a href="/venue/delete?id={{ data.id }}" class="button button-small"> Delete Venue </a>
+                </td>
+              {% endif %}
+            </tr> -->
+        </table>
+      </div>
+  {% endfor %}
+</div>

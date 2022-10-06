@@ -1,0 +1,34 @@
+{% liquid
+  function available_languages = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array"
+  function categories = 'lib/queries/categories/search', limit: 9999, page: 1, lang: 'en', withAllLangs: true
+%}
+
+{% for category in categories.results %}
+  {% for lang in available_languages %}
+    {% assign detail = category.category_details | detect: lang: lang %}
+    {% unless detail %}
+      {% assign name = 'categories.' | append: category.key | t: locale: lang %}
+      {% graphql name: name, category_id: category.id, lang: lang %}
+        mutation create_category_detail(
+          $category_id: String!
+          $name: String!
+          $lang: String!
+        ) {
+          record_create(
+            record: {
+              table: "category_detail"
+              properties: [
+                { name: "category_id", value: $category_id }
+                { name: "name", value: $name }
+                { name: "lang", value: $lang }
+              ]
+            }
+          ) {
+            id
+          }
+        }
+      {% endgraphql %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+

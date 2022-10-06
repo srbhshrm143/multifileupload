@@ -1,0 +1,53 @@
+mutation update_promo_code(
+  $id: ID!
+  $description: String
+  $campaign_code: String
+  $start_date: String
+  $end_date: String
+  $total_discount: Int
+  $upper_limit: Int
+  $code: String
+  $max_available: Int
+  $max_times_user_can_use: Int
+  $max_discount_amount_per_user: Int
+  $available_quantity: Int
+  $disabled_at: String
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "promo_code"
+      properties: [
+        { name: "description" value: $description }
+        { name: "campaign_code" value: $campaign_code }
+        { name: "start_date" value: $start_date }
+        { name: "end_date" value: $end_date }
+        { name: "total_discount" value_int: $total_discount }
+        { name: "upper_limit" value_int: $upper_limit }
+        { name: "code" value_int: $code }
+        { name: "max_available" value_int: $max_available }
+        { name: "max_discount_amount_per_user" value_int: $max_discount_amount_per_user }
+        { name: "max_times_user_can_use" value_int: $max_times_user_can_use }
+        { name: "available_quantity" value_int: $available_quantity }
+        { name: "disabled_at" value: $disabled_at }
+      ]
+    }
+  ){
+    id
+    created_at
+    updated_at
+    type: table
+    description: property(name: "description")
+    campaign_code: property(name: "campaign_code")
+    start_date: property(name: "start_date")
+    end_date: property(name: "end_date")
+    total_discount: property_int(name: "total_discount")
+    upper_limit: property_int(name: "upper_limit")
+    code: property(name: "code")
+    max_available: property_int(name: "max_available")
+    max_discount_amount_per_user: property_int(name: "max_discount_amount_per_user")
+    max_times_user_can_use: property_int(name: "max_times_user_can_use")
+    available_quantity: property_int(name: "available_quantity")
+  }
+}
+

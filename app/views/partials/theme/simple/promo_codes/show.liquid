@@ -1,0 +1,67 @@
+{% if namespace == 'admin' %}
+
+  <header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+    <div class="flex items-center gap-4">
+      <a href="{% render 'link_to', promo_code: true, namespace: namespace %}" class="w-8 h-8 flex items-center justify-center rounded-full bg-panel text-content-sidenote">
+        {% render 'theme/simple/ui/icon', icon: 'arrowLeft', class: 'w-3.5' %}
+      </a>
+      <h2 class="title !mb-0 flex items-center gap-4">
+        {{ promo_code.total_discount }}% {{ 'app.promo_codes.off_percent' | t }} – {{ promo_code.campaign_code }}
+      </h2>
+    </div>
+  </header>
+
+{% else %}
+
+  <h1 class="bigtitle">{{ promo_code.total_discount }}% {{ 'app.promo_codes.off_percent' | t }} – {{ promo_code.campaign_code }}</h1>
+  <a href="{% render 'link_to', promo_code: true, namespace: namespace %}" class="flex gap-1 items-center">
+    {% render 'theme/simple/ui/icon', icon: 'dashLeft' %}
+    {{ 'app.promo_codes.title' | t }}
+  </a>
+
+{% endif %}
+
+<div class="mt-8 flex flex-col md:flex-row gap-4 md:gap-12">
+
+  <section class="card md:w-1/2">
+    <h2>
+      <div class="subtitle">{{ profile.name }} {{ 'app.promo_codes.cards.offers' | t }}</div>
+      <div class="bigtitle !mt-0">{{ promo_code.total_discount }}% {{ 'app.promo_codes.off_percent' | t }} – {{ promo_code.campaign_code }}</div>
+    </h2>
+
+    <div class="mt-4 flex flex-col md:flex-row flex-grow-0 items-center justify-between gap-4">
+      <div class="sidenote max-w-sm mt-2 px-4 py-6 rounded bg-panel-highlight overflow-hidden overflow-ellipsis">{{ promo_code.code }}</div>
+      <div class="text-center md:text-end">
+        {% unless promo_code.code_type == 'global' %}
+          {% function org_url = 'link_to', object: promo_code.organization %}
+          <a target="_blank" href="{{org_url}}" class="button button-secondary">{{ 'app.promo_codes.list.see_items' | t }}</a>
+        {% endunless %}
+        <div class="mt-1 sidenote">{{ 'app.promo_codes.list.valid' | t }} <time datetime="{{ promo_code.start_date }}">{{ promo_code.start_date | l: 'date_compact' }}</time> – <time datetime="{{ promo_code.end_date }}">{{ promo_code.end_date | l: 'date_compact' }}</time></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card md:w-1/2">
+    <h3 class="subtitle">
+      {{ 'app.promo_codes.show.number_of_promo_codes' | t }}
+    </h3>
+
+    <ul class="mt-12 flex justify-evenly text-center">
+      <li>
+        <div class="sidenote uppercase">{{ 'app.promo_codes.show.limit' | t }}</div>
+        <strong class="mt-1 block">{{ promo_code.max_available }}</strong>
+      </li>
+      <li>
+        <div class="sidenote uppercase">{{ 'app.promo_codes.show.used' | t }}</div>
+        <strong class="bigtitle">{{ promo_code.max_available | minus: promo_code.available_quantity | default: 0 }}</strong>
+      </li>
+      <li>
+        <div class="sidenote uppercase">{{ 'app.promo_codes.show.remaining' | t }}</div>
+        <strong class="mt-1 block">{{ promo_code.available_quantity | default: 0 }}</strong>
+      </li>
+    </ul>
+  </section>
+
+</div>
+
+{% render 'theme/simple/promo_codes/form', object: promo_code, context: context, profile: profile, filled: true, namespace: namespace %}

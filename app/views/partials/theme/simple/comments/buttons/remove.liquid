@@ -1,0 +1,10 @@
+<form action="/comments/remove" method="post" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }" class="inline">
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="delete">
+  <input type="hidden" name="id" value="{{ comment.id }}">
+  <input type="hidden" name="return_to" value="{{ return_to }}">
+
+  <button class="{{ button_class | default: 'button button-primary' }}">
+    {{ 'app.models.shared.delete' | t }}
+  </button>
+</form>

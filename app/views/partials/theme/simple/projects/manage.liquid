@@ -1,0 +1,71 @@
+<h1 class="pagetitle">{{ 'app.projects.list.pagetitle' | t }}</h1>
+
+<div class="-mt-10 mb-10 py-4 bg-frame">
+  <div class="container">
+    <div class="flex justify-between">
+      <form action="" id="projects-list" class="flex items-center">
+        <input class="lg:w-60 pe-16 rounded-e" name="keyword" type="text" value="{{ filters.keyword }}" placeholder="{{ 'app.projects.list.search_in_challenges' | t }}">
+        <button type="submit" class="-ms-10 button button-compact">
+          <span class="sr-only">{{ 'app.search.search' | t }}</span>
+          {% render 'theme/simple/ui/icon', icon: 'search' %}
+        </button>
+      </form>
+
+      <a class="button" href="/projects/new">{{'app.projects.list.new' | t}}</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="table">
+    <header>
+      <div></div>
+      <div >{{'app.projects.list.title' | t}}</div>
+      <div >{{'app.projects.list.id' | t}}</div>
+      <div >{{'app.projects.form.sent_by' | t}}</div>
+      <div >{{'app.projects.list.joined' | t}}</div>
+      <div >{{'app.projects.list.applied' | t}}</div>
+      <div class="text-start">{{'app.projects.form.status' | t}}</div>
+      <div></div>
+    </header>
+
+    <div class="table-content">
+      {% for project in projects.results %}
+        <ul data-project-id="{{ project.id }}">
+          <li>
+            <picture>
+              <source type="image/avif" srcset="{{ project.cover.photo.versions.sm_avif }}">
+              <img src="{{ project.cover.photo.versions.sm }}" width="{{ photo.photo_width }}" height="{{ photo.photo_height }}" alt="" class="w-20 rounded">
+            </picture>
+          </li>
+          <li>
+            <a href="{% render 'link_to', object: project %}">{{ project.name }}</a>
+          </li>
+          <li>{{project.id}}</li>
+          <li>{{project.sent_by}}</li>
+          <li>{{project.c__members_count}}</li>
+          <li>{{project.c__applications_count}}</li>
+          <li>
+            {% render 'theme/simple/projects/show/status', project: project %}
+          </li>
+          <li class="text-end">
+            <a href="{% render 'link_to', object: project, action: 'edit' %}" class="button button-compact" title="{{ 'app.edit' | t }}">
+              {% render 'theme/simple/ui/icon', icon: 'pencil' %}
+            </a>
+
+            <form action="{% render 'link_to', object: project %}" method="post" class="inline" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }" >
+              {% render 'authenticity_token', context: context %}
+              <input type="hidden" name="_method" value="delete">
+
+              <button class="button button-compact button-danger" title="{{ 'app.models.shared.delete' | t }}">
+                {% render 'theme/simple/ui/icon', icon: 'trash' %}
+              </button>
+            </form>
+          </li>
+        </ul>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% render 'theme/simple/ui/pagination', collection: projects, current_page: filters.page, form: 'projects-list' %}
+</div>

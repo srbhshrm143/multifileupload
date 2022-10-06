@@ -1,0 +1,8 @@
+{% liquid
+  assign data = '{}' | parse_json
+  hash_assign data['amount'] = object.amount
+  hash_assign data['gateway'] = object.gateway
+  hash_assign data['payment_status'] = 'success'
+
+  return data
+%}

@@ -1,0 +1,18 @@
+{% comment %}
+  Params:
+    - theme
+{% endcomment %}
+
+{% liquid
+  assign template_path = 'theme/' | append: theme | append: '/' | append: template_file
+  assign fallback_template_path = 'theme/simple/' | append: template_file
+
+  try_rc
+    include template_path
+  catch err
+    unless err.message contains "can't find partial"
+      log err, type: 'error when including template file'
+    endunless
+    include fallback_template_path
+  endtry_rc
+%}

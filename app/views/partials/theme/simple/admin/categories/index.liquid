@@ -1,0 +1,98 @@
+
+{%- comment -%}
+{%- endcomment -%}
+<header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+
+  <h2 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'categories', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'admin.navigation.categories' | t }}
+  </h2>
+
+  <div class="flex gap-4">
+      <div class="pe-4 border-frame text-center">
+        <strong class="subtitle leading-tight">{{ categories.total_entries }}</strong>
+        <div class="sidenote">{{ 'app.admin.categories.title' | t }}</div>
+      </div>
+  </div>
+
+</header>
+
+
+<form action="" id="admin-form"></form>
+
+<div class="flex min-h-screen">
+
+  <div class="w-full">
+
+    <nav class="flex items-center justify-end gap-4">
+
+      <form action="/admin/categories/generate" method="post" data-tc="category-generate">
+        {% render 'authenticity_token', context: context %}
+        <button class="button button-small">{{ 'app.admin.categories.list.generate' | t }}</button>
+      </form>
+
+      <a href="/admin/categories/new" class="button button-small">
+        {{ 'app.admin.categories.list.add' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'plus' %}
+      </a>
+
+    </nav>
+
+    <section class="table">
+
+      <header>
+        <div>{{ 'app.categories.attr.name' | t }}</div>
+        <div>{{ 'app.categories.attr.created_at' | t }}</div>
+        <div></div>
+        <div></div>
+      </header>
+
+      <div class="table-content">
+        {% for category in categories.results %}
+          <ul data-tc="category-admin-panel">
+            <li>
+              <span class="lg:hidden">{{ 'app.categories.attr.key' | t }}</span>
+              <a href="{% render 'link_to', object: category, type: 'category' %}" class="flex items-center">
+                {{ category.key }}
+              </a>
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.categories.attr.created_at' | t }}</span>
+              {{ category.created_at | l: 'compact' }}
+            </li>
+            <li>
+              {{ detail }}
+              {% for detail in category.category_details %}
+                <p data-tc="detail-lang-{{detail.lang}}">{{ detail.lang }}: {{ detail.name }}</p>
+              {% endfor %}
+            </li>
+            <li>
+              <a href="/admin/categories/{{ category.id }}/edit" class="button button-secondary button-small" data-tc="category-edit">
+                {{ 'app.edit' | t }}
+              </a>
+              <form action="/admin/categories" method="post" class="inline ms-2" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }" >
+                {% render 'authenticity_token', context: context %}
+                <input type="hidden" name="_method" value="delete" />
+                <input type="hidden" name="id" value="{{ category.id }}">
+
+                <button class="button button-secondary button-small">{{ 'app.models.shared.delete' | t }}</button>
+              </form>
+            </li>
+            <li>
+              {% for image in category.categoty_image %}
+                <img src="{{ image.image_url.url }}" alt="" width="100" height="100">
+              {% endfor %}
+            </li>
+          </ul>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% liquid
+      assign page = page | default: 1 | plus: 0
+    %}
+    {% render 'theme/simple/ui/pagination', form: 'admin-form' collection: categories, current_page: filters.page %}
+  </div>
+
+
+</div>

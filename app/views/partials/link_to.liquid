@@ -1,0 +1,251 @@
+{% liquid
+
+  if namespace
+    assign url = '/' | append: namespace
+  endif
+
+  assign type = type | default: object.type
+  if type
+    case type
+    when 'activity'
+      assign activity = object
+    when 'tag'
+      assign tag = object
+    when 'group'
+      assign group = object
+    when 'profile'
+      assign profile = object
+    when 'organization'
+      assign organization = object
+    when 'item'
+      assign item = item.properties.venue_room_name
+    when 'items'
+      assign items = item.properties.venue_room_name
+    when 'category'
+      assign category = object
+    when 'comment'
+      assign comment = object
+    when 'post'
+      assign post = object
+    when 'venues'
+      assign venues = object
+    when 'venue_event_space'
+      assign event_time = object
+    when 'event_type'
+      assign event_type = object
+    when 'seller_order'
+      assign seller_order = object
+    when 'buyer_order'
+      assign buyer_order = object
+    when 'order'
+      assign order = object
+    when 'item_review'
+      assign item_review = object
+    when 'relationship'
+      assign relationship = object
+    when 'organization_review'
+      assign organization_review = object
+    when 'line_item_return'
+      assign line_item_return = object
+    when 'process'
+      assign process = object
+    when 'project'
+      assign project = object
+    when 'project_offer'
+      assign project_offer = object
+    when 'bulk_operation'
+      assign bulk_operation = object
+    when 'document'
+      assign document = object
+    when 'promo_code'
+      assign promo_code = object
+    when 'theme_settings'
+      assign theme_settings = object
+    when 'search'
+      assign search = object
+    else
+      assign unknown = object
+    endcase
+  endif
+
+  if theme_settings
+    assign url = '/admin/themes/' | append: theme_settings.name | append: '/edit'
+  endif
+
+  if activity
+    assign url = '/my/feed/' | append: activity.uuid
+  endif
+
+  if process
+    if namespace == blank
+      assign url = url | append: '/dashboard/sell/processes/' | append: process.id
+    else
+      assign url = url | append: '/processes/' | append: process.id
+    endif
+  endif
+
+  if group
+    assign url = url | append: '/groups/' | append: group.id
+  endif
+
+  if item_review
+    assign url = url | append: '/dashboard/reviews/items/' | append: item_review.id | append: '/edit'
+  endif
+
+  if relationship
+    assign url = url | append: '/relationships/' | append: relationship.id
+  endif
+
+  if organization_review
+    assign url = url | append: '/dashboard/reviews/organizations/' | append: organization_review.id | append: '/edit'
+  endif
+
+  if profile
+    if current_profile and profile.id == current_profile.id and namespace == blank
+      assign url = url | append: '/my/feed'
+    elsif namespace == 'admin'
+      assign url = url | append: '/profile/' | append: profile.id
+    else
+      assign url = url | append: '/profile/' | append: profile.slug
+    endif
+  endif
+
+  assign templates = '{"organizations": "/o/{slug}{/action}", "admin": {"organizations": "/admin/organizations/{slug}{/action}"}}' | parse_json
+  if organization
+    if namespace
+      assign template = templates[namespace]['organizations']
+    else
+      assign template = templates['organizations']
+    endif
+  endif
+
+  if item
+    assign english_detail = item.item_details | detect: lang: 'en' | default: item.item_detail
+    function slug = 'generate_slug', title: english_detail.name, id: item.id
+    assign lang = lang | default: item.item_detail.lang
+    if action == blank
+      assign url = "/items/" | append: lang | append: slug
+    else
+      assign url = "/items/" | append: slug
+    endif
+  endif
+
+
+  if venues or event_time
+    assign url = "/venue_detail?venue_id=" | append: object.id
+  endif
+
+
+  if tag
+    function slug = 'generate_slug', title: tag.name, id: tag.id
+    assign url = url | append: "/tags/" | append: slug
+  endif
+
+  if category
+    assign key = category.key | default: category
+    assign url = url | append: "/categories/" | append: key
+  endif
+
+  if document
+    assign url = url | append: "/documents/" | append: document.id
+  endif
+
+  if promo_code
+    assign url = url | append: "/promo_codes/" | append: promo_code.id
+  endif
+
+  if search
+    assign url = url | append: "/search" | append: '?'
+
+    if search.organization
+      assign url = url | append: 'organization_slugs%5B%5D=' | append: search.organization.slug
+    endif
+  endif
+
+  if comment
+    assign url = comment.url
+  endif
+
+  if seller_order
+    assign url = "/dashboard/sell/orders/" | append: seller_order.id
+  endif
+
+  if buyer_order
+    assign url = "/dashboard/buy/orders/" | append: buyer_order.id
+  endif
+
+  if current_profile and namespace == blank
+    if context.constants.DEBUG == "true"
+      log "Do not pass current_profile. User role instead.", type: 'INFO: /link_to.liquid:85'
+    endif
+    assign role = role | default: current_profile.type
+  endif
+
+  if bulk_operation
+    assign url = "/dashboard/sell/data/" | append: bulk_operation.id
+  endif
+
+  if order
+    case namespace
+    when 'admin'
+      assign url = url | append: "/orders/" | append: order.id
+    when 'organization'
+      assign url = "/dashboard/sell/orders/" | append: order.id
+    else
+      if role == 'organization'
+        assign url = "/dashboard/sell/orders/" | append: order.id
+      else
+        assign url = "/dashboard/buy/orders/" | append: order.id
+      endif
+    endcase
+  endif
+
+  if line_item_return
+    if role == 'organization' or namespace == 'organization'
+      assign url = "/dashboard/sell/line_item_returns/" | append: line_item_return.id
+    else
+      assign url = "/dashboard/buy/line_item_returns/" | append: line_item_return.id
+    endif
+  endif
+
+  if post
+    function slug = 'generate_slug', title: post.title, id: post.id
+    assign url = url | append: "/groups/" | append: post.group_id |  append: "/content/" | append: slug
+  endif
+
+  if project
+    assign url = url | append: "/projects/" | append: project.id
+  endif
+
+  if project_offer
+    assign url = url | append: "/offers/" | append: project_offer.id
+  endif
+
+  if object
+    hash_assign object['action'] = null
+
+    if action
+      assign url = url | append: '/' | append: action
+      hash_assign object['action'] = action
+    endif
+  else
+    if action
+      assign url = url | append: '/' | append: action
+    endif
+  endif
+
+  if anchor
+    assign url = url | append: '#refid-' | append: anchor
+  endif
+
+  if unknown
+    assign url = "/404?type=unknown&id=" | append: unknown.id
+  endif
+
+  if template
+    assign url = template |  expand_url_template: object
+  endif
+
+  print url
+  return url
+%}

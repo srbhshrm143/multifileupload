@@ -1,0 +1,9 @@
+---
+slug: dashboard/rooms/new
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+%}
+
+{% include 'theme/simple/venue/rooms/new' %}
+<!-- {{ context.session.return_to }} -->

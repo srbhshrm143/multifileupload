@@ -1,0 +1,20 @@
+{%  liquid
+  function object = 'lib/commands/items/create_version/build', object: object, owner: owner
+  function object = 'lib/commands/items/create_version/check', object: object
+
+  if object.valid and dry_run == blank
+    assign quantity = object.quantity
+    assign item_inventory = '{}' | parse_json
+    hash_assign item_inventory['id'] = object.item_inventory_id
+    hash_assign item_inventory['max_in_one_order'] = object.max_in_one_order
+
+    function object = 'lib/commands/items/create_version/execute', object: object, item: item
+
+    if object.valid
+      function _ = 'lib/commands/item_inventories/update', object: item_inventory, item_inventory: item_inventory
+      hash_assign object['quantity'] = quantity
+    endif
+  endif
+
+  return object
+%}

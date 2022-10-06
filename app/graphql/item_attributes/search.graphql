@@ -1,0 +1,44 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $page: Int = 1
+  $name: String
+  $value: String
+  $disabled_exists: Boolean
+) {
+  item_attributes: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "item_attribute" }
+      properties: [
+        { name: "name" value: $name }
+        { name: "value" value: $value }
+        { name: "disabled_at" exists: $disabled_exists }
+      ]
+    }
+    sort: [
+      {
+        properties: [
+          { name: "name", order: ASC}
+          { name: "value", order: ASC }
+        ]
+      }
+    ]
+  ){
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      name: property(name: "name")
+      value: property(name: "value")
+      disabled_at: property(name: "disabled_at")
+    }
+  }
+}

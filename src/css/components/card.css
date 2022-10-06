@@ -1,0 +1,47 @@
+/*
+  main
+  card overlay
+*/
+
+
+
+
+/* main
+============================================================================ */
+@layer utilities {
+
+  .card {
+    @apply
+      p-4
+      bg-panel
+      rounded
+      shadow;
+  }
+
+  .card-lg {
+    @apply
+      card
+      !p-8;
+  }
+
+}
+
+
+/* card overlay
+============================================================================ */
+.card-overlay {
+  @apply
+    rounded
+    flex
+    absolute
+    inset-0
+    items-center
+    justify-center
+    bg-panel
+    bg-opacity-80;
+}
+
+.card-overlay.hidden {
+  @apply
+    hidden;
+}

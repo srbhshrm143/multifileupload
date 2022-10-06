@@ -1,0 +1,8 @@
+{% liquid
+  assign now = 'now' | to_time
+  function relation = 'lib/commands/relationships/create', name: name, l_id: l_id, r_id: r_id, l_at: now, r_accepted_at: now
+
+  include 'test/assertions/valid_object', contract: contract, object: relation, field_name: 'relationship'
+
+  return relation
+%}

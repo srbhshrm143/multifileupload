@@ -1,0 +1,21 @@
+{% parse_json output %}
+  {
+    "id": {{ object.id | json }},
+    "c__keywords": {{ object.c__keywords | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+
+  if object.promoted == 'false'
+    hash_assign output["promoted"] = false
+  elsif object.promoted
+    hash_assign output["promoted"] = true
+  endif
+
+  if object.photo_ids
+    hash_assign output['photo_ids'] = object.photo_ids
+  endif
+
+  return output
+%}

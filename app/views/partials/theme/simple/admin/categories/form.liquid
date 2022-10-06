@@ -1,0 +1,42 @@
+{% liquid
+  if category.id
+    assign method = 'put'
+  else
+    assign method = 'post'
+  endif
+%}
+
+<form action="/admin/categories" method="post">
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="{{method}}" />
+  <input type="hidden" name="category[uuid]" value="{{uuid}}" />
+  {% if category.id %}
+    <input type="hidden" name="id" value="{{ category.id }}" />
+  {% endif %}
+  <fieldset class="mt-5">
+    <label class="block" for="name">{{ 'app.categories.attr.key' | t }}:</label>
+  <input class="w-full" type="text" id="name" name="category[key]" value="{{ category.key }}" {% if category.id %}disabled{% else %} autofocus{% endif %}>
+    {% render 'theme/simple/field_error', errors: category.errors.key %}
+  </fieldset>
+
+  {% for lang in context.available_languages %}
+    {% assign detail = category.category_details[lang] %}
+    {% unless detail %}{% assign detail = category.category_details | detect: lang: lang %}{% endunless %}
+    <input type="hidden" name="category[category_details][{{lang}}][lang]" value="{{lang}}">
+    <input type="hidden" name="category[category_details][{{lang}}][id]" value="{{ detail.id }}">
+    <div>
+      <fieldset>
+        <label class="block" for="name_{{lang}}">{{ 'app.categories.form.name' | t }} ({{ lang }}):</label>
+        <input class="w-full" type="text" id="name_{{lang}}" name="category[category_details][{{lang}}][name]" value="{{ detail.name }}" >
+        {% render 'theme/simple/field_error', errors: detail.errors.name %}
+      </fieldset>
+    </div>
+  {% endfor %}
+
+  {% include 'theme/simple/forms/upload_media_field' %}
+
+  <fieldset class="mt-8 text-end">
+    <button class="button">{{ 'app.admin.categories.new.save' | t }}</button>
+  </fieldset>
+
+</form>

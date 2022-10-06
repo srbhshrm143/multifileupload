@@ -1,0 +1,45 @@
+query search(
+  $id: ID
+  $object_uuid: String
+  $with_object: Boolean = false
+  $with_creator: Boolean = false
+){
+  documents: records(
+    per_page: 20
+    filter: {
+      id: { value: $id }
+      table: { value: "document" },
+      properties: { name: "object_uuid", value: $object_uuid}
+    }
+  ){
+    results{
+      id
+      type: table
+      creator_id: property(name: "creator_id")
+
+      document: property_upload(name: "document" expires_in: 60) {
+        file_name
+        extension
+        url
+      }
+
+      object: related_record(
+        table: ["project" "project_offer", "bulk_operation"] join_on_property: "object_uuid" foreign_property: "uuid"
+      ) @include(if: $with_object) {
+        id
+        type: table
+        creator_id: property(name: "creator_id")
+      }
+
+      creator: related_record(
+        table: ["profile", "organization"] join_on_property: "creator_id"
+      ) @include(if: $with_creator) {
+        id
+        type: table
+        name: property(name: "name")
+        first_name: property(name: "first_name")
+        last_name: property(name: "last_name")
+      }
+    }
+  }
+}

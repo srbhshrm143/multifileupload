@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/promo_code_details/create/build', object: object, promo_code: promo_code, lang: lang
+  function object = 'lib/commands/promo_code_details/create/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'promo_code_details/create' object: object
+  endif
+
+  return object
+%}

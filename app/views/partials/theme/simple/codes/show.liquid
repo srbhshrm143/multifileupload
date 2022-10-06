@@ -1,0 +1,49 @@
+<section class="max-w-xl">
+
+  <div class="flex items-center justify-between">
+    <h3 class="bigtitle">{{ 'app.promo_codes.apply.title' | t }}</h3>
+    <button data-promoCodes-close class="-me-4 p-4 mb-3 hover:text-interaction-hover">
+      {% render 'theme/simple/ui/icon', icon: 'x', class: 'w-5' %}
+    </button>
+  </div>
+  {{ 'app.promo_codes.apply.desc' | t }}
+
+  <div class="mt-6">
+    {{ 'app.promo_codes.apply.type_code' | t }}
+    <form data-codeForm class="mt-1">
+        {% render 'authenticity_token', context: context %}
+        <input type="text" name="code">
+        <input type="hidden" name="sellerIds[]" value='{{ promo_codes.seller_ids}}'>
+        <button type="submit" class="button button-secondary">{{ 'app.promo_codes.apply.apply_code' | t }}</button>
+    </form>
+  </div>
+
+  {% if promo_codes.total_entries > 0 %}
+    <div class="mt-6">
+      {{ 'app.promo_codes.apply.select_suggested' | t }}
+    </div>
+
+    {% for promo_code in promo_codes.results %}
+      <div class="card mt-4">
+        <div class="subtitle">{{promo_code.organization.name}} offers</div>
+          <span class="bigtitle">{{promo_code.total_discount}}% {{ 'app.promo_codes.off_percent' | t }} - {{promo_code.detail.description }}</span><br>
+
+          <div>
+            {{ 'app.promo_codes.apply.saves' | t }}:
+            {% render 'theme/simple/price', amount_cents: promo_code.discount_cents, currency: currency %}
+          </div>
+          <div class="mt-4 flex justify-between gap-4">
+            <span class="sidenote mt-2 px-4 py-6 inline-block rounded bg-panel-highlight">{{promo_code.code}}</span>
+
+            <div class="text-end">
+              <button data-apply-code data-code="{{ promo_code.code }}" data-promoId="{{ promo_code.id }}" data-sellerId="{{ promo_code.organization.id }}" class="button">Apply</button>
+
+              <div class="sidenote mt-2 text-content-sidenote">
+                {{ 'app.promo_codes.list.valid' | t }} <time datetime="">{{promo_code.start_date | l: 'date_compact'}} – {{promo_code.end_date | l: 'date_compact'}}</time>
+              </div>
+            </div>
+          </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</section>

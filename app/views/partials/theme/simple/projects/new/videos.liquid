@@ -1,0 +1,29 @@
+<label class="sidenote mt-6 mb-1 block cursor-pointer text-content-sidenote" for="video_0_url">
+  {{ 'app.projects.form.videos' | t }}
+</label>
+{% liquid
+ if submitted
+   assign default_videos = '[]'
+ else
+   assign default_videos = '[""]'
+ endif
+%}
+<div x-data='{"urls": {{ object.video_urls | default: default_videos }}}' >
+  <div data-tc="project-resources-url" x-ref="inputs">
+    <template x-for='(url, index) in urls'>
+      <div class="mb-2 flex items-center gap-2">
+        <label x-bind:for="'video_' + index + '_url'">{{ 'app.projects.form.url' | t }}</label>
+        <input type="url" x-bind:id="'video_' + index + '_url'" id="video_url" name="{{input_name}}" class="w-full" x-model="urls[index]" placeholder="https://youtube.com/" {% if submitted %}disabled{% endif %}>
+      </div>
+    </template>
+  </div>
+  {% unless submitted %}
+    <button type="button" class="mt-4 flex items-center gap-2 cursor-pointer hover:text-interaction-hover"
+      x-on:click='urls.push(""); $nextTick(() => $refs.inputs.lastElementChild.querySelector("input").focus())'
+      data-tc="project-resources-add-url"
+    >
+      {% render 'theme/simple/ui/icon', icon: 'plus' %} {{ 'app.project_offers.form.add_urls' | t }}
+    </button>
+  {% endunless %}
+</div>
+{% render 'theme/simple/field_error', errors: object.errors.video_urls %}

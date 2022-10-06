@@ -1,0 +1,29 @@
+---
+metadata:
+  breadcrumbs:
+    - label: app.dashboard
+      url: /dashboard
+    - label: app.items.list
+      url: /dashboard/sell/items
+    - label: app.edit
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function item_inventory = 'lib/queries/item_inventories/find', id: context.params.id, lang: context.language, withAllLangs: true, withAllVariants: true, withFormattedPrice: true, owner: current_profile.id
+  include 'lib/can_do_or_unauthorized', object: item_inventory, do: "edit", actor: current_profile
+
+  function pending_process = 'lib/queries/processes/find_pending_item_publish_version', profile_id: current_profile.id, item_inventory_id: item_inventory.id
+  if pending_process
+    function process_url = 'link_to', object: pending_process, namespace: 'dashboard/sell'
+    include 'redirect_to', url: process_url, error: 'app.items.cant_edit_version_pending_approve'
+  else
+    function _ = 'lib/extend_context', default_currency: true, item_attributes: true, photo_presign: true
+    function object = 'lib/commands/items/build_new_version', item_inventory: item_inventory
+    function filters = 'lib/queries/search/filters'
+
+    render 'theme/simple/ui/breadcrumbs', breadcrumbs: context.page.metadata.breadcrumbs
+    render 'theme/simple/dashboard/items/edit', item: object, lib: filters, user: context.current_user, context: context
+  endif
+%}

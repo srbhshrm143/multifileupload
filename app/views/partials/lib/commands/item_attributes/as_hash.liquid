@@ -1,0 +1,24 @@
+{% liquid
+  assign limit = 100
+  assign attributes = '{}' | parse_json
+  function item_attributes = 'lib/queries/item_attributes/search', limit: limit, page: 1
+  for item in item_attributes.results
+    if attributes[item.name] == blank
+      hash_assign attributes[item.name] = '[]' | parse_json
+    endif
+    hash_assign attributes[item.name] = attributes[item.name] | add_to_array: item.value
+  endfor
+
+  assign total_pages = item_attributes.total_pages
+  for page in (2..total_pages)
+    function item_attributes = 'lib/queries/item_attributes/search', limit: limit, page: page
+    for item in item_attributes.results
+      if attributes[item.name] == blank
+        hash_assign attributes[item.name] = '[]' | parse_json
+      endif
+      hash_assign attributes[item.name] = attributes[item.name] | add_to_array: item.value
+    endfor
+  endfor
+
+  return attributes
+%}

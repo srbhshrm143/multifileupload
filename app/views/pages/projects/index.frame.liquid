@@ -1,0 +1,12 @@
+---
+slug: projects.frame
+layout: null
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, followships: true
+
+  function filters = 'lib/queries/projects/filters', params: context.params
+  function projects = 'lib/queries/projects/search', limit: 6, page: filters.page, tags: filters.tags, sort: filters.sort, status: filters.statuses, promoted: null
+
+  render 'theme/simple/projects/index/list', projects: projects, page: page, filters: filters, current_profile: current_profile, context: context
+%}

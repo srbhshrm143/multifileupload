@@ -1,0 +1,73 @@
+<header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+
+  <h2 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'usersMoney', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'admin.navigation.organizations' | t }}
+  </h2>
+
+  <div class="flex gap-4">
+      <div class="pe-4 border-frame text-center">
+        <strong class="subtitle leading-tight">{{ organizations.total_entries }}</strong>
+        <div class="sidenote">{{ 'app.admin.organizations.title' | t }}</div>
+      </div>
+  </div>
+
+</header>
+
+<form action="" id="admin-form"></form>
+
+<div class="flex min-h-screen">
+
+  {% render 'theme/simple/admin/organizations/filters', filters: filters %}
+
+  <div class="w-full">
+
+    <nav class="flex items-center justify-end gap-4">
+
+      <a href="/admin/organizations/new" class="button button-small">
+        {{ 'app.admin.organizations.list.add' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'plus' %}
+      </a>
+
+    </nav>
+
+    <section class="table">
+
+      <header>
+        <div>{{ 'app.organizations.attr.name' | t }}</div>
+        <div>{{ 'app.organizations.attr.created_at' | t }}</div>
+        <div></div>
+      </header>
+
+      <div class="table-content">
+        {% for organization in organizations.results %}
+          <ul data-tc="admin-panel-organization">
+            <li>
+              <span class="lg:hidden">{{ 'app.organizations.attr.id' | t }}</span>
+              <a href="{% render 'link_to', object: organization, namespace: 'admin' %}" class="flex items-center">
+                <picture>
+                  <source type="image/avif" srcset="{{ organization.logo.photo.versions.sm_avif }}">
+                  <img src="{{ organization.logo.photo.versions.sm }}" width="{{ organization.logo.photo_width }}" height="{{ organization.logo.photo_height }}" alt="" class="w-10 me-5">
+                </picture>
+                {{ organization.name }}
+              </a>
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.organizations.attr.created_at' | t }}</span>
+              {{ organization.created_at | l: 'compact' }}
+            </li>
+            <li class="lg:text-end">
+              <a href="/admin/organizations/{{ organization.id }}/edit" class="button button-compact" title="{{ 'app.edit' | t }}">
+                {% render 'theme/simple/ui/icon', icon: 'pencil' %}
+              </a>
+            </li>
+          </ul>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% render 'theme/simple/ui/pagination', form: 'admin-form' collection: organizations, current_page: filters.page %}
+  </div>
+
+</div>
+

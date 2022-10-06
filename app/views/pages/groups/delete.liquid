@@ -1,0 +1,19 @@
+---
+slug: groups/:id
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign group_id = context.params.id | split: '-' | last
+  function group = 'lib/queries/groups/find_by_owner', id: group_id, owner_id: current_profile.id
+  include 'lib/can_do_or_unauthorized', object: group, do: "delete", actor: current_profile
+
+  function object = 'lib/commands/groups/delete', group: group
+  if object.valid
+    include 'redirect_to', url: '/dashboard/groups', notice: 'app.groups.deleted'
+  else
+    include 'redirect_to', url: '/dashboard/groups', error: 'app.models.shared.delete_failed'
+  endif
+%}

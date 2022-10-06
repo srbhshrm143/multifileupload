@@ -1,0 +1,25 @@
+{% parse_json data %}
+  {
+    "start_date": {{ 'now' | to_time | json }},
+    "end_date": {{ 'tomorrow' | to_time | json }},
+    "total_discount":  {{ total_discount | default: 10  }},
+    "upper_limit":   {{ upper_limit | default: 3  }},
+    "code":          "code-{{ 3 | random_string }}",
+    "campaign_code": "campaign-{{ 3 | random_string }}",
+    "mpo_cost_percent": "100"
+  }
+{% endparse_json %}
+{% liquid
+  case code_type
+  when 'global', 'mpo'
+    if code_type == 'global'
+      hash_assign data['is_global'] = true
+    endif
+    function promo_code = 'lib/commands/promo_codes/create_mpo', object: data, profile: profile
+  else
+    function promo_code = 'lib/commands/promo_codes/create', object: data, profile: profile
+  endcase
+  include 'test/assertions/valid_object', contract: contract, object: promo_code, field_name: 'promo_code'
+
+  return promo_code
+%}

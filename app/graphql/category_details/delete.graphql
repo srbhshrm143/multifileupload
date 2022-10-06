@@ -1,0 +1,17 @@
+mutation delete_category_detail(
+  $id: ID!
+  $lang: String!
+  $translation_key: String!
+) {
+  record_delete(
+    table: "category_detail"
+    id: $id
+  ){ id }
+
+  admin_translation_delete(
+    key: $translation_key
+    locale: $lang,
+  ) {
+    id
+  }
+}

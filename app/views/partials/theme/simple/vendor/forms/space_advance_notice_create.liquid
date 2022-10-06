@@ -1,0 +1,103 @@
+<div class="overflow-x-auto relative">
+  <form class="" action="/venue/advance_notice/{{action}}" method="POST">
+    <input type="hidden" name="advance_notice[venue_id]" id="venue__id" value="{{ context.params.venue_id }}">
+    <div class="border border-borderColor sm:px-3 sm:py-4 md:px-7 md:py-8 rounded-md">
+      <div class="sm:text-lg md:text-xl xl:text-2xl font-semibold font-Work md:pb-2 xl:pb-3">
+        {{ "Advance Notice" }}
+      </div>
+      <p class="sm:text-xs md:text-base font-normal font-Work text-black">How much advanced
+        notice do you need before an event is booked?</p>
+      <div
+        class="md:flex sm:flex-wrap md:flex-wrap lg:whitespace-nowrap sm:block justify-between items-center my-2">
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="hours_24" type="radio" value="24 hours" name="advance_notice[booking_before]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.booking_before == "24 hours" %}checked {% endif %} required>
+          <label for="hours_24" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            {{ "24 Hours" }}
+          </label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="hours_48" type="radio" value="48 hours" name="advance_notice[booking_before]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.booking_before == "48 hours" %}checked {% endif %}>
+          <label for="hours_48" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            {{ "48 Hours" }}
+          </label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="week_1" type="radio" value="1 week" name="advance_notice[booking_before]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.booking_before == "1 week" %}checked {% endif %}>
+          <label for="week_1" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            {{ "1 Week" }}
+          </label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="month_1" type="radio" value="1 month" name="advance_notice[booking_before]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.booking_before == "1 month" %}checked {% endif %}>
+          <label for="month_1" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            {{ "1 Month" }}
+          </label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="month_2" type="radio" value="2 month" name="advance_notice[booking_before]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.booking_before == "2 month" %}checked {% endif %}>
+          <label for="month_2" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            {{ "2 Month" }}
+          </label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="month_3" type="radio" value="3 month" name="advance_notice[booking_before]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.booking_before == "3 month" %}checked {% endif %}>
+          <label for="month_3" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            {{ "3 Month" }}
+          </label>
+        </div>
+      </div>
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black border-b pb-2">Tip: if you
+        select
+        "1 month notice" - a customer who wants to book a February 1, 2020 date must do so by or before
+        January 1, 2020.</p>
+
+      <div class="sm:text-lg md:text-xl xl:text-2xl font-semibold font-Work md:pb-2 xl:pb-3">Booking
+        Confirmation</div>
+      <p class="my-2 sm:text-xs md:text-base font-semibold font-Work text-black">Choose your style</p>
+      <div class="flex items-center">
+        <input id="auto_confirm" type="radio" value="Automatic Confirmation" name="advance_notice[booking_confirmation]"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          {% if object.booking_confirmation == "Automatic Confirmation" %}checked {% endif %}>
+        <label for="auto_confirm" class="font-Work text-base ml-2">
+          {{ "Automatic Confirmation" }}
+        </label>
+      </div>
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black">Customers can book
+        any available date, automatically, without approval. All bookings are final and cannot be cancelled by
+        you or the Customer </p>
+      <div class="flex items-center">
+        <input id="manual_confirm" type="radio" value="Manual Confirmation" name="advance_notice[booking_confirmation]"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          {% if object.booking_confirmation == "Manual Confirmation" %}checked {% endif %}>
+        <label for="manual_confirm" class="font-Work text-base ml-2">
+          {{ "Manual Confirmation" }}
+        </label>
+      </div>
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black">Customers will request to book
+        a date. You will have 48 hours to accept or deny the request. This gives you a chance to ensure that
+        date was not already booked. While waiting for your confimation Customers will be able to cancel their
+        request and book with a different venue.</p>
+
+      <div class="w-full md:text-right mt-2">
+        <button type="button"
+          class="text-themeBlue rounded-3xl bg-white border border-themeBlue uppercase hover:themeBlue-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mt-2 focus:outline-none">previous</button>
+        <button type="submit"
+          class="text-white rounded-3xl bg-themeBlue uppercase hover:themeBlue-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mt-2 focus:outline-none">
+          {{ "save and continue" }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

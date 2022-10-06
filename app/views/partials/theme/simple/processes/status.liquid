@@ -1,0 +1,9 @@
+{{ status.created_at | l: 'compact' }}
+{{ status.name | t  }}
+{{ 'app.admin.processes.list.by' | t }}
+{% case status.profile.type %}
+  {% when 'profile' %}
+    {{ status.profile.first_name }} {{ status.profile.last_name }}
+  {% when 'organization' %}
+    {{ status.profile.name }}
+{% endcase %}

@@ -1,0 +1,122 @@
+<header class="-mt-10 py-20 bg-heading bg-panel-highlight text-center">
+  <h1 class="bigtitle !text-5xl capitalize">{{ 'app.projects.projects' | t }}</h1>
+</header>
+
+<div
+  x-data='{ selectedTags: [], showTags: false, spinnerFilters: false, showFeatured: true, featuredTotalEntries: {{ projects_promoted.total_entries }}, itemsCounter: 0, totalEntries: 0, totalPages: 0, currentPage: 0, ...frames() }'
+>
+  <nav class="py-6 bg-frame">
+    <div class="container">
+      <form action="/projects" method="GET" id="projects-list" x-ref="form">
+        <input type="hidden" name="page" x-bind:value="currentPage+1" value="{{ filters.page }}" x-ref="page">
+        <div class="flex flex-col md:flex-row items-center gap-4 justify-between">
+          <fieldset class="flex items-center gap-2">
+            <label class="sidenote text-content-sidenote" x-on:click="showTags = !showTags">{{ 'app.projects.filters.filter_by_hashtags' | t }}</label>
+            <div x-on:click="if(!selectedTags.length){ showTags = !showTags; }" class="min-w-44 min-h-[44px] ps-2 py-0.5 flex items-center gap-2 bg-panel border border-content-sidenote">
+              <span x-show="!selectedTags.length" class="cursor-default text-content-sidenote">{{ 'app.projects.filters.select' | t }}</span>
+              <ul class="me-4 flex flex-wrap items-center gap-2">
+                <template x-for="tag in selectedTags">
+                  <li class="my-0.5 px-2 py-1 flex items-center gap-2 rounded bg-panel-highlight uppercase">
+                    <span>#<span x-text="tag"></span></span>
+                    <label
+                      x-bind:for="`tag_${tag}`"
+                      class="hover:text-danger-hover cursor-pointer">
+                      {% render 'theme/simple/ui/icon', icon: 'x' %}
+                    </label>
+                  </li>
+                </template>
+              </ul>
+              <button type="button" class="ms-auto p-2 cursor-pointer" x-show="!showTags" x-on:click="if(selectedTags.length){ showTags = !showTags }">
+                {% render 'theme/simple/ui/icon', icon: 'dashDown' %}
+              </button>
+              <button type="button" class="ms-auto p-2 cursor-pointer" x-cloak x-show="showTags" x-on:click="if(selectedTags.length){ showTags = !showTags }">
+                {% render 'theme/simple/ui/icon', icon: 'dashUp' %}
+              </button>
+            </div>
+          </fieldset>
+          <fieldset class="md:ms-auto">
+            <label for="filter_sort" class="sidenote text-content-sidenote">{{ 'app.projects.filters.sort_by' | t }}</label>
+            <select name="sort_by" id="filter_sort" x-on:change="spinnerFilters = true; itemsCounter = 0; currentPage = 0; totalPages = 0; $nextTick(() => replace({target: 'projects'})); showFeatured = false;">
+              <option value="created_at_desc" {% if filters.sort_by == 'created_at_desc' %}selected{% endif %} >{{ 'app.projects.filters.time_desc' | t }}</option>
+              <option value="created_at_asc" {% if filters.sort_by == 'created_at_asc' %}selected{% endif %} >{{ 'app.projects.filters.time_asc' | t }}</option>
+            </select>
+          </fieldset>
+        </div>
+        <fieldset class="mt-4 p-4 rounded bg-panel-highlight" x-cloak x-show="showTags" x-transition>
+          <ul class="flex flex-wrap gap-2">
+            {% for tag in context.tags.results %}
+              <li>
+                <input
+                  type="checkbox"
+                  name="tags[]"
+                  x-model="selectedTags"
+                  value="{{ tag.name }}" id="tag_{{ tag.name }}" {% if tag.name == filters.tag %}checked{% endif %} class="hidden peer"
+                  x-on:change="spinnerFilters = true; itemsCounter = 0; currentPage = 0; totalPages = 0; $nextTick(() => replace({target: 'projects'})); showFeatured = false;"
+                >
+                <label
+                  for="tag_{{ tag.name }}"
+                  class="my-0.5 px-2 py-1 flex items-center rounded cursor-pointer uppercase text-xs peer-checked:bg-content peer-checked:text-content-inverted bg-panel"
+                >
+                  #{{ tag.name }}
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </fieldset>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container sidenote py-6 text-content-sidenote">
+    <span x-text="(currentPage == 1) ? totalEntries + featuredTotalEntries : totalEntries">{{ projects.total_entries }}</span>
+    {{ 'app.projects.results' | t: count: projects.total_entries }}
+  </div>
+
+  <div class="flex justify-center" x-cloak x-show="spinnerFilters" x-transition x-on:frame-rendered.window="spinnerFilters = false">
+    {% render 'theme/simple/ui/spinner', size: 10 %}
+  </div>
+
+  {% if projects_promoted.total_entries > 0 %}
+    <section class="mb-12 pt-6 pb-12 bg-panel-highlight" x-show="showFeatured">
+      <div class="container">
+
+        <h3 class="subtitle !mb-6 uppercase text-content">{{ 'app.projects.featured' | t }} {{ 'app.projects.projects' | t }}</h3>
+
+        <div class="grid gap-4 grid-cols-1 md:grid-cols-3">
+          {% for project in projects_promoted.results %}
+            <div>
+              <div class="sidenote mb-2 flex items-center justify-end gap-2 uppercase tracking-widest text-content">
+                {{ 'app.projects.featured' | t }} {% render 'theme/simple/ui/icon', icon: 'starFull', class: 'w-4 text-warning' %}
+              </div>
+              {% render 'theme/simple/projects/card', project: project %}
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </section>
+  {% endif %}
+
+  <div x-frames-target="projects" class="container" x-show="!spinnerFilters">
+    {% render 'theme/simple/projects/index/list', projects: projects %}
+  </div>
+
+  <div
+    x-show="totalEntries"
+    class="container mt-8 text-center"
+  >
+    <div class="sidenote mb-2 text-content-sidenote">
+      {{ 'app.projects.showing' | t }} <span x-text="itemsCounter">{{ projects.results | size }}</span> {{ 'app.projects.of' | t }} <span x-text="(currentPage == 1) ? totalEntries + 1 : totalEntries">{{ projects.total_entries }}</span>
+      {{ 'app.projects.results' | t: count: projects.total_entries }}
+    </div>
+    <button type="button" x-bind:disabled="spinner" x-show="currentPage < totalPages" x-on:click='insert({where: "beforeEnd", target: "projects"});' class="button relative">
+      {{ 'app.projects.show_more' | t }}
+      <div class="card-overlay" x-cloak x-show="spinner" x-transition>
+        {% render 'theme/simple/ui/spinner', size: 8 %}
+      </div>
+    </button>
+    <hr x-show="currentPage < totalPages" class="border-0 border-t -mt-0.5 relative -z-10 -top-5">
+  </div>
+
+
+</div>

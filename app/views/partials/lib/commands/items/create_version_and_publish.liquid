@@ -1,0 +1,38 @@
+{% liquid
+  function object = 'lib/commands/items/create_version', object: context.params.item, owner: current_profile.id, item: item_inventory.item
+  if object.valid
+    for id in object.items.ids
+      function _event = 'lib/commands/events/create', type: 'item_created', actor_id: current_profile.id, object_id: id, delay: 0.03
+    endfor
+
+    assign publish_object = '{}' | parse_json
+    hash_assign publish_object['new_item_ids'] = object.items.ids
+    hash_assign publish_object['old_item_ids'] = item_inventory.item_ids
+    hash_assign publish_object['item_inventory_id'] = item_inventory.id
+    hash_assign publish_object['quantity'] = object.quantity
+    function require_acceptance = 'lib/queries/constants/find' name: "INVENTORY_REQUIRE_ACCEPTANCE", type: "boolean"
+    if require_acceptance
+      function new_items = 'lib/queries/items/search', ids: object.items.ids
+      function old_items = 'lib/queries/items/search', ids: item_inventory.item_ids
+      function diff = 'lib/commands/items/import/csv/calculate_diff', current: new_items, incoming: old_items
+
+      assign diff = old_items | hash_diff: new_items
+      assign sensitive_changes = false
+      for change in diff
+        assign key = change[1]
+        if key contains 'item_detail' or key contains 'photo_ids'
+          assign sensitive_changes = true
+          break
+        endif
+      endfor
+      assign require_acceptance = sensitive_changes
+    endif
+    function publish_object = 'lib/commands/processes/wrap', command: 'items/publish_version', object: publish_object, current_profile: current_profile, require_acceptance: require_acceptance
+    if publish_object.valid != true
+      log publish_object, type: 'ERROR: items/publish_version'
+    endif
+    hash_assign object['publish_object'] = publish_object
+  endif
+
+  return object
+%}

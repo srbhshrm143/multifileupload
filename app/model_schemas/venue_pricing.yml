@@ -1,0 +1,22 @@
+name: venue_pricing
+properties:
+  - name: venue_id
+  - name: weekdays_morning
+    type: integer
+  - name: weekdays_day
+    type: integer
+  - name: weekdays_night
+    type: integer
+  - name: weekdays_all_day
+    type: integer
+  - name: weekend_morning
+    type: integer
+  - name: weekend_day
+    type: integer
+  - name: weekend_night
+    type: integer
+  - name: weekend_all_day
+    type: integer
+  - name: non_available_dates
+  - name: menu_id
+    type: string

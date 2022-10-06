@@ -1,0 +1,18 @@
+---
+slug: groups/:group_id/content/:post_id
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign group_id = context.params.group_id | split: '-' | last
+  function group = 'lib/queries/groups/find', id: group_id, with_owner: true, current_profile: current_profile
+  include 'lib/can_do_or_unauthorized', object: group, do: "see_content", actor: current_profile
+
+  assign post_id = context.params.post_id | split: '-' | last
+  function post = 'lib/queries/posts/find', id: post_id, group_id: group_id
+  include 'lib/present_or_404', property:  post.id
+
+  function presigned_url = 'lib/queries/presigned_url'
+  render 'theme/simple/groups/content/show', post: post, presigned_url: presigned_url, context: context, current_profile: current_profile, group: group, tab: 'content'
+%}

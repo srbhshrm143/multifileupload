@@ -1,0 +1,97 @@
+en:
+  app:
+    bulk_operations:
+      title: Product update
+      export: Export
+      import: Import
+      form:
+        export:
+          success: The file is being prepared and will be available on this page. This could take some time. If you’d like, you can close this page and continue working.
+        import:
+          title: Import products from CSV
+          desc: Download a sample CSV template to see an example of the format required.
+          help: Need help importing products?
+          submit: Import uploaded file
+          need_to_be_accepted_before_import: Your request to import items has been successfully submitted and is currently reviewed.
+      new:
+        new: New bulk_operation
+      list:
+        add: Add bulk_operation
+        empty:
+          title: There is no history of bulk operations yet.
+      instructions:
+        title: Import Instructions
+        csv_format:
+          title: CSV Format
+          description: >
+            In order to upload products to the system, you need to upload CSV that follows the specific format. Please use the export feature to obtain the valid file. You can use excel to modify the exported file to make changes to your inventory. You can use the import feature to create new products and update existing ones. The SKU will be used to identify whether a product is a new or existing one.
+
+            The import flow goes through to the maker/checker process, which means that every request to import items needs to be explicitly approved by the Administrator.
+
+            Below you can see a list of the headers and an explanation of what they do.
+          attr:
+            header: Header Name
+            description: Description
+          headers:
+            product_uuid: Required, used to group variants into one item.
+            sku: Required, used as a unique identifier for items.
+            category: Required, a category associated with the item. Please see a <a href="#variants">list of valid categories</a>.
+            detail_name_en: Required, English name of the item.
+            detail_description_en: Required, English description of the item.
+            detail_name_ar: Required, Arabic name of the item.
+            detail_description_ar: Required, Arabic description of the item.
+            price: Required, the price of the product, for example 10.25,
+            currency: Required, currently, the only acceptable currency is JOD.
+            original_price: Optional, used to mark the item as discounted. The value should be greater than the price.
+            quantity: Required, your stock quantity.
+            max_in_one_order: Required, defines how many items the user can buy in a single order.
+            return_days: Required, defines how many days since buying the item can pass until Return functionality will be blocked.
+            item_type: "Required, defines type of the item, possible options: physical, digital, affiliate"
+            attribute_1_name: Optional, name of the first variant attribute, for example `color`. Please see a <a href="#variants">list of valid attributes</a>.
+            attribute_1_value: Optional, value for the first variant, for example `black`. Please see a <a href="#variants">list of valid attribute values</a>.
+            attribute_2_name: Optional, if the item uses more than one variant attribute, you can specify the second variant name.
+            attribute_2_value: Optional, if the item uses the second attribute, please provide the second attribute value.
+            attribute_3_name: Optional, if you would like to use three variant attributes, you can specify the third variant name.
+            attribute_3_value: Optional, if you would like to use three variant attributes, you can specify the third attribute value.
+            photo_url_1: The first photo URL associated with the item, expected to be a valid URL to the photo, for example https://example.com/image.jpg.
+            photo_url_2: If you would like to upload a second photo for the item, please provide another valid url. You can add up to 10 photos per item, using photo_url_3, ..., photo_url_10.
+        variants:
+          title: How to use variants
+          description: >
+            Data Import supports both standalone products and variants. Each variant has to be inserted as a row. Our system will use `product_uuid` column to group variants into items. Currently, all variants share names, descriptions, and photos and those values are expected to be the same across all rows.
+            You can add up to three different attribute names in the CSV. Here is the list of all available attribute names along with their values. If you would like to use an attribute or a value that is not listed, please <a href="/contact-us" target=_blank>Contact Us</a>.
+          attr:
+            name: Attribute Name
+            values: Available attribute values
+        categories:
+          title: Categories
+          description: >
+            The list of available categories is pre-defined and cannot be changed. Please choose one of the existing categories. If you would like to use a category, which is not listed, please <a href="/contact-us" target=_blank>Contact Us</a>.
+          attr:
+            name: Category Name
+      attr:
+        operation_type: History
+        uuid: Uuid
+        status: Status
+        date: When
+      report:
+        title: Report
+        import_summary:
+          title: Import summary
+          total_rows: Total rows
+          total_products: Total products
+          changes: Changes
+          updates: Updates
+          additions: Additions
+          deletions: Deletions
+          total: Total
+        erros:
+          title: Errors
+          row: Row num
+          name: Name
+          value: Value
+          problem: Problem
+        success:
+          title: Changes
+          old: Previous
+          new: New

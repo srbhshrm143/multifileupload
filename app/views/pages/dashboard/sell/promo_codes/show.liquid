@@ -1,0 +1,20 @@
+---
+slug: dashboard/sell/promo_codes/:id
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  assign promo_code_id = context.params.id | split: '-' | last
+  function promo_code = 'lib/queries/promo_codes/find', id: promo_code_id, creator_ids: current_profile.id, withAllLangs: true, with_organization: true
+  include 'lib/present_or_404', property: promo_code.id
+
+  assign details = '{}' | parse_json
+  for detail in promo_code.details
+    hash_assign details[detail.lang] = detail
+  endfor
+  hash_assign promo_code['details'] = details
+
+  function _ = 'lib/extend_context', available_languages: true, default_currency: true
+  render 'theme/simple/promo_codes/show', promo_code: promo_code, context: context, profile: current_profile, lib: lib, currency: default_currency, namespace: 'dashboard/sell'
+%}

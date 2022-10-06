@@ -1,0 +1,119 @@
+{% liquid
+  comment
+    photos returned by releated_records are in wrong order
+  endcomment
+  assign photos = '[]' | parse_json
+  for photo_id in item.photo_ids
+    assign photo = item.photos | detect: id: photo_id
+    assign photos = photos | add_to_array: photo
+  endfor
+%}
+<div
+  x-data="{ loading: Array({{ photos.size }}).fill(true, 1), activeImgIndex: 0, coverImg: '{{ photos[0].photo.versions.lg }}', coverImg2x: '{{ photos[0].photo.versions.xl }}', coverImgAvif: '{{ photos[0].photo.versions.lg_avif }}', coverImgAvif2x: '{{ photos[0].photo.versions.xl_avif }}'}"
+  x-on:item-variant-changed.window="itemId = $event.detail.id;"
+  x-cloak x-show="{{ item.id }} == itemId"
+  class="lg:w-1/2 lg:flex-shrink-0 relative overflow-hidden"
+>
+  <div>
+    {% if item.quantity == 0 %}
+      {% render 'theme/simple/ui/badge', class: 'bg-danger', label_key: 'app.items.sold-out' %}
+    {% elsif item.original_price %}
+      {% liquid
+        assign percent_original = item.price | times: 100.00 | divided_by: item.original_price
+        assign discount_off = 'app.items.discount' | t
+        assign discount = 100 | minus: percent_original | round
+        assign discount_label = discount | append: '% ' | append: discount_off
+      %}
+      {% if discount >= 5 %}
+        {% render 'theme/simple/ui/badge', class: 'bg-confirmation', label: discount_label %}
+      {% endif %}
+    {% endif %}
+  </div>
+
+
+  {% render 'theme/simple/wishlists/button', profile_id: current_profile.id, item_id: item.id  %}
+
+  {% if photos.size > 0 %}
+    <div class="relative bg-white">
+      <div x-show="loading[activeImgIndex]" x-cloak class="flex items-center justify-center absolute inset-0 bg-panel bg-opacity-80">
+        {% render 'theme/simple/ui/spinner', size: 10 %}
+      </div>
+      <picture class="block -me-1">
+        <source :srcset="`${coverImgAvif}, ${coverImgAvif2x} 2x`" srcset="{{ photos[0].photo.versions.lg_avif }}, {{ photos[0].photo.versions.xl_avif }} 2x" type="image/avif">
+        <img
+          width="{{ photos[0].photo_width }}"
+          height="{{ photos[0].photo_height }}"
+          x-on:load="loading[activeImgIndex] = false"
+          :src="coverImg"
+          src="{{ photos[0].photo.versions.lg }}"
+          :srcset="`${coverImg2x} 2x`"
+          srcset="{{ photos[0].photo.versions.lg }} 2x"
+          alt="{{ item.item_detail.name }}"
+          class="w-full max-h-[50vh] md:max-h-[60vh] block object-contain"
+        >
+      </picture>
+    </div>
+  {% else %}
+    {% render 'theme/simple/ui/picture-placeholder' %}
+  {% endif %}
+
+  {% if photos.size > 1 %}
+    <div class="mt-4 flex me-4" {% if photos.size > 4 %} data-slider {% endif %}>
+
+      {% if photos.size > 4 %}
+        <button
+          disabled
+          class="pe-6 hidden lg:block text-interaction disabled:text-interaction-disabled hover:text-interaction-hover transition-colors"
+          data-slider-prev
+        >
+          {% if dir == 'rtl' %}
+            {% render 'theme/simple/ui/icon', icon: 'dashRight', class: 'fill-current w-4 h-4' %}
+          {% else %}
+            {% render 'theme/simple/ui/icon', icon: 'dashLeft', class: 'fill-current w-4 h-4' %}
+          {% endif %}
+        </button>
+      {% endif %}
+
+      <ul class="w-full relative flex whitespace-nowrap overflow-x-auto lg:overflow-hidden">
+        {% liquid
+          assign flex_shrink = "flex-shrink-1"
+          if photos.size > 4
+            assign flex_shrink = "flex-shrink-0"
+          endif
+        %}
+        {% for p in photos limit: 8 %}
+          <li
+            class="w-1/4 h-0 mx-2 first:ms-0 last:me-0 pb-[25%] relative {{flex_shrink}}"
+            x-on:click="activeImgIndex = {{ forloop.index0 }}; if(coverImg !== '{{ p.photo.versions.lg }}'){ coverImg = '{{ p.photo.versions.lg }}'; coverImg2x = '{{ p.photo.versions.xl }}'; coverImgAvif = '{{ p.photo.versions.lg_avif }}'; coverImgAvif2x = '{{ p.photo.versions.xl_avif }}'; }"
+          >
+            <a
+              href="{{ p.photo.versions.uncropped }}"
+              target="_blank"
+              class="w-full h-full block"
+              :class="{ 'cursor-default': coverImg === '{{ p.photo.versions.lg }}' }"
+              x-on:click.prevent
+            >
+              <picture>
+                <source type="image/avif" srcset="{{ p.photo.versions.sm_avif }}, {{ p.photo.versions.m_avif }} 2x">
+                <img src="{{ p.photo.versions.sm }}" srcset="{{ p.photo.versions.m }} 2x" width="{{ p.photo_width }}" height="{{ p.photo_height }}" alt="{{ item.item_detail.name }}" class="w-full h-full absolute inset-0 object-cover">
+              </picture>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if photos.size > 4 %}
+        <button
+          class="ps-6 hidden lg:block text-interaction disabled:text-interaction-disabled hover:text-interaction-hover transition-colors"
+          data-slider-next
+        >
+          {% if dir == 'rtl' %}
+            {% render 'theme/simple/ui/icon', icon: 'dashLeft', class: 'fill-current w-4 h-4' %}
+          {% else %}
+            {% render 'theme/simple/ui/icon', icon: 'dashRight', class: 'fill-current w-4 h-4' %}
+          {% endif %}
+        </button>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

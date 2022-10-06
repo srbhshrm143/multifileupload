@@ -1,0 +1,19 @@
+{% liquid
+  function project = 'lib/queries/projects/find', id: event.object.id
+  function group = 'lib/queries/groups/find', id: project.group.id
+
+  function audience = 'lib/commands/audience/build'
+%}
+
+{% comment %} Project {group} MEMBERS and OWNER{% endcomment %}
+{% liquid
+  function group = 'lib/queries/activities/groups/audience', id: group.id
+
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | concat: group.members
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | concat: group.owners
+
+  function publish = 'lib/commands/activities/publish_to_many', uuid: event.uuid, audience: audience
+%}
+
+{% comment %} system:audit {% endcomment %}
+{% render 'lib/commands/activities/publish', uuid: event.uuid, type: "system", ids: "1" %}

@@ -1,0 +1,6 @@
+{% liquid
+  assign random = 5 | random_string
+  assign code = object.shipping_type | append: '-' | append: random
+
+  return code
+%}

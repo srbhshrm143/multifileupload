@@ -1,0 +1,16 @@
+{% parse_json data %}
+  {
+    "id": {{ object.id | json }},
+    "name": {{ object.name | json }},
+    "video_urls": {{ object.video_urls | json }},
+    "collaborator_emails": {{ object.collaborator_emails | split: ',' | json  }}
+  }
+{% endparse_json %}
+
+{% liquid
+  if object.status == 'submitted'
+    hash_assign data['status'] = 'app.statuses.project_offers.submitted'
+  endif
+
+  return data
+%}

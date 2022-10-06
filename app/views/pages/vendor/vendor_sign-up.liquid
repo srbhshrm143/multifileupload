@@ -1,0 +1,12 @@
+---
+  slug: vendor/sign_up
+---
+{% liquid
+  include 'lib/anonymous_or_redirect', user: context.current_user
+  assign object = '{}' | parse_json
+  include 'theme/simple/vendor/vendor_sign-up'
+%}
+
+{%- comment -%}
+  include 'theme/simple/users/user_form'
+{%- endcomment -%}

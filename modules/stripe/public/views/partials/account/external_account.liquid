@@ -1,0 +1,83 @@
+{% if response.country == 'NZ' %}
+  {% assign routing_number_required = false %}
+  {% assign col_size = 4 %}
+{% else %}
+  {% assign col_size = 2 %}
+  {% assign routing_number_required = true %}
+{% endif %}
+
+{%- assign external_account = response.external_accounts.data.first -%}
+{% if external_account %}
+  {%- assign account_number = '**** ' | append: external_account.last4 -%}
+{% endif %}
+<div class="col-12 border rounded border-light pt-3 bg-light mb-5">
+  <div class="row">
+    <div class="col-10 col-md-11">
+      <h5 class="card-title">External Bank Account Details</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ external_account.bank_name }} {{ account_number }} {{ external_account.currency | upcase }}</h6>
+    </div>
+    <div class="cal-1 pt-2">
+      {% if external_account != blank %}
+        <a href="#" data-toggle="collapse" data-target=".external_account" class="btn btn-primary">Edit</a>
+      {% endif %}
+    </div>
+  </div>
+
+{% if external_account != blank  %}
+  {% assign hide_external =  true %}
+{% endif %}
+  <fieldset class="row pt-5 bg-white external_account {% if hide_external %}collapse{% endif %}" {% if hide_external %}disabled{% endif %}>
+    <div class="col-12">
+        <div class="errors alert alert-danger" role="alert"></div>
+        <div class="form-row">
+          <div class="form-group col-md-{{ col_size}}">
+            {% assign country = external_account.country | default: response.country %}
+            {% parse_json "country_list" %}
+              { "{{ country }}": "{{ context.exports.payments.country_list[country] }}" }
+            {% endparse_json %}
+
+            {% include select_field with "Country",
+            value: country,
+            collection: country_list
+            required: true
+            %}
+          </div>
+          {% assign currency = external_account.currency | default: response.default_currency | upcase %}
+          {% assign currency_collection = context.exports.payments.country_currency_list[country] %}
+          <div class="form-group col-md-{{ col_size}}">
+            {% include select_field with "Currency",
+            value: currency,
+            collection: currency_collection,
+            required: true
+            %}
+          </div>
+          {% if routing_number_required %}
+            <div class="form-group col-md-4">
+              {% include text_field with "Routing Number", value: external_account.routing_number, required: true, country_iso: country %}
+            </div>
+          {% endif %}
+          <div class="form-group col-md-4">
+            {% include text_field with "Account Number",
+            value: external_account.account_number,
+            placeholder: account_number, required: true
+            %}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            {% include text_field with "Account Holder Name", value: external_account.account_holder_name %}
+          </div>
+          <div class="form-group col-md-6">
+            {% assign account_holder = external_account.account_holder_type | default: response.legal_entity.type %}
+            {% parse_json "account_holder_type_options" %}
+            { "individual": "Individual", "company": "Company"}
+            {% endparse_json %}
+            {% include select_field with "Account Holder Type",
+            value: account_holder,
+            collection: account_holder_type_options
+            %}
+          </div>
+        </div>
+    </div>
+  </fieldset>
+</div>

@@ -1,0 +1,71 @@
+<ul>
+  {% for comment in list %}
+    {% liquid
+      assign type_comment = comment | parse_json
+      hash_assign type_comment['type'] = 'comment'
+
+      function can_edit = "lib/can", actor: current_profile, do: "edit", object: type_comment
+      function can_remove = "lib/can", actor: current_profile, do: "remove", object: type_comment
+
+      if can_edit.valid or can_remove.valid
+        assign show_options = true
+      endif
+    %}
+    <li x-data='commentEdit()' class="mt-4 md:ms-14 pt-2 md:px-4 flex border-t border-dashed {% if forloop.last %} border-b pb-3 {% endif %}">
+      <div class="w-full">
+        <div class="md:h-10 mb-2 md:flex justify-between items-center">
+          <a href="{% render 'link_to', profile: comment.creator %}">
+            {{ comment.creator.name }}
+          </a>
+          <span class="block">
+            {% if show_options  %}
+              <span class="pe-5">
+                {% if can_edit.valid %}
+                  <button
+                    x-on:click="showEdit = true; $nextTick(() => { $refs.commentInput.focus(); });"
+                    class="text-interaction">{{ 'app.models.shared.edit' | t }}
+                  </button>
+                {% endif %}
+
+                {% if can_remove.valid %}
+                  {% render 'theme/simple/comments/buttons/remove', comment: comment, return_to: return_to, context: context, button_class: 'text-danger' %}
+                {% endif %}
+              </span>
+            {% endif %}
+            <date datetime="{{ comment.created_at }}" class="text-sm text-content-sidenote timeago">
+              {{comment.created_at | l: 'compact'}}
+            </date>
+          </span>
+        </div>
+
+      {% liquid
+        assign comment_body = comment.body
+
+        if comment.removed_at
+          assign comment_body = 'app.models.comments.removed_comment' | t | prepend: '[' | append: ']'
+        endif
+
+        assign comment_body_formatted = comment_body | markdown: '{ "elements": ["b","strong","i","em","a","code", "pre"], "attributes":{ "a": ["href"] } }'
+      %}
+
+        <form action="/api/comments" x-on:submit="spinner = true; submit(event);">
+          {% render 'authenticity_token', context: context %}
+          <input type="hidden" name="comment[id]" value="{{ comment.id }}">
+
+          <input x-ref="commentInput" type="text" x-cloak name="comment[body]" x-show="showEdit" value="{{ comment_body_formatted }}">
+          <button type="submit" class="button relative">
+            {{ 'app.save' | t }}
+            <div class="card-overlay" x-cloak x-show="spinner">
+              {% render 'theme/simple/ui/spinner' %}
+            </div>
+          </button>
+        </form>
+
+        <span x-ref="comment" class="prose" x-show="!showEdit">
+          {{ comment_body_formatted }}
+        </span>
+
+      </div>
+    </li>
+  {% endfor %}
+</ul>

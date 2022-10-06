@@ -1,0 +1,34 @@
+{% liquid
+  assign object = '{}' | parse_json
+
+  hash_assign object['item_inventory_id'] = item_inventory.id
+  hash_assign object['uuid'] = item_inventory.uuid | split: ':' | first
+  hash_assign object['price'] = item_inventory.item.price
+  hash_assign object['original_price'] = item_inventory.item.original_price
+  hash_assign object['return_days'] = item_inventory.item.return_days
+  hash_assign object['currency'] = item_inventory.item.currency
+  hash_assign object['tax_rate'] = item_inventory.item.tax_rate
+  hash_assign object['category'] = item_inventory.item.category
+  hash_assign object['sku'] = item_inventory.item.sku
+  hash_assign object['owner'] = item_inventory.item.owner
+  hash_assign object['quantity'] = item_inventory.item.quantity
+  hash_assign object['max_in_one_order'] = item_inventory.max_in_one_order
+  hash_assign object['photos'] = item_inventory.item.photos
+  hash_assign object['photo_ids'] = item_inventory.item.photo_ids
+  hash_assign object['item_type'] = item_inventory.item_type
+
+  assign details = '{}' | parse_json
+  for detail in item_inventory.item.item_details
+    hash_assign details[detail.lang] = detail
+  endfor
+  hash_assign object['details'] = details
+  hash_assign object['variants'] = item_inventory.items
+  for el in object.variants
+    assign variant = el
+    if variant.attributes_json == null
+      hash_assign variant['attributes_json'] = '[]' | parse_json
+    endif
+  endfor
+
+  return object
+%}

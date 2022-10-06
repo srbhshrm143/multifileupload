@@ -1,0 +1,22 @@
+---
+slug: admin/users/:id/passwords
+method: post
+layout: admin
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_superadmin', return_url: '/admin/users'
+
+  function profile = 'lib/queries/profiles/find', id: context.params.profile_id
+
+  assign input = context.params.password
+  hash_assign input['user_id'] = profile.user_id
+  function object = 'lib/commands/passwords/create', object: input
+
+  if object.valid
+    include 'redirect_to', url: '/admin/users', notice: 'app.admin.users.password.update.changed', context: context
+  else
+    render 'theme/simple/admin/users/password/new', profile: profile, context: context, object: object
+  endif
+%}

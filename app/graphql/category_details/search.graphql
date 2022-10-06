@@ -1,0 +1,33 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $category_id: String
+  $lang: String
+  $name: String
+) {
+  category_details: records(
+    per_page: $limit
+    filter: {
+      id: { value: $id }
+      table: { value: "category_detail" }
+      properties: [
+              { name: "category_id" value: $category_id }
+              { name: "lang" value: $lang }
+              { name: "name" value: $name }
+            ]
+    }
+    sort: [
+      { created_at: { order: DESC }}
+    ]
+  ){
+    total_entries
+    results {
+      id
+      created_at
+      type: table
+      category_id: property(name: "category_id")
+      lang: property(name: "lang")
+      name: property(name: "name")
+    }
+  }
+}

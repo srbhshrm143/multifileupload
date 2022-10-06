@@ -1,0 +1,247 @@
+{% comment %}
+  step1:
+    'valid' for validated and saved
+    'error' for error
+    undefined for empty hidden form
+    'current' for currently expanded
+{% endcomment %}
+
+{% liquid
+  if object.id
+    assign method = 'put'
+  else
+    assign method = 'post'
+  endif
+  assign uuid = '' | uuid
+  assign object_uuid = object.uuid | default: uuid
+
+  if submitted
+    assign max_photo = object.photos.size
+    assign max_files = object.files.size
+  else
+    assign max_photo = 10
+    assign max_files = 10
+  endif
+%}
+
+<section x-data="{ videosNumber: 0, step1: 'current', step2: {% if submitted %} 'current' {% else %} undefined {% endif %}, edit: '{{ object.id }}' }">
+
+  <div class="pagetitle">
+    {% if submitted %}
+      <a href="/offers/manage" class="flex justify-center items-center gap-1 text-content-inverted text-base font-normal">
+        {% render 'theme/simple/ui/icon', icon: 'dashLeft', class: 'w-2' %}
+        {{ 'app.project_offers.my_applications' | t }}
+      </a>
+    {% endif %}
+    <h1>{{ project.name }} — {{ 'app.project_offers.application' | t }}</h1>
+  </div>
+
+  <div class="container max-w-3xl">
+
+    {% unless submitted %}
+      <div class="mb-16 text-center">{{ 'app.project_offers.description' | t }}</div>
+    {% endunless %}
+
+    <form action="/offers/{{object.id}}" method="POST" x-ref="form">
+      {% render 'authenticity_token', authenticity_token: context.authenticity_token %}
+      <input type="hidden" name="_method" value="{{method}}">
+      {% if object.id %}
+        <input type="hidden" name="project_offer[id]" value="{{object.id}}">
+      {% endif %}
+      <input type="hidden" name="project_offer[project_id]" value="{{ project.id }}">
+      <input type="hidden" name="project_offer[uuid]" value="{{ object_uuid }}">
+
+      <fieldset class="mt-8 pb-16 flex items-start gap-4 relative" :class="{ 'items-center': step1 === 'valid' || step1 === undefined }">
+        <i
+          class="title w-12 h-12 !m-0 flex-shrink-0 flex items-center justify-center rounded-full bg-content-sidenote text-content-inverted not-italic leading-none transition-colors"
+          :class="{ 'bg-danger' : step1 === 'error', 'bg-confirmation': step1 === 'valid' }"
+        >
+          <span x-show="step1 !== 'valid'" class="ms-px -mt-0.5">1</span>
+          <span x-show="step1 === 'valid'" x-cloak>{% render 'theme/simple/ui/icon', icon: 'check' %}</span>
+        </i>
+        <div class="-ms-px hidden md:block md:absolute top-0 left-6 bottom-0 border-l-2 -z-10"></div>
+        <div class="w-full">
+
+          <h3 class="title" :class="{ 'text-confirmation-hover': step1 === 'valid' }">{{ 'app.project_offers.form.your_solution' | t }}</h3>
+          <div x-show="step1 === 'current' || step1 === 'error'">
+            {% unless submitted %}
+              {{ 'app.project_offers.form.your_solution_desc' | t }}
+            {% endunless %}
+            <div class="card -ms-16 md:-ms-0 mt-4">
+
+              <label for="solutionName" class="sidenote mb-1 block cursor-pointer text-content-sidenote">{{'app.project_offers.form.solution_name' | t}}</label>
+              <input type="text" id="solutionName" name="project_offer[name]" class="w-full" value="{{object.name}}" required x-ref="nameInput" {% if submitted %}disabled{% endif %}>
+              {% unless submitted %}
+                {% render 'theme/simple/ui/form-tip', content_key: 'app.project_offers.form.solution_name_desc'  %}
+              {% endunless %}
+
+              {% if object.id == blank %}
+                <span class="mt-6 mb-1 block sidenote text-content-sidenote">{{ 'app.project_offers.form.documents' | t }}</span>
+                <div class="p-4 border rounded" x-data='{"isShowing": {% if object.id %}true{% else %}false{% endif %}}'>
+                  {% if object.id == blank %}
+                    <span class="sidenote text-content-sidenote">{{ 'app.project_offers.form.documents_desc' | t | markdown }}</span>
+                  {% endif %}
+                  <button class="mt-2 button button-secondary" x-show="!isShowing" x-on:click.prevent="isShowing=true">
+                    {{ 'app.projects.form.choose_files' | t }}
+                    {% render 'theme/simple/ui/icon', icon: 'folderUpload', class: 'text-content-sidenote' %}
+                  </button>
+                  <div id="drag-drop-area-files" x-show="isShowing" class="mt-2"></div>
+                </div>
+              {% elsif object.files[0] != blank %}
+                <span class="mt-6 mb-1 block sidenote text-content-sidenote">{{ 'app.project_offers.form.documents' | t }}</span>
+                <ul class="flex flex-col gap-2 border rounded">
+                  {% for file in object.files %}
+                    <li class="px-3 py-4 flex gap-2 items-center">
+                      <a href="{{file.file.url}}" target="_blank" class="flex items-center gap-2">
+                        {% render 'theme/simple/ui/icon', icon: 'fileText', class: 'w-6 text-content' %}
+                        {{ file.file.file_name }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+
+              {% if object.id == blank %}
+                <span class="mt-6 mb-1 block sidenote text-content-sidenote">{{ 'app.project_offers.form.gallery' | t }}</span>
+                <div class="p-4 border rounded" x-data='{"isShowing": {% if object.id %}true{% else %}false{% endif %}}'>
+                  {% if object.id == blank %}
+                    <span class="sidenote text-content-sidenote">{{ 'app.project_offers.form.gallery_desc' | t | markdown }}</span>
+                  {% endif %}
+                  <button class="mt-2 button button-secondary" x-show="!isShowing" x-on:click.prevent="isShowing=true">
+                    {{ 'app.projects.form.choose_files' | t }}
+                    {% render 'theme/simple/ui/icon', icon: 'folderUpload', class: 'text-content-sidenote' %}
+                  </button>
+                  <div id="drag-drop-area-photos" x-show="isShowing" class="mt-2"></div>
+                </div>
+              {% elsif object.photos[0] != blank %}
+                <span class="mt-6 mb-1 block sidenote text-content-sidenote">{{ 'app.project_offers.form.gallery' | t }}</span>
+                <ul class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border rounded">
+                  {% for photo in object.photos %}
+                    <li>
+                      <a href="{{ photo.photo.versions.uncropped }}" target="_blank">
+                        <picture>
+                          <source type="image/avif" srcset="{{ photo.photo.versions.sm_avif }}, {{ photo.photo.versions.m_avif }} 2x">
+                          <img src="{{ photo.photo.versions.sm }}" srcset="{{ photo.photo.versions.m }} 2x" width="{{ photo.photo_width }}" height="{{ photo.photo_height }}" alt="">
+                        </picture>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+
+              {% if object.id == blank or object.video_urls[0] != blank %}
+                {% render 'theme/simple/projects/new/videos', object: object, input_name: 'project_offer[video_urls][]', submitted: submitted %}
+              {% endif %}
+            </div>
+            <div class="mt-4 text-end" x-show="!edit">
+              <button
+                type="button"
+                class="button"
+                x-on:click="if ($refs.nameInput.checkValidity() || $refs.nameInput.reportValidity()) { step1 = 'valid'; step2 = 'current'; }"
+              >{{ 'app.project_offers.form.save_next' | t }}</button>
+            </div>
+          </div>
+
+        </div>
+      </fieldset>
+
+
+      <fieldset class="pb-16 flex items-start gap-4 relative" :class="{ 'items-center': step2 === 'valid' || step2 === undefined }">
+        <i
+          class="title w-12 h-12 !m-0 flex-shrink-0 flex items-center justify-center rounded-full bg-content-sidenote text-content-inverted not-italic leading-none transition-colors"
+          :class="{ 'bg-danger' : step2 === 'error', 'bg-confirmation': step2 === 'valid' }"
+        >
+          <span x-show="step2 !== 'valid'" class="ms-0.5 -mt-0.5">2</span>
+          <span x-show="step2 === 'valid'" x-cloak>{% render 'theme/simple/ui/icon', icon: 'check' %}</span>
+        </i>
+        <div class="w-full">
+
+          <h3 class="title" :class="{ 'text-confirmation-hover': step2 === 'valid' }">{{ 'app.project_offers.form.collaborators_email' | t }}</h3>
+          <div x-show="step2 === 'current' || step2 === 'error' || edit" x-cloak>
+            {% unless submitted %}
+              {{ 'app.project_offers.form.collaborators_email_desc' | t }}
+            {% endunless %}
+            <div class="card -ms-16 md:-ms-0 mt-4">
+              {% if object.id == blank %}
+                <div x-data="invites()" x-init='initManual({emails: {{object.collaborator_emails | default: '[]'}}})'>
+                  {% render 'theme/simple/invites/widget', submitted: submitted %}
+                  <input name="project_offer[collaborator_emails]" type="hidden" :value="emailList()"/>
+                </div>
+              {% else %}
+                <ul>
+                  {% for email in object.collaborator_emails %}
+                    <li>
+                      <input type="text" disabled value="{{ email }}" class="w-full">
+                    </li>
+                  {% else %}
+                    {{ 'app.project_offers.form.no_emails' | t }}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+            {% unless submitted %}
+              <div class="mt-4 -ms-16 md:-ms-0 flex items-start gap-2">
+                <input type="checkbox" id="solutionAgree" name="project_offer[agree]" required class="mt-1">
+                <div>
+                  <label for="solutionAgree" class="cursor-pointer">{{ 'app.project_offers.form.agree_terms' | t: name: 'Test' }}</label>
+                  {% if project.terms_and_conditions != blank %}
+                    <div class="card prose !max-w-full mt-4 h-36 overflow-y-auto">
+                      <h4 class="font-bold">{{ 'app.projects.form.terms_and_conditions' | t }}</h4>
+                      {{ project.terms_and_conditions | markdown }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="mt-8 -ms-16 md:-ms-0 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="button button-secondary"
+                  x-on:click="step1 = 'current'; step2 = undefined"
+                  x-show="!edit"
+                >{{ 'app.back' | t }}</button>
+                <!--
+                <button type="submit" class="ms-auto button button-secondary" name="project_offer[status]" value="draft">
+                  {{ 'app.project_offers.form.save_draft' | t }}
+                </button>
+                -->
+                <button type="submit" class="ms-auto button" name="project_offer[status]" value="submitted">
+                  {{ 'app.project_offers.form.send' | t }}
+                </button>
+              </div>
+            {% endunless %}
+        </div>
+      </fieldset>
+
+    </form>
+
+  </div>
+
+</section>
+
+{% if object.id == blank or object.photos[0] != blank %}
+  {% render 'theme/simple/photos/uppy_form',
+    target: '#drag-drop-area-photos'
+    object_uuid: object_uuid,
+    presigned_url: context.presigned_url,
+    photo_type: 'image',
+    note: 'Image up to 2MB',
+
+    existing_photos: object.photos,
+    disabled: submitted,
+    max_number_of_files: max_photo
+  %}
+{% endif %}
+
+{% if object.id == blank or object.files[0] != blank %}
+  {% render 'theme/simple/photos/uppy_document_form',
+    target: '#drag-drop-area-files'
+    object_uuid: object_uuid,
+    presigned_url: context.presigned_url,
+    type: 'file',
+    note: 'File up to 2MB',
+    existing_documents: object.files,
+    disabled: submitted,
+    max_number_of_files: max_files
+  %}
+{% endif %}

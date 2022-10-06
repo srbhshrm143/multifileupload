@@ -1,0 +1,18 @@
+mutation update(
+  $Id: ID!,
+  $venue_id: String!
+  $menus: String!
+){
+  record_update(
+     id: $Id
+     record: {
+      table : "venue_menus"
+      	properties: [
+        { name: "venue_id", value: $venue_id }
+        { name: "venue_menu", value: $menus }
+        ]
+      }
+  ) {
+    id properties
+  }
+}

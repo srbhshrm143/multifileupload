@@ -1,0 +1,38 @@
+<article class="card flex flex-col relative" id="object-{{payload.object.id}}" data-tc="private-feed">
+  {% render 'theme/simple/activities/feed_unit/header', payload: payload, namespace: namespace, role: role, current_profile: current_profile, context: context, post: payload.post %}
+
+{% liquid
+  assign types = 'profile,group' | split: ','
+  if types contains payload.target.type and payload.object.type == 'comment'
+    assign comment_body_formatted = payload.object.body | markdown: '{ "elements": ["b","strong","i","em","a","code", "pre"], "attributes":{ "a": ["href"] } }'
+    echo comment_body_formatted
+  endif
+%}
+
+{% if payload.post %}
+  {% liquid
+    assign post = payload.post
+    assign comments = post.comments
+    assign comment_body_formatted = post.body | markdown: '{ "elements": ["b","br","strong","i","em","a","code","p","pre"], "attributes":{ "a": ["href"] } }'
+    echo comment_body_formatted
+
+    case payload.type
+    when 'post_created'
+      render 'theme/simple/activities/feed_unit/photo', photos: payload.object.photos, name: payload.object.name
+    endcase
+  %}
+
+  <footer class="mt-4 flex flex-wrap items-center gap-4 sidenote text-content-sidenote">
+    {% render 'theme/simple/posts/like_button', profile_id: current_profile.id, post: payload.post, context: context %}
+    {% if comments.size > 0 %}
+      <span class="flex gap-2">
+        {% render 'theme/simple/ui/icon', icon: 'messageBubblesDouble' %}
+        {{ 'app.feed.comments' | t: count: comments.size }}
+      </span>
+    {% endif %}
+  </footer>
+
+    {% render 'theme/simple/activities/feed_unit/comments', comments: comments, post: post, current_profile: current_profile, context: context, namespace: namespace %}
+  {% endif %}
+
+</article>

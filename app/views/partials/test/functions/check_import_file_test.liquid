@@ -1,0 +1,33 @@
+{% parse_json data %}
+[
+  { "sku": "sku-1"},
+  { "sku": "sku-2"},
+  { "sku": "sku-3"},
+  { "sku": "sku-4"},
+  { "sku": "sku-5"}
+]
+{% endparse_json %}
+
+{% liquid
+  function error = 'lib/commands/bulk_operations/trigger_import/check_file', data: data
+  include 'test/assertions/equal', contract: contract, given: error, field_name: 'correct-data', expected: nil
+%}
+
+{% parse_json data %}
+[
+  { "sku": "sku-1"},
+  { "sku": "sku-2"},
+  { "sku": "sku-3"},
+  { "sku": "sku-4"},
+  { "sku": "sku-4"},
+  { "sku": "sku-1"},
+  { "sku": "sku-5"}
+]
+{% endparse_json %}
+
+{% liquid
+  function error = 'lib/commands/bulk_operations/trigger_import/check_file', data: data
+
+  assign expect = 'Duplicated products in import file. All products must have uniq SKU. Duplicated SKU: ["sku-1", "sku-4"]'
+  include 'test/assertions/equal', contract: contract, given: error.message, field_name: 'incorrect-data', expected: expect
+%}

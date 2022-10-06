@@ -1,0 +1,12 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  function c = 'lib/validations/number', c: c, object: object.promo_code, field_name: 'available_quantity', gt: 0, message_gt: 'app.promo_codes.error.does_not_exist'
+  function c = 'lib/validations/date', c: c, object: object.promo_code, field_name: 'start_date', can_be_future: false, message_can_be_future: 'app.promo_codes.error.invalid'
+  function c = 'lib/validations/date', c: c, object: object.promo_code, field_name: 'end_date', can_be_past: false, message_can_be_past: 'app.promo_codes.error.invalid'
+
+  hash_assign object['valid'] = c.valid
+  hash_assign object['errors'] = c.errors
+
+  return object
+%}

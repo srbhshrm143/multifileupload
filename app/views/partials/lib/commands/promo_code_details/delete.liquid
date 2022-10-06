@@ -1,0 +1,9 @@
+{% liquid
+  function object = 'lib/commands/promo_code_details/delete/check',  object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'promo_code_details/delete', object: object
+  endif
+
+  return object
+%}

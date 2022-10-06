@@ -1,0 +1,9 @@
+---
+name: account
+properties:
+- name: gateway_id
+  type: string
+- name: external_id
+  type: string
+- name: state
+  type: string

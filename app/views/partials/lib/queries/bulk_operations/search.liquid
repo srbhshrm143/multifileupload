@@ -1,0 +1,8 @@
+{% liquid
+  unless profile_id
+    return
+  endunless
+  graphql r = 'bulk_operations/search', limit: limit, profile_id: profile_id
+
+  return r.bulk_operations
+%}

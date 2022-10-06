@@ -1,0 +1,57 @@
+query search(
+  $id: ID,
+  $limit: Int,
+  $page: Int = 1,
+  $venue_id: String
+  ) {
+    data: records(
+      per_page: $limit
+      page: $page
+      filter: {
+        id: { value: $id }
+        table: {
+          value: "venues"
+        }
+        properties: [
+          { name: "venue_id", value: $venue_id }
+        ]
+      }
+      sort: {
+        created_at: {
+          order:  DESC
+        }
+      }
+    ) {
+      total_entries
+      total_pages
+      results {
+        id
+        properties
+        venue_type: related_records(
+          join_on_property: "id"
+          foreign_property: "venue_id"
+          table: "venue_event_space"
+        ) {
+          id
+          # properties
+          event_type: property(name: "event_type")
+          venue_media: related_records(
+            join_on_property: "media_uuid"
+            foreign_property: "media_uuid"
+            table: "form_media_testing"
+          ) {
+            id
+            # properties
+            testing_media: property_upload(name: "testing_media") {
+              # File Url Link
+              url
+              # File Name
+              file_name
+              # File Extension
+              extension
+            }
+          }
+        }
+      }
+    }
+  }

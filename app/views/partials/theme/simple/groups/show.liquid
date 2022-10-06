@@ -1,0 +1,18 @@
+<section>
+  {% render 'theme/simple/groups/header', group: group, current_profile: current_profile, context: context %}
+</section>
+
+<div class="container flex flex-col md:flex-row gap-6">
+  {% render 'theme/simple/groups/nav', tab: tab, group: group, context: context, current_profile: current_profile %}
+
+  <div class="flex-1">
+    {% liquid
+      function can_post = "lib/can", actor: current_profile, do: "post", object: group
+      if can_post.valid
+        render 'theme/simple/activities/feed_new_entry', current_profile: current_profile, placeholder: 'app.models.comments.placeholder', group: group, context: context
+      endif
+
+      render 'theme/simple/groups/activity', group: group, current_profile: current_profile, list: list, page: 1, context: context
+    %}
+  </div>
+</div>

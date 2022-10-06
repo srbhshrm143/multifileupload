@@ -1,0 +1,12 @@
+{% liquid
+  assign project_id = event.object.project_id
+  function applications_count = 'lib/queries/project_offers/count', project_id: project_id
+
+  assign object = '{}' | parse_json
+  hash_assign object['id'] = project_id
+  hash_assign object['c__applications_count'] = applications_count.total_entries
+  function res = 'lib/commands/projects/update_count_cache', object: object
+  if res.valid != true
+    log res, type: 'ERROR: project_offer_created/update_project_app_counter'
+  endif
+%}

@@ -1,0 +1,22 @@
+mutation create(
+  $buyer: String!
+  $vendor: String
+  $item_id: String!
+  $currency: String
+  $item_price: String
+) {
+  record: record_create(
+    record: {
+      table: "order"
+      properties: [
+        { name: "buyer", value: $buyer }
+        { name: "item_id", value: $item_id }
+        { name: "seller", value: $vendor }
+        { name: "currency", value: $currency }
+        { name: "products_price_cents", value: $item_price }
+      ]
+    }
+  ) {
+    id
+  }
+}

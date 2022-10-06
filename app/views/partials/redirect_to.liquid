@@ -1,0 +1,76 @@
+{% liquid
+  unless url
+    if context.session.return_to
+      assign url = context.session.return_to
+      session return_to = null
+    endif
+  endunless
+
+  if context.params.return_to
+    assign url = context.params.return_to
+  endif
+
+  
+  
+  assign url = url | default: default_url | default: '/'
+
+  assign is_relative_path = url | matches: '^\/'
+  if is_relative_path != true
+    assign url = '/'
+  endif
+
+
+  if venue_id
+    assign venue_id = venue_id
+  endif
+
+  comment
+    if venue_create
+      assign url = 'vendor/add_venue' | append: '/' | append: venue_id | append: '?' | append: 'add_space'
+    endif/
+    "?venue_id=111&tab=2"
+    "?currentTab=tab3"
+  endcomment
+  if venue_create and venue_id
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab2'
+  elsif venue_create
+    assign url = 'vendor/add_venue'
+  endif
+
+  if event_space
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab3'
+  endif
+  
+  if space_features
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab4'
+  endif
+
+  if event_hours
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab5'
+  endif
+  
+  if event_pricing
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab6'
+  endif
+
+  if event_menus
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab7'
+  endif
+
+  if venue_payments
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab8'
+  endif
+  
+  if venue_advance_notice
+    assign url = 'vendor/add_venue' | append: '?' | append: 'venue_id=' | append: venue_id | append: '&currentTab=tab9'
+  endif
+
+  if venue_contrtact
+    assign url = 'vendor'
+  endif
+
+  include 'lib/flash/publish', notice: notice, error: error, info: info
+
+  redirect_to url
+  break
+%}

@@ -1,0 +1,9 @@
+{% liquid
+  if context.session.language == 'de'
+    assign language = 'en'
+  else
+    assign language = 'de'
+  endif
+
+  return language
+%}

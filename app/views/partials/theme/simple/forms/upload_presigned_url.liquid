@@ -1,0 +1,31 @@
+{% graphql data %}
+  mutation presign {
+    property_upload_presigned_url(
+      table: "form_media_testing",
+      property_name: "testing_media"
+    ) {
+      upload_url
+      upload_url_payload
+    }
+  }
+{% endgraphql %}
+
+{%- comment -%} Assigning Presigned Url to 'data' variable {%- endcomment -%}
+{% assign data = data.property_upload_presigned_url %}
+
+{%- comment -%} File Upload Uppy Form {%- endcomment -%}
+<form action="{{ data.upload_url }}"
+  data-s3-uppy="form"
+  data-s3-uppy-user-id="{{ context.current_user.id }}"
+  data-s3-uppy-object-uuid="{{ uuid }}"
+  data-s3-uppy-photo-type="{{ photo__type }}"
+  data-s3-uppy-max-number-of-files="{{ max__files }}"
+  hidden
+  id="uppy_custom_media_upload">
+  {% for field in data.upload_url_payload %}
+    <input type="hidden" name="{{ field[0] }}" value='{{ field[1] }}'>
+  {% endfor %}
+</form>
+
+{%- comment -%} file path {% include 'theme/simple/forms/upload_presigned_url' %} {%- endcomment -%}
+

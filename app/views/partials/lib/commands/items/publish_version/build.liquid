@@ -1,0 +1,18 @@
+{% parse_json data %}
+  {
+    "new_item_ids": {{ object.new_item_ids | json }},
+    "old_item_status": "app.statuses.items.unpublished",
+    "item_inventory_id": {{ object.item_inventory_id | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  if object.quantity > 0
+    assign status = "app.statuses.items.published"
+  else
+    assign status = "app.statuses.items.unavailable"
+  endif
+  hash_assign data['new_item_status'] = status
+
+  return data
+%}

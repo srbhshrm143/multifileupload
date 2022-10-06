@@ -1,0 +1,20 @@
+{% liquid
+  assign site_name = 'app.title' | t
+%}
+
+{% parse_json object %}
+  {
+    "to":      {{ object.email | json }},
+    "from":    {% print 'app.support_email' | t | json %},
+    "subject": {% print 'app.emails.groups.invite.subject' | t: site_name: site_name, group_name: object.group.name, member: object.member.name | json %},
+    "url":     {% print object.url | json %},
+    "group_name": {{ object.group.name | json }},
+    "member": {{ object.member.name | json }},
+    "partial": "theme/simple/emails/groups/invite"
+  }
+{% endparse_json %}
+
+{% liquid
+  function object = 'lib/commands/emails/send', object: object
+  return object
+%}

@@ -1,0 +1,31 @@
+{% liquid
+comment
+  params:
+    class: css classes (optional)
+    value: initial value (optional)
+    name: input name (optional)
+    is_hex: color format (true: hex, false: rgb)
+    text_input_enabled: (optional)
+endcomment
+
+if is_hex != true
+  assign is_hex = false
+endif
+%}
+<div class="{{class}}" x-data="{
+  fromHex: hex => `${parseInt(`${hex[1]}${hex[2]}`, 16)}, ${parseInt(`${hex[3]}${hex[4]}`, 16)}, ${parseInt(`${hex[5]}${hex[6]}`, 16)}`,
+  toHex: rgb => `#${rgb.split(',').map(c => Number(c).toString(16).padStart(2, '0')).join('')}` }">
+  <div class="flex" x-data="{
+    color: {% if is_hex != true %}toHex('{{value}}'){% else %}'{{value}}'{% endif %}
+  }">
+    {% if text_input_enabled == true %}
+    <input type="text"
+      x-model="color"
+      class="flex-1"
+      placeholder="#"
+      pattern="^#[a-fA-F0-9]{6}">
+    {% endif %}
+    <input type="color" x-model="color" class="h-12 p-0">
+    <input type="hidden" name="{{name}}" x-model="{% if is_hex != true %}fromHex(color){% else %}color{% endif %}">
+  </div>
+</div>

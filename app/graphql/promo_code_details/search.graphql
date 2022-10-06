@@ -1,0 +1,34 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $promo_code_id: String
+  $lang: String
+  $description: String
+) {
+  promo_code_details: records(
+    per_page: $limit
+    filter: {
+      id: { value: $id }
+      table: { value: "promo_code_details" }
+      properties: [
+        { name: "promo_code_id" value: $promo_code_id }
+        { name: "lang" value: $lang }
+        { name: "description" value: $description }
+      ]
+    }
+    sort: [
+      { created_at: { order: DESC }}
+    ]
+  ){
+    total_entries
+    results {
+      id
+      created_at
+      type: table
+
+      promo_code_id: property(name: "promo_code_id")
+      lang: property(name: "lang")
+      description: property(name: "description")
+    }
+  }
+}

@@ -1,0 +1,26 @@
+---
+  slug: venue/space_features/create
+  method: post
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  assign features_json = context.params.features | json
+  function object = 'lib/commands/vendor/space_features/create', venue_id: context.params.space_features.venue_id, object: features_json, profile: current_profile.user
+  assign venue_id = object.properties.venue_id
+  
+  include 'redirect_to', venue_id: venue_id, space_features: context.params.features, notice: 'venue special features created'
+
+  comment  
+  include 'redirect_to', space_features: context.params.features, notice: 'venue special features created'
+
+  assign context.params.venue_id = object.id
+  assign venue_idid = object.id
+  include 'redirect_to', space_features: context.params.space_features, space_food: context.params.space_food, space_bar: context.params.space_bar, space_extras: context.params.space_extras, notice: 'venue special features created'
+  endcomment
+%}
+{{features_json}}<br>
+{{ context.params.features }}
+<br><br>
+{{ object }}
+<br><br>

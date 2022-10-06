@@ -1,0 +1,19 @@
+name: item_inventory
+properties:
+  - name: owner
+  - name: max_in_one_order
+    type: integer
+  - name: item_type
+    # physical
+    # digital
+    # affiliate
+
+  - name: uuid
+  - name: item_ids
+    type: array
+
+  - name: c__status
+  - name: c__rating_score
+    type: float
+  - name: c__rating_count
+    type: integer

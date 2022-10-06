@@ -1,0 +1,19 @@
+{% parse_json object %}
+  {
+    "venue_id":          {{ object.venue_id | json }},
+    "menu_id":          {{ object.menu_id | json }},
+    "weekdays_morning":        {{ object.weekdays_morning | json }},
+    "weekdays_day":          {{ object.weekdays_day | json }},
+    "weekdays_night":      {{ object.weekdays_night | json }},
+    "weekdays_allday":        {{ object.weekdays_allday | json }},
+    "weekends_morning":    {{ object.weekends_morning | json }},
+    "weekends_day":    {{ object.weekends_day | json }},
+    "weekends_night":    {{ object.weekends_night | json }},
+    "weekends_allday":    {{ object.weekends_allday | json }},
+    "available_dates":      {{ object.available_dates | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

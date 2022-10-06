@@ -1,0 +1,35 @@
+mutation update_item_inventory(
+  $id: ID!
+  $c__rating_count: Int
+  $c__rating_score: Float
+  $c__recommended_count: Int
+  $c__disadvised_count: Int
+  $c__rating_description: Float
+  $c__rating_delivery: Float
+  $c__rating_service: Float
+) {
+  record: record_update(
+    id: $id
+    record: {
+      properties: [
+        { name: "c__rating_count" value_int: $c__rating_count }
+        { name: "c__rating_score" value_float: $c__rating_score }
+        { name: "c__recommended_count" value_float: $c__recommended_count }
+        { name: "c__disadvised_count" value_float: $c__disadvised_count }
+        { name: "c__rating_description" value_float: $c__rating_description }
+        { name: "c__rating_delivery" value_float: $c__rating_delivery }
+        { name: "c__rating_service" value_float: $c__rating_service }
+      ]
+    }
+  ){
+    id
+    type: table
+    c__rating_count: property_int(name: "c__rating_count")
+    c__rating_score: property_float(name: "c__rating_score")
+    c__recommended_count: property_int(name: "c__recommended_count")
+    c__disadvised_count: property_int(name: "c__disadvised_count")
+    c__rating_description: property_float(name: "c__rating_description")
+    c__rating_delivery: property_float(name: "c__rating_delivery")
+    c__rating_service: property_float(name: "c__rating_service")
+  }
+}

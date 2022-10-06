@@ -1,0 +1,27 @@
+{% liquid
+  if seller == blank
+    log 'Something went wrong. Seller cannot be blank.', type: 'ERROR'
+    return null
+  endif
+
+  if buyer == blank
+    log 'Something went wrong. Buyer cannot be blank.', type: 'ERROR'
+    return null
+  endif
+
+  assign lang = lang | default: context.language
+  graphql r = 'orders/search', limit: 10, buyer: buyer, seller: seller, status: status, id: id, lang: lang
+
+  assign placed_orders = '[]' | parse_json
+  for o in r.orders.results
+    if o.status.name == 'app.statuses.orders.placed'
+      assign placed_orders = placed_orders | add_to_array: o
+      break
+    endif
+  endfor
+  hash_assign r['orders']['results'] = placed_orders
+
+  function orders = 'lib/commands/orders/recalculate/build', object: r.orders
+
+  return r.orders.results.first
+%}

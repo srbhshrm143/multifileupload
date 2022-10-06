@@ -1,0 +1,13 @@
+query read($Id: ID) {
+  models(
+    per_page: 1
+    filter: {model_schema_name: {value: "profile"}, id: {value: $Id}}
+    sort: {created_at: {order: DESC}}
+  ) {
+    results {
+      id
+    # properties
+      uuid: property(name: "uuid")
+    }
+  }
+}

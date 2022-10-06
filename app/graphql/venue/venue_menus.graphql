@@ -1,0 +1,18 @@
+mutation create(
+  $venue_id: String!
+  $menus: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_menus"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "venue_menu", value: $menus }
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+  
+}

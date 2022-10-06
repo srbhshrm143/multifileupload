@@ -1,0 +1,38 @@
+{% liquid
+  if profile.relationships
+    assign relationships = profile.relationships | group_by: "name"
+    hash_assign profile['relationships'] = relationships
+
+    for m in profile.relationships.membership
+      assign member = m
+      if member.l_accepted_at == blank
+        hash_assign member['pending_acceptance'] = true
+      endif
+
+      if member.r_accepted_at == blank
+        hash_assign member['pending_approval'] = true
+      endif
+
+      if member.r_accepted_at and member.l_accepted_at
+        hash_assign member['valid'] = true
+      endif
+    endfor
+
+    for m in profile.relationships.owner
+      assign member = m
+      if member.l_accepted_at == blank
+        hash_assign member['pending_acceptance'] = true
+      endif
+
+      if member.r_accepted_at == blank
+        hash_assign member['pending_approval'] = true
+      endif
+
+      if member.r_accepted_at and member.l_accepted_at
+        hash_assign member['valid'] = true
+      endif
+    endfor
+  endif
+
+  return profile
+%}

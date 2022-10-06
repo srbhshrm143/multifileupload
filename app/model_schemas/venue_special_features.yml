@@ -1,0 +1,7 @@
+name: venue_special_features
+properties:
+  - name: venue_id
+    type: string
+  - name: menu_id
+    type: string
+  - name: space_features

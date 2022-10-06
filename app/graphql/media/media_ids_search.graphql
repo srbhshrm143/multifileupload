@@ -1,0 +1,25 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $image_uuid: String!
+  $origin_urls: String
+  $photo_type: String
+) {
+  photos: records(
+    per_page: $limit
+    filter: {
+      id: { value: $id }
+      table: { value: "form_media_testing" }
+      properties: [
+        { name: "media_uuid", value: $image_uuid }
+        { name: "origin_url", value_in: $origin_urls }
+        { name: "media_type", value: $photo_type }
+      ]
+    }
+  ) {
+    results {
+      id
+      # properties
+    }
+  }
+}

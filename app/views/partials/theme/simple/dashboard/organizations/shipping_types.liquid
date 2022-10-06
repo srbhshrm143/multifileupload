@@ -1,0 +1,82 @@
+<h3 class="subtitle">{{ 'app.organizations.attr.shipping_types' | t }}:</h3>
+
+{% assign shipping_types = 'app.orders.shipping_types' | t %}
+
+<div class="card">
+
+  <div
+    x-data="{ checked: {% if object.shipping_types contains 'delivery' %}true{% else %}false{% endif %} }"
+    class="mb-4 md:flex items-start gap-8"
+  >
+    <fieldset class="w-40 flex items-center gap-1">
+      <input
+        type="checkbox"
+        id="shipping_type_delivery"
+        name="organization[shipping_types][]"
+        value="delivery"
+        {% if object.shipping_types contains 'delivery' %}checked{% endif %}
+        x-on:change="checked=!checked"
+      >
+      <label for="shipping_type_delivery" class="cursor-pointer">{{'app.orders.shipping_types.delivery' | t}}</label>
+    </fieldset>
+
+    <fieldset
+      x-show="checked"
+      class="ms-5 md:ms-0"
+    >
+      {% liquid
+        function cities = 'lib/queries/constants/find' name: "DELIVERY_FEES_CITIES", type: "array"
+      %}
+      {% for city in cities %}
+        <div>
+          {% assign city_symbol = city | downcase | slugify %}
+          <label class="block" for="delivery_fee">{{ 'app.organizations.attr.delivery_fee_for' | t: for: city }}:</label>
+          <!-- TODO: Add currency prefix $[input]  -->
+          <div class="flex items-center gap-2">
+            <input type="number" step="any" required
+              id="delivery_fee_{{city_symbol}}"
+              name="organization[delivery_fees_for_cities][{{city_symbol}}]"
+              value="{{ object.delivery_fees_for_cities[city_symbol] | plus: 0 | default: 0 | fractional_to_amount: currency }}"
+              x-bind:disabled="!checked"
+            >
+            {{ currency }}
+          </div>
+          {% render 'theme/simple/field_error', errors: object.errors.delivery_fees_for_cities[city_symbol] %}
+        </div>
+      {% endfor %}
+      <div>
+        <label class="block" for="delivery_fee_default">{{ 'app.organizations.attr.delivery_fee_default' | t }}:</label>
+        <div class="flex items-center gap-2">
+          <input type="number" step="any" id="delivery_fee_default" name="organization[delivery_fees_for_cities][default]" required
+            value="{{ object.delivery_fees_for_cities['default'] | plus: 0 | default: 0 | fractional_to_amount: currency }}"
+            x-bind:disabled="!checked">
+          {{ currency }}
+        </div>
+        {% render 'theme/simple/field_error', errors: object.errors.delivery_fees_for_cities['default'] %}
+      </div>
+    </fieldset>
+  </div>
+
+  <div
+    x-data="{ checked: {% if object.shipping_types contains 'personal_pickup' %}true{% else %}false{% endif %} }"
+    class="md:flex items-start gap-8"
+  >
+    <fieldset class="w-40 flex items-center gap-1">
+      <input type="checkbox" id="shipping_type_personal_pickup" name="organization[shipping_types][]" value="personal_pickup" {% if object.shipping_types contains 'personal_pickup' %}checked{% endif %}
+        x-on:change="checked=!checked">
+      <label for="shipping_type_personal_pickup" class="cursor-pointer">{{'app.orders.shipping_types.personal_pickup' | t}}</label>
+    </fieldset>
+
+    <fieldset
+      x-show="checked"
+      class="ms-5 md:ms-0"
+    >
+      <label class="block" for="offline_stores">{{ 'app.admin.organizations.new.offline_stores' | t }}:</label>
+      <input class="w-full" type="text" id="offline_stores" name="organization[offline_stores]" value="{{ object.offline_stores | join: ';' }}" required
+        x-bind:disabled="!checked">
+      {% render 'theme/simple/ui/form-tip', content_key: 'app.admin.organizations.new.offline_stores_tip'  %}
+      {% render 'theme/simple/field_error', errors: object.errors.offline_stores %}
+    </fieldset>
+  </div>
+
+</div>

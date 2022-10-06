@@ -1,0 +1,60 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $page: Int = 1
+  $operation_type: String
+  $uuid: String
+  $profile_id: String
+) {
+  bulk_operations: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "bulk_operation" }
+      properties: [
+        { name: "operation_type" value: $operation_type }
+        { name: "uuid" value: $uuid }
+        { name: "profile_id" value: $profile_id }
+      ]
+    }
+    sort: [
+      { created_at: { order: DESC }}
+    ]
+  ){
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      operation_type: property(name: "operation_type")
+      uuid: property(name: "uuid")
+
+      statuses: related_records(join_on_property: "id" foreign_property: "object_id" table: "status" sort: { created_at: { order: ASC } }) {
+        id
+        created_at
+        name: property(name: "name")
+        timestamp: property(name: "timestamp")
+      }
+
+      files: related_records(
+        table: "document" join_on_property: "uuid" foreign_property: "object_uuid"
+        filter: { properties: { name: "document_type", value_in: ["report", "file"] } }
+      ) {
+        id
+        type: table
+
+        document_type: property(name: "document_type")
+        file: property_upload(name: "document" expires_in: 60) {
+          url
+          file_name
+          extension
+        }
+      }
+    }
+  }
+}

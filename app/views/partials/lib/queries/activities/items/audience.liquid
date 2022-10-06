@@ -1,0 +1,15 @@
+{% liquid
+  if id == blank
+    log '(items) ID cannot be blank when searching for audience'
+    return null
+  endif
+
+  graphql r = 'activities/items/audience', id: id, limit: 10000
+  assign item = r.records.results.first
+
+  assign audience = '{"organization":{}}' | parse_json
+  hash_assign audience['organization']['id'] = item.owner.id
+  hash_assign audience['organization']['members'] = item.owner.members | map: 'id'
+
+  return audience
+%}

@@ -1,0 +1,102 @@
+{% liquid
+  if item_attribute.attributes[0].id
+    assign method = 'put'
+    assign input_readonly = ' readonly '
+  else
+    assign method = 'post'
+  endif
+  assign empty_array = '[]' | parse_json
+%}
+
+<form action="/admin/item_attributes" method="post" class="max-w-4xl w-full mx-auto flex flex-col gap-8">
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="{{ method }}">
+  {% if item_attribute.id %}
+    <input type="hidden" name="id" value="{{ item_attribute.id }}">
+  {% endif %}
+  <div>
+    <h3 class="subtitle">{{ 'app.item_attributes.attr.name' | t }}</h3>
+    <fieldset class="p-4 border rounded">
+      <label class="block" for="name">{{ 'app.item_attributes.attr.name' | t }}:</label>
+      <input class="w-full" type="text" id="name" name="item_attribute[name]" value="{{ item_attribute.name }}" {% if item_attribute.id %}disabled{% else %} autofocus{% endif %} required {{ input_readonly }} />
+      {% render 'theme/simple/field_error', errors: item_attribute.errors.name %}
+      {% for lang in available_languages %}
+        <label for="lang_{{ lang }}" class="mt-4 block capitalize">{{ lang | t: scope: 'languages' }}:</label>
+        <input type="hidden"name="item_attribute[translations][][lang]" value="{{ lang }}">
+        <input type="text" name="item_attribute[translations][][name]" class="w-full" id="lang_{{ lang }}" value="{{ item_attribute.name | t: scope: 'app.item_attributes' }}" required />
+      {% endfor %}
+    </fieldset>
+  </div>
+
+  <div>
+    {% liquid
+      for el in object.attributes
+        assign attribute = el
+        for lang in available_languages
+          assign key = 'value_' | append: lang
+          assign value_slug = attribute.value | slugify
+          assign value =  attribute.name | append: '_' | append: value_slug
+          hash_assign attribute[key] = value | t: scope: 'app.item_attributes'
+        endfor
+      endfor
+    %}
+    <h3 class="subtitle">{{ 'app.item_attributes.edit.values' | t }}</h3>
+    <fieldset class="p-4 border rounded">
+
+      {% render 'theme/simple/field_error', errors: object.errors.attributes %}
+      <div x-data='{"values": {{ object.attributes | default: empty_array | json }}}' >
+        <template x-for='(value, index) in values'>
+          <div class="mb-4 pb-6 border-b">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <label class="block font-bold"
+                  x-bind:for="`value_${index}`"
+                >{{ 'app.item_attributes.attr.value' | t }}:</label>
+                <input type="text" name="item_attribute[attributes][][value]" {{ input_readonly }} required
+                  x-bind:id="`value_${index}`"
+                  x-bind:value="value.value"
+                >
+              </div>
+              <div>
+                <input type="checkbox" name="item_attribute[attributes][][disabled_at]" class="-mt-1"
+                  x-bind:id="`disabled_${index}`"
+                  x-bind:checked="!!value.disabled_at"
+                  x-model="value.disabled_at"
+                >
+                <label x-bind:for="`disabled_${index}`">{{ 'app.admin.item_attributes.edit.disable' | t }}</label>
+              </div>
+              <input type="hidden" name="item_attribute[attributes][][id]" x-bind:value="value.id">
+            </div>
+            <div class="mt-2 flex items-center gap-2">
+              {% for lang in available_languages %}
+                <div>
+                  <label x-bind:for="`lang_{{lang}}_${index}`" class="block capitalize">{{ lang | t: scope: 'languages' }}:</label>
+                  <input type="hidden" name="item_attribute[attributes][][translations][][lang]" value="{{lang}}">
+                  <input type="text"  name="item_attribute[attributes][][translations][][name]" required
+                    x-bind:id="`lang_{{lang}}_${index}`"
+                    x-bind:value="value.value_{{lang}}">
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </template>
+
+        <div class="text-center">
+          <button
+            type="button"
+            x-on:click="values.push({})"
+            class="button button-secondary button-small"
+            data-tc="add_value_button"
+          >
+            {{ 'app.add' | t }}
+            {% render 'theme/simple/ui/icon', icon: 'plus' %}
+          </button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <fieldset class="w-full mb-8 text-end">
+    <button class="button">{{ 'app.admin.item_attributes.new.save' | t }}</button>
+  </fieldset>
+</form>

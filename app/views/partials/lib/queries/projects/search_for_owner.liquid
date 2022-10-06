@@ -1,0 +1,9 @@
+{% liquid
+  if owner_id == blank
+    log 'Something went wrong. Owner cannot be blank.', type: 'ERROR'
+    return null
+  endif
+
+  graphql r = 'projects/search_for_owner', limit: limit, page: page, promoted: promoted, tag: tag, sort: sort, keyword: keyword, owner_id: owner_id
+  return r.projects
+%}

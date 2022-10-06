@@ -1,0 +1,16 @@
+{% if order.shipping_type == 'digital' and role == 'buyer'  %}
+  <h3 class="subtitle mt-8 font-bold">{{ 'app.orders.show.digital_code_title' | t }}</h3>
+  <section class="card md:flex md:gap-4 md:justify-between md:items-center">
+    {% if transaction.status.name == 'app.statuses.transactions.success' %}
+      <div>
+        <label class="block" for="item_type">{{ 'app.items.attr.digital_code' | t }}:</label>
+        <input class="font-bold" type="text" disabled value="{{ order.order_delivery.delivery_information }}" class="md:w-36">
+        {% render 'theme/simple/ui/form-tip', content_key: 'app.orders.show.digital_code_tip' %}
+      </div>
+    {% else %}
+      <span class="subtitle">
+        {{ 'app.orders.show.digital_code_available_after_payment' | t }}
+      </span>
+    {% endif %}
+  </section>
+{% endif %}

@@ -1,0 +1,7 @@
+{% liquid
+  assign prices = '[]' | parse_json
+  for item in organization.delivery_fees_for_cities
+    assign prices = prices | add_to_array: item[1]
+  endfor
+  return prices | sort | first
+%}

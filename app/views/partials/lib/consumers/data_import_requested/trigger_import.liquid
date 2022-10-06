@@ -1,0 +1,21 @@
+{% liquid
+  function operation = 'lib/queries/bulk_operations/find', id: event.object.id
+  function status = 'lib/commands/statuses/create', profile_id: event.actor.id, object_id: operation.id, name: 'app.statuses.bulk_operations.import.started', scope: 'app.statuses.bulk_operations.import'
+  function owner = 'lib/queries/organizations/find', id: event.actor.id
+
+  assign object = '{}' | parse_json
+  hash_assign object['operation_id'] = operation.id
+
+  function require_acceptance = 'lib/queries/constants/find' name: "INVENTORY_REQUIRE_ACCEPTANCE", type: "boolean"
+  function process = 'lib/commands/processes/wrap', command: 'bulk_operations/trigger_import', object: object, current_profile: owner, require_acceptance: require_acceptance, run_in_background: true
+  if process.valid
+    if process.require_acceptance
+      assign status_name = 'app.statuses.bulk_operations.import.pending_acceptance'
+    endif
+  else
+    assign status_name = 'app.statuses.bulk_operations.import.failure'
+  endif
+  if status_name
+    function status = 'lib/commands/statuses/create', profile_id: event.actor.id, object_id: operation.id, name: status_name, scope: 'app.statuses.bulk_operations.import'
+  endif
+%}

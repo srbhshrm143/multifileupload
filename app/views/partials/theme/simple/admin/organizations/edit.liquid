@@ -1,0 +1,38 @@
+<header class="mt-2.5 mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+  <h2 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'users', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'app.admin.organizations.organization' | t }} - {{ object.name }}
+
+    <picture>
+      <source type="image/avif" srcset="{{ object.logo.photo.versions.sm_avif }}">
+      <img src="{{ object.logo.photo.versions.sm }}" width="{{ pobject.logo.photo.photo_width }}" height="{{ object.logo.photo.photo_height }}" alt="" class="w-10 me-5">
+    </picture>
+  </h2>
+
+</header>
+
+<form action="/admin/organizations/{{object.id}}" method="post">
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="put">
+  <input type="hidden" name="organization[id]" value="{{ object.id }}">
+
+  <div class="flex flex-wrap items-center mx-auto">
+    <div class="mt-5">
+      {{ 'app.admin.organizations.edit.promote' | t }}:
+      <fieldset>
+        <input type="checkbox" id="promoted" name="organization[promoted]" value="promoted"
+          {% if object.promoted %}checked{% endif %}
+        >
+        <label for="promoted">{{ 'app.admin.organizations.edit.promoted' | t }}</label>
+
+        {% render 'theme/simple/field_error', errors: object.errors.promoted %}
+      </fieldset>
+    </div>
+  </div>
+
+  <fieldset class="mt-6">
+    <button class="button" value="{{ path }}">
+      {{ 'app.admin.organizations.edit.save' | t }}
+    </button>
+  </fieldset>
+</form>

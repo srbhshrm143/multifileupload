@@ -1,0 +1,14 @@
+{% liquid
+  function orders = 'lib/queries/orders/search_by_buyer' limit: 100,  buyer: current_profile.id, status: 'app.statuses.orders.placed'
+
+  assign promo_code_global = orders.results | map: 'promo_code' | compact | select: code_type: 'global' | first
+  if promo_code_global != blank
+    function object = 'lib/commands/orders/update_promo', object: object, promo_code: promo_code_global
+    if object.valid != true
+      log object, type: 'ERROR: check_and_add_promo'
+    endif
+    break
+  endif
+
+  return object
+%}

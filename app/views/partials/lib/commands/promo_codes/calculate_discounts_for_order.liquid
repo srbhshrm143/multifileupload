@@ -1,0 +1,29 @@
+{% liquid 
+  function orders = 'lib/queries/orders/search_by_buyer', limit: 100, buyer: current_profile.id, status: 'app.statuses.orders.placed'
+
+  for code in codes.results
+    assign upper_limit = code.upper_limit | to_positive_integer: 0 | amount_to_fractional: orders.currency
+    
+    if code.code_type == 'global'
+      assign order = orders
+    else
+      assign merchant_orders = orders.results | where: "seller_id", code.creator_id
+      assign order = merchant_orders.first
+    endif
+    
+    assign discount_value = order.total_price_cents | times: code.total_discount | plus: 0.0 | divided_by: 100
+
+    if discount_value <= upper_limit
+      assign discount_value = order.products_price_cents | times: code.total_discount | plus: 0.0 | divided_by: 100
+      assign discount = discount_value
+    else
+      assign discount = upper_limit | round
+    endif
+
+    hash_assign code['discount_cents'] = discount
+  endfor
+  
+  hash_assign codes['currency'] = orders.currency
+
+  return codes
+%}

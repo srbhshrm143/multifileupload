@@ -1,0 +1,6 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+
+  function list = 'lib/queries/promo_codes/search', limit: 9, page: 1, sort: filters.sort, lang: context.language, with_organization: true, active: true
+  render 'theme/simple/codes/index', list: list, filters: filters, context: context, current_profile: current_profile
+%}

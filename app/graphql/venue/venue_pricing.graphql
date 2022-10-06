@@ -1,0 +1,37 @@
+mutation create(
+  $venue_id: String!
+  $weekdays_morning: String!
+  $weekdays_day: String!
+  $weekdays_night: String!
+  $weekdays_allday: String!
+  $weekends_morning: String!
+  $weekends_day: String!
+  $weekends_night: String!
+  $weekends_allday: String!
+  $available_dates: String!
+  $menu_id: String!
+
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_pricing"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "menu_id", value: $menu_id }
+        { name: "weekdays_morning", value: $weekdays_morning }
+        { name: "weekdays_day", value: $weekdays_day }
+        { name: "weekdays_night", value: $weekdays_night }
+        { name: "weekdays_all_day", value: $weekdays_allday }
+        { name: "weekend_morning", value: $weekends_morning }
+        { name: "weekend_day", value: $weekends_day }
+        { name: "weekend_night", value: $weekends_night }
+        { name: "weekend_all_day", value: $weekends_allday }
+        { name: "non_available_dates", value: $available_dates }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

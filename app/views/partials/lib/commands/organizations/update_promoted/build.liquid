@@ -1,0 +1,10 @@
+{% parse_json object %}
+  {
+    "id": {{ object.id | json }},
+    "promoted": {{ object.promoted | matches: 'promoted' | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

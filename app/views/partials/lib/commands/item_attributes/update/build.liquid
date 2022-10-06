@@ -1,0 +1,12 @@
+{% parse_json data %}
+  {
+    "id": {{ object.id | json }},
+    "disabled_at": {{ object.disabled_at | json }},
+    "name": {{ object.name | json }},
+    "value": {{ object.value | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return data
+%}

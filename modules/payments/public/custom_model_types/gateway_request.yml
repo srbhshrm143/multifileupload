@@ -1,0 +1,16 @@
+---
+name: gateway_request
+properties:
+- name: data
+  type: string
+- name: config
+  type: string
+- name: gateway
+  type: string
+- name: request_type
+  type: string
+- name: response
+  type: string
+- name: request_errors
+  type: string
+

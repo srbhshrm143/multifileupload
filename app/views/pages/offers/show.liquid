@@ -1,0 +1,14 @@
+---
+slug: offers/:id
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign project_offer_id = context.params.id | split: '-' | last
+  function project_offer = 'lib/queries/project_offers/find', id: project_offer_id
+  include 'lib/can_do_or_unauthorized', object: project_offer, do: "view", actor: current_profile
+
+  render 'theme/simple/project_offers/form', project: project_offer.project, object: project_offer, context: context, submitted: true
+
+%}

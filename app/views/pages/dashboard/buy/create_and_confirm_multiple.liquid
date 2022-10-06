@@ -1,0 +1,31 @@
+---
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_uncompleted: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true, return_to: '/dashboard/buy/review'
+
+  function items = 'lib/queries/items/search', ids: context.params.cart.item_ids, limit: 100
+  assign object = context.params.cart
+  hash_assign object['items'] = items.results
+  function object = 'lib/commands/orders/create_and_confirm_multiple', object: object, current_profile: current_profile
+  if object.valid
+    function orders = 'lib/queries/orders/search', ids: object.order_ids, limit: 100
+    function transaction = 'lib/commands/transactions/create', order_results: orders, profile: current_profile
+    if transaction.valid
+      assign event_object = '{}' | parse_json
+      hash_assign event_object['transaction'] = transaction
+      hash_assign event_object['orders'] = orders.results
+
+      function _event = 'lib/commands/events/create', type: 'orders_confirmed', actor_id: current_profile.id, object: event_object, delay: 0
+
+      function url = 'lib/commands/orders/pay_url', transaction: transaction
+      redirect_to url
+    else
+      log transaction, 'transaction#create error'
+    endif
+  else
+    include 'lib/flash/publish', error: 'app.orders.confirm.errors.order_changed', force_clear: true
+    include 'theme/simple/dashboard/orders/review_and_confirm', orders: object.orders
+  endif
+%}

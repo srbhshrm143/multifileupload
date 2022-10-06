@@ -1,0 +1,20 @@
+mutation create(
+  $form_subject: String!
+  $form_booking_id: String!
+  $form_text_content: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "contact-us"
+      properties : [
+        { name: "subject", value: $form_subject }
+        { name: "booking-id", value: $form_booking_id }
+        { name: "text-content", value: $form_text_content }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

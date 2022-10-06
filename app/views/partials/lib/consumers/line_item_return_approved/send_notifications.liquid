@@ -1,0 +1,32 @@
+{% liquid
+  function line_item_return = 'lib/queries/line_item_returns/find', id: event.object.id
+
+  function return_url = 'link_to', line_item_return: line_item_return, current_profile: line_item_return.order.seller
+  assign url_object = '{}' | parse_json
+  hash_assign url_object['host'] = context.location.host
+  hash_assign url_object['return_url'] = return_url
+
+  hash_assign line_item_return['return_url'] = 'https://{host}{order_url}' | expand_url_template: url_object
+
+  context_rc language: line_item_return.order.buyer.language | default: 'en'
+  assign site_name = 'app.title' | t
+%}
+
+{% parse_json object %}
+  {
+    "to":      {{ line_item_return.order.buyer.user.email | json }},
+    "from":    {{ 'app.support_email' | t | json }},
+    "subject": {{ 'app.emails.orders.return.approve.buyer.subject' | t | json }},
+    "line_item_return": {{ line_item_return | json }},
+    "site_name": {{ site_name | json }},
+    "partial": "theme/simple/emails/orders/line_item_return_approve"
+  }
+{% endparse_json %}
+
+{% liquid
+  function object = 'lib/commands/emails/send', object: object
+  unless object.valid
+    log object, type: 'ERROR when sending line item return approve notification email to the buyer'
+  endunless
+  return object
+%}

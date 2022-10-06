@@ -1,0 +1,12 @@
+{% comment %}
+  Params:
+    - theme
+{% endcomment %}
+
+{% assign config_path = 'theme/' | append: theme | append: '/config.json' %}
+
+{% parse_json default_settings %}
+  {% include config_path %}
+{% endparse_json %}
+
+{% return default_settings %}

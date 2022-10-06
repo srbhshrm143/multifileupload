@@ -1,0 +1,37 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+%}
+
+<div class="md:mt-16 sm:mt-5 ">
+  <!-- Featured Category start -->
+    {% render 'theme/simple/home/category' %}
+  <!-- Featured Category end -->
+
+  <!-- Featured Venue start -->
+    {% render 'theme/simple/home/featured_venues', current_profile: current_profile %}
+  <!-- Featured Venue end -->
+
+  <!-- Featured Deals start -->
+    {% render 'theme/simple/home/featured_deals', current_profile: current_profile %}
+  <!-- Featured Deals end -->
+
+  <!-- Join Start -->
+  <section class="mx-auto py-24 bg-join-bg1 w-full bg-no-repeat bg-cover max-lg:py-16 max-sm:py-10 max-sm:px-5">
+    <div class="text-center w-full">
+      <h3 class="block font-Work text-white text-4xl font-semibold max-xxl:text-3xl max-sm:text-2xl">
+        {{ "Have an amazing Venue?" }}
+      </h3>
+      <p class="block font-Work text-white text-base uppercase mt-1.5 max-xxl:text-sm">
+        {{ "use our site at no cost to increase sales" }}
+      </p>
+    </div>
+    <div class="w-full text-center pt-10 max-lg:pt-6">
+      <a href="#"
+        class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+        {{ "Join Us" }}
+      </a>
+    </div>
+  </section>
+  <!-- Join end -->
+</div>
+

@@ -1,0 +1,17 @@
+{% liquid
+  assign tokens = '[]' | parse_json
+
+  for x in item.item_details
+    assign tokens = tokens | add_to_array: x.description | add_to_array: x.name
+  endfor
+
+  unless item.item_inventory.owner.name
+    log item, type: 'broken item?'
+  endunless
+  assign tokens = tokens | add_to_array: item.category
+
+  assign tokens = tokens | join: ' ' | regex_matches: '[\S\\\-]*' | uniq | compact | join: ' ' | downcase
+
+  assign tokens = tokens | append: ' ' | append: item.item_inventory.owner.name
+  return tokens
+%}

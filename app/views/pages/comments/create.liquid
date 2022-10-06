@@ -1,0 +1,21 @@
+---
+slug: comments
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  if context.params.comment.commentable_type == 'post'
+    function post = 'lib/queries/posts/find_with_group', id: context.params.comment.commentable_id
+    include 'lib/can_do_or_unauthorized', object: post.group, do: "post", actor: current_profile
+  endif
+
+  function object = 'lib/commands/comments/create', object: context.params.comment, current_profile: current_profile
+  if object.valid
+    function _event = 'lib/commands/events/create', type: 'comment_created', actor_id: current_profile.id, object_id: object.id, target_id: context.params.comment.commentable_id, delay: 0
+    include 'redirect_to', url: context.params.return_to
+  else
+    include 'redirect_to', url: context.params.return_to, error: 'app.models.comments.create_failed'
+  endif
+%}

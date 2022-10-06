@@ -1,0 +1,16 @@
+{% comment %} migrate_delivery_fee_to_new_column GraphQL queries go below {% endcomment %}
+{% liquid
+  function organizations = 'lib/queries/organizations/search', limit: 500
+
+  for organization in organizations.results
+    if organization.delivery_fee != null and organization.delivery_fees_for_cities == null
+      assign delivery_fees = '{}' | parse_json | hash_merge: default: organization.delivery_fee
+
+      assign object = '{}' | parse_json | hash_merge: id: organization.id, delivery_fees_for_cities: delivery_fees
+      function object = 'lib/commands/execute', mutation_name: 'organizations/update' object: object
+      if object.valid != true
+        log object, type: 'ERROR: object'
+      endif
+    endif
+  endfor
+%}

@@ -1,0 +1,47 @@
+{% content_for metatags %}
+  {% render 'theme/simple/home/metatags', lang: lang %}
+{% endcontent_for %}
+{%liquid
+  graphql venue_rooms = 'venue_rooms/show' | fetch: "models"
+%}
+
+
+{% render 'theme/simple/home/hero' %}
+{% render 'theme/simple/home/shields' %}
+{% render 'theme/simple/home/shortcuts' %}
+  {% if item[1].results.size > 0 %}
+  {% endif %}
+  <section class="py-12 bg-gray-600">
+    <div class="container">
+      <div class="grid gap-5 md:grid-cols-3 lg:grid-cols-4">
+        {% for item in venue_rooms.results %}
+          {%liquid
+            assign items_url = item.properties.venue_room_name | default: item
+            function item_url = 'link_to', path: '/items/', item: items_url
+          %}
+          <article class="card p-0 flex flex-col relative overflow-hidden">
+            <h2 class="text-interaction font-bold">
+              {{ item.id }}<br>
+            </h2>
+            {{item_url}}
+            <a href="/items/{{ item.properties.venue_room_name }}">
+              <h2 class="text-interaction font-bold">
+                {{ item.properties.venue_room_name }}<br>
+              </h2>
+            </a>
+          </article>
+        {% endfor %}
+      </div>
+
+      {%- comment -%}
+        <div class="grid gap-5 md:grid-cols-3 lg:grid-cols-4">
+          {% for item in item.properties %}
+          {% endfor %}
+          {% render 'theme/simple/items/card', item: item, current_profile: current_profile, showMeta: false %}
+        </div>
+      {%- endcomment -%}
+    </div>
+  </section>
+
+
+{% render 'theme/simple/home/partners' %}

@@ -1,0 +1,14 @@
+{% liquid
+  assign object = '{}' | parse_json
+  if gateway_request.payload
+    assign payload = gateway_request.payload | parse_json
+    hash_assign object['transaction_id'] = payload['transaction_id']
+    hash_assign object['payment_status'] = 'success'
+
+    hash_assign object['valid'] = true
+  else
+    hash_assign object['valid'] = false
+  endif
+
+  return object
+%}

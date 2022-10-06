@@ -1,0 +1,9 @@
+mutation presign {
+  property_upload_presigned_url(
+    table: "form_media_testing",
+    property_name: "testing_media"
+  ) {
+    upload_url
+    upload_url_payload
+  }
+}

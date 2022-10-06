@@ -1,0 +1,46 @@
+{% function actor = 'lib/commands/activities/header', payload: payload, namespace: namespace, role: role, current_profile: current_profile %}
+
+<header class="mb-3 last:mb-0 flex items-center gap-4">
+  {% if actor.url %}
+    <a href="{{ actor.url }}" class="flex-shrink-0">
+  {% endif %}
+    {% render 'theme/simple/ui/avatar', profile: payload.actor, actor: actor, size: 48, class: 'w-12 h-12' %}
+  {% if actor.url %}
+    </a>
+  {% endif %}
+
+  <div>
+    {% if actor.url %}
+      {%- capture info -%}[{{ payload.type }}] [{{ payload.actor.type }}#{{ payload.actor.id }}][{{ payload.object.type }}#{{ payload.object.id }}][{{ payload.target.type }}#{{ payload.target.id }}]{%- endcapture -%}
+      <a href="{{ actor.url }}" title="{{ info | escape }}" class="font-semibold text-content">{{ actor.name }}</a>
+    {% else %}
+      {{ actor.name }}
+    {% endif %}
+
+    {% liquid
+      case payload.type
+
+      when 'login_failed', 'account_locked', 'account_unlocked'
+        render 'theme/simple/activities/feed_unit/type/login_failed', payload: payload, namespace: namespace
+
+      when 'item_inventory_updated'
+        render 'theme/simple/activities/feed_unit/type/item_inventory_updated', payload: payload, namespace: namespace
+
+      when 'post_created'
+        if payload.target.name == 'PROFILE_GROUP' or payload.target.name == 'PROJECT_GROUP'
+          assign internal_group = true
+        endif
+        if internal_group
+          render 'theme/simple/activities/feed_unit/type/default', payload: payload, namespace: namespace, role: role, type: 'post_created_notification_internal'
+        else
+          render 'theme/simple/activities/feed_unit/type/default', payload: payload, namespace: namespace, role: role, type: 'post_created_notification'
+        endif
+      else
+
+        render 'theme/simple/activities/feed_unit/type/default', payload: payload, namespace: namespace, role: role
+      endcase
+    %}
+
+    {% render 'theme/simple/activities/feed_unit/date', payload: payload %}
+  </div>
+</header>

@@ -1,0 +1,202 @@
+<!-- {{ context }} -->
+
+
+<div class="w-full mx-auto flex flex-wrap">
+  <!-- Fetching Venue Data for Compare ID -->
+  {% graphql venue_list = 'venue/read' %}
+  <!-- {{ venue_list.models.results }} -->
+    <!-- Fetching Rooms Data -->
+    {%- comment -%}
+      {% graphql room_list = 'venue_rooms/show' %}
+    {%- endcomment -%}
+
+  {%- comment -%} Get All Venue Records Starts {%- endcomment -%}
+
+  {%- comment -%} Venue Records Pagination Starts {%- endcomment -%}
+  {%- comment -%}
+  {%- endcomment -%}
+  {% assign limit = '10' %}
+  {% if context.params.dots %}
+    {% assign offset = context.params.dots | times: 10 | minus: 10 %}
+  {% endif %}
+  {% for item in venue_list.models.results limit: limit offset: offset  %}
+    {% if item.id != blank and item.properties.venue_name != blank %}
+      <div class="w-1/3 mt-3">
+        {%- comment -%}
+          {% for rooms in room_list.models.results %}
+            {% if rooms.properties.venue_id == item.id %}
+              <div class="custom_slider">
+                {% for photos_id in rooms.properties.media_ids %}
+                  <!-- Fetching Room Media Data -->
+                  {% graphql media_search = 'venue/media_search', id: photos_id %}
+                  {% for rooms_media in media_search.photos.results %}
+                    <div class="slider_media">
+                      {% if rooms_media.testing_media.extension == "jpeg" or rooms_media.testing_media.extension == "jpg" or rooms_media.testing_media.extension == "png" or rooms_media.testing_media.extension == "webp" %}
+                        <img src="{{ rooms_media.testing_media.url }}" alt="" width="350  ">
+                      {% endif %}
+                      {% if rooms_media.testing_media.extension == "mp4" %}
+                        <video controls width="350">
+                          <source src="{{ rooms_media.testing_media.url }}" type="video/mp4">
+                        </video>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {%- endcomment -%}
+        <!-- {{item}}<br> -->
+        {%- comment -%}
+        {%- endcomment -%}
+
+        {%- comment -%}
+        {%- endcomment -%}
+        <div class="w-full my-2 mx-4 p-4 border">
+  
+          {% if item.properties.venue_name %}
+            <a href="rooms_list?id={{item.id}}">
+              <h2 class="text-3xl">
+                {{ item.properties.venue_name }}<br>
+              </h2>
+            </a>
+            <p class="mt-3">
+              {{ "Venue-ID" }} : {{ item.id }}
+            </p>
+          {% endif %}
+          <p class="mt-3">
+            {{ forloop.index }}
+          </p>
+          {% if item.properties.venue_address %}
+            <p class="mt-3">
+              {{ "Venue Address" }} : {{ item.properties.venue_address }}
+            </p>
+          {% endif %}
+          {% if item.properties.corporate_name %}
+            <p class="mt-3">
+              {{ "Corporate Name" }} : {{ item.properties.corporate_name }}
+            </p>
+          {% endif %}
+          {% if item.properties.venue_email %}
+            <p class="mt-3">
+              {{ "Venue Email" }} : {{ item.properties.venue_email }}
+            </p>
+          {% endif %}
+          {% if item.properties.venue_phone_number %}
+            <p class="mt-3">
+              {{ "Venue Phone Number" }} : {{ item.properties.venue_phone_number }}
+            </p>
+          {% endif %}
+          {% if item.properties.venue_contact_person %}
+            <p class="mt-3">
+              {{ "Venue Contact Number" }} : {{ item.properties.venue_contact_person }}
+            </p>
+          {% endif %}
+          {% if item.properties.business_number %}
+            <p class="mt-3">
+              {{ "Business Number" }} : {{ item.properties.business_number }}
+            </p>
+          {% endif %}
+        </div>          
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="w-full mx-auto">
+    <div class="circles">
+      {%- comment -%} Pagination Page Counter {%- endcomment -%}
+      {% assign total_results = venue_list.models.results | size %}
+      {% assign per_page_limit = 10 | plus: 0.0 %}
+      {% assign per_page_res = total_results | divided_by: per_page_limit %}
+      {% assign page_counter = per_page_res | ceil %}
+
+        {%- comment -%} Pagination Direction Buttons {%- endcomment -%}
+        {% assign int_dots = context.params.dots | plus: 0 %}
+        {% assign prev_btn = int_dots | minus: 1 %}
+        {% assign next_btn = int_dots | plus: 1 %}
+
+        {% if prev_btn > 0 %}
+          <a href="/?dots={{ prev_btn }}" class="ml-2 page__dots">
+            <span>
+              &laquo;
+            </span>
+          </a>
+        {% endif %}
+      {% for page_dots in (1..page_counter)  %}
+        {%- comment -%}
+          {% assign offset = limit | times: page_dots | minus: limit | plus: 1 %}
+          {% if context.location.search.id == page_dots %}
+            {{ "Pages" }} - {{ page_dots }}
+          {% endif %}
+          {% if page_dots %}
+            {{ page_dots | json }}- 
+            {{ offset | json }} - 
+            {{ context.location.search.dots }}
+          {% endif %}
+          {% assign offset = '' %}
+          {% if context.params.id == '1' %}
+            {% assign offset = 1 %}
+            {{ offset }}
+          {% else %}
+            {% assign offset = offset | times: 10 | minus: 10 | plus : 1 %}
+            {{ offset }}
+          {% endif %}
+        {%- endcomment -%}
+        
+        {%- comment -%}
+          <h4 class="mt-3 text.xl">
+            {% assign abc = '10.5' %}
+            {{ page_couter }}
+          </h4><br>
+          <h4 class="mt-3 text.xl">
+            {{ "abc" }} - {{ page_couter }}
+          </h4>
+        {%- endcomment -%}
+        
+        {%- comment -%} Venue Records Pagination Starts {%- endcomment -%}
+           {%- comment -%}
+            {% if context.params.id == '1' %}
+              {% assign offset = 0 %}
+              {% assign limit = 10 %}
+            {% elsif context.params.id == '2' %}
+              {% assign offset = 11 %}
+              {% assign limit = 10 %}
+            {% elsif context.params.id == '3' %}
+              {% assign offset = 21 %}
+              {% assign limit = 10 %}
+            {% elsif context.params.id == '4' %}
+              {% assign offset = 31 %}
+              {% assign limit = 10 %}
+                
+            {% endif %}
+          {%- endcomment -%}
+        {%- comment -%} Venue Records Pagination Ends {%- endcomment -%}
+        <a href="/?dots={{ page_dots }}" class="ml-2 page__dots{% if page_dots == int_dots %} circles_active{% endif %}">
+          <span>
+            {{ page_dots }}
+          </span>
+        </a>
+      {% endfor %}
+      {% if next_btn <= page_counter %}
+        <a href="/?dots={{ next_btn }}" class="ml-2 page__dots">
+          <span>
+            &raquo;
+          </span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+  {%- comment -%} Get All Venue Records Ends {%- endcomment -%}
+  {%- comment -%}
+    <div class="w-full mx-auto">
+      <div class="circles">
+        {% for page_dots in (1..page_couter)  %}
+          <a href="/?dots={{ page_dots }}">
+            <span class="page__dots">
+            </span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {%- endcomment -%}
+</div>

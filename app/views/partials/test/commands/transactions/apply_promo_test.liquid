@@ -1,0 +1,22 @@
+{% parse_json promo_code_with_restrictions %}
+{
+  "id": "5",
+  "max_times_user_can_use": 1,
+  "max_discount_amount_per_user": 100
+}
+{% endparse_json %}
+
+{% parse_json promo_code_without_restrictions %}
+{
+  "id": "5"
+}
+{% endparse_json %}
+
+{% liquid
+  function can_be_applied = 'lib/commands/transactions/apply_promo', promo_code: promo_code_with_restrictions, buyer: "10"
+  include 'test/assertions/blank', contract: contract, object: can_be_applied, field_name: 'errors'
+
+  function can_be_applied = 'lib/commands/transactions/apply_promo', promo_code: promo_code_without_restrictions, buyer: "10"
+  include 'test/assertions/blank', contract: contract, object: can_be_applied, field_name: 'errors'
+
+%}

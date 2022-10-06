@@ -1,0 +1,25 @@
+---
+slug: dashboard/items/inventory
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function item_inventory = 'lib/queries/item_inventories/find', id: context.params.item.item_inventory_id, owner: current_profile.id, lang: context.language
+  include 'lib/can_do_or_unauthorized', object: item_inventory, do: "edit", actor: current_profile
+
+  function object = 'lib/commands/item_inventories/update', object: context.params.item, item_inventory: item_inventory
+  if object.valid
+    function res = 'lib/commands/item_inventories/change_status_on_quantity', object: object, item_inventory: item_inventory, profile: current_profile
+    function res = 'lib/commands/item_inventories/create_updated_event', object: object, item_inventory: item_inventory, current_profile: current_profile
+    include 'redirect_to', url: '/dashboard/sell/items', notice: 'app.items.updated'
+  else
+    function item = 'lib/commands/items/build_new_version', item_inventory: item_inventory
+    assign item = item | hash_merge: object
+    function filters = 'lib/queries/search/filters'
+    function _ = 'lib/extend_context', default_currency: true, photo_presign: true
+
+    include 'theme/simple/dashboard/items/edit', item: item, lib: filters, context: context
+  endif
+%}

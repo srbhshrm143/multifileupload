@@ -1,0 +1,122 @@
+{%- comment -%}
+  <h1 class="pagetitle">{{ 'app.account.reset_password.title' | t }}</h1>
+{%- endcomment -%}
+
+
+
+<div x-data="{ isOpen: false }">
+  <div class="w-full h-full sm:flex sm:h-full md:flex relative items-center justify-start">
+    <div
+      class="lg:w-1/2 md:w-1/2 md:mx-0 sm:w-full sm:w-full lg:h-screen xs:h-auto sm:relative sm:z-10 sm:bg-white sm:w-4/5 sm:flex sm:items-center sm:justify-center sm:mx-auto sm:mt-24 md:mt-0">
+      <div class="py-3 px-2 flex items-center sm:px-6 sm:w-full sm:h-full md:h-screen xs:h-full">
+        <div class="pb-10 sm:py-3 sm:w-full lg:max-w-lg md:px-3 lg:p-0 m-auto">
+          <div>
+            <img class="w-auto mx-0 h-12 sm:w-40 sm:h-auto md:w-48 lg:w-56 xl:w-80"
+              src="{{ 'images/event-hound/logo.png' | asset_url }}" alt="Workflow">
+            <h2
+              class="pt-7 text-left text-3xl tracking-tight font-semibold font-Work sm:text-base md:text-lg lg:text-3xl xl:text-4xl sm:pt-2 text-blackColor">
+              {{ "Forgot Password" }}
+            </h2>
+            <p
+              class="sm:pt-1 md:pt-1 pt-4 text-left text-sm text-gray-600 font-Work lg:text-base xl:text-xl sm:text-xs text-paragraphTextColor">
+              {{ "Please enter the following details" }}
+            </p>
+          </div>
+          <form class="mt-8 space-y-6 sm:mt-3" action="/authentication_links/create" method="POST">
+
+            {% include 'authenticity_token' %}
+
+            <input type="hidden" name="remember" value="true">
+            <div>
+              <div class="rounded mb-6 sm:mb-3 relative">
+                <label for="email-address"
+                  class="text-base block mb-1 font-Work sm:text-xs md:text-sm lg:text-md md:font-medium text-blackColor">
+                  {{ "Email address" }}
+                  <span class="text-themeBlue">*&nbsp;
+                  </span>
+                </label>
+                <div class="relative">
+                  <input id="email-address" name="authentication_link[email]" type="email" autocomplete="email"
+                  required
+                  class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+                  placeholder="john.doe@gmail.com"
+                  onblur="ValidateEmail();">
+                  <img class="absolute z-10 right-3 md:w-5 top-2/4 -translate-y-1/2" src="{{ 'images/event-hound/check-icon.png' | asset_url }}"  id="email_field_icon"/>
+                  {% include 'theme/simple/field_error', errors: object.errors.email %}
+                  <p id="email_Invalid" class="">{{ "invalid email address”, “Use Email like:- example@test.com" }}</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="w-full rounded-3xl flex justify-center py-3 px-2 border font-medium text-white bg-themeBlue hover:bg-themeBlue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 text-base uppercase font-Work sm:text-sm lg:text-sm xl:text-lg md:font-medium sm:p-3 lg:py-3.5 xl:py-3" id="login_btn">
+                <!-- {{ "SUBMIT" }} -->
+                {{ 'app.account.reset_password.send_link' | t }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="md:fixed md:w-1/2 sm:w-full fixed sm:fixed xs:relative top-0 right-0 h-screen xs:h-auto ">
+      <img class="mx-auto h-screen w-full xs:h-screen absolute top-0 right-0 object-cover"
+      src="{{ 'images/event-hound/forget-image.jpg' | asset_url }}" />
+    </div>
+  </div>
+
+
+  <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
+    x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-75 transform"
+    x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+    class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    
+    <div class="fixed z-10 inset-0 overflow-y-auto">
+      <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+        <div
+          class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-sm sm:w-full">
+          <div class="bg-white px-4 md:pt-12 md:pb-12 sm:p-6 sm:pb-4">
+            <div class="text-center flex flex-col items-center">
+              <img class="w-12 h-11 mb-7" src="{{ 'images/event-hound/reset-icon.png' | asset_url }}" />
+              <p class="mb-7 font-Railway font-semibold text-paragraphTextColor">
+                {{ "A reset link has been
+                sent to your registered
+                email ID" }}
+                <a href="#" class="text-mailLinkColor">
+                  {{ "mail@website.com." }}
+                </a>
+              </p>
+              <button @click="isOpen = false" x-ref="modalCloseButton"
+                class="bg-themeBlue px-4 py-2 text-base text-sm text-white font-medium rounded-3xl uppercase">
+                {{ "Okay" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{%- comment -%}
+  <section class="container">
+    <form action="/authentication_links/create" method="post" class="card-lg w-full md:w-96 mx-auto">
+      {% include 'authenticity_token' %}
+
+      <p>{{ 'app.account.reset_password.description' | t }}</p>
+
+      <fieldset class="mt-5">
+        <label for="email">{{ 'app.users.attr.email' | t }}</label>
+        <input name="authentication_link[email]" type="email" id="email" value="{{ object.email }}" class="w-full" autofocus required>
+        {% include 'theme/simple/field_error', errors: object.errors.email %}
+      </fieldset>
+
+      {% include 'hcaptcha', object: object %}
+
+      <fieldset class="mt-5 text-center">
+        <button class="button">{{ 'app.account.reset_password.send_link' | t }}</button>
+      </fieldset>
+    </form>
+  </section>
+{%- endcomment -%}

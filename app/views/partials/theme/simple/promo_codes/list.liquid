@@ -1,0 +1,92 @@
+<div class="mt-4 table">
+  <header>
+    <div>{{ 'app.name' | t }}</div>
+    <div>{{ 'app.promo_codes.code' | t }}</div>
+    <div>{{ 'app.status' | t }}</div>
+    <div class="lg:text-end">{{ 'app.promo_codes.manage.used' | t }}</div>
+    {% if namespace == 'admin' %}
+      <div class="lg:text-end">{{ 'app.promo_codes.attr.merchant_name' | t }}</div>
+      <div class="lg:text-end">{{ 'app.promo_codes.attr.code_type' | t }}</div>
+    {% endif %}
+    <div class="lg:text-end">{{ 'app.promo_codes.manage.valid' | t }}</div>
+    <div></div>
+  </header>
+
+  <div class="table-content">
+    {% for promo_code in promo_codes.results %}
+      <ul data-tc="promo_code">
+        <li>
+          <span class="lg:hidden">{{ 'app.name' | t }}: </span>
+          <a href="{% render 'link_to', object: promo_code, namespace: namespace %}">{{ promo_code.detail.description }}</a>
+        </li>
+        <li>
+          <span class="lg:hidden">{{ 'app.promo_codes.code' | t }}: </span>
+          {{ promo_code.code }}
+        </li>
+        <li>
+          {% liquid
+            assign is_past =  promo_code.end_date | to_date | is_date_in_past
+
+            if promo_code.available_quantity > 0
+              if is_past
+                assign status_class = 'bg-warning-disabled border-warning'
+                assign status = 'expired'
+              else
+                assign start_date = promo_code.start_date | to_date
+                assign now = 'now' | to_time | to_date
+                if start_date > now
+                  assign status_class = 'bg-warning-disabled border-warning'
+                  assign status = 'not_started'
+                else
+                  assign status_class = ''
+                  assign status = 'active'
+                endif
+              endif
+            else
+              assign status_class = 'bg-warning-disabled border-warning'
+              assign status = 'used'
+            endif
+          %}
+          <span class="lg:hidden">{{ 'app.status' | t }}: </span>
+          <span class="px-2 py-1 inline-block rounded border leading-normal uppercase {{ status_class }}">{{ status | t: scope: 'app.promo_codes.list.status' }}</span>
+        </li>
+        <li class="lg:text-end">
+          <span class="lg:hidden">{{ 'app.promo_codes.manage.used' | t }}: </span>
+          {{ promo_code.max_available | minus: promo_code.available_quantity | default: 0 }}
+        </li>
+        {% if namespace == 'admin' %}
+          <li class="lg:text-end">
+            {% unless promo_code.code_type == 'global' %}
+              {{ promo_code.organization.name }}
+            {% endunless %}
+          </li>
+          <li class="lg:text-end">
+            {{ promo_code.code_type | t: scope: 'app.promo_codes.code_types' }}
+          </li>
+        {% endif %}
+        <li class="lg:text-end">
+          <span class="lg:hidden">{{ 'app.promo_codes.manage.valid' | t }}: </span>
+          {{ promo_code.start_date | to_date }} - {{ promo_code.end_date | to_date }}
+        </li>
+        <li class="lg:text-end">
+          <div class="flex items-center lg:justify-end">
+            <a href="{% render 'link_to', object: promo_code, namespace: namespace %}" class="button button-compact" data-tc="promo_code_show_more">
+              <span class="sr-only">{{ 'app.show_more' | t }}</span>
+              {% render 'theme/simple/ui/icon', icon: 'focusEye' %}
+            </a>
+            <form action="{% render 'link_to', object: promo_code, namespace: namespace %}" method="post" class="ms-2" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }">
+              {% render 'authenticity_token', context: context %}
+              <input type="hidden" name="_method" value="delete">
+              <input type="hidden" name="id" value="{{ promo_code.id }}">
+
+              <button class="button button-compact button-danger" data-tc="promo-code-delete-{{promo_code.id}}">
+                <span class="sr-only">{{ 'app.delete' | t }}</span>
+                {% render 'theme/simple/ui/icon', icon: 'trash' %}
+              </button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    {% endfor %}
+  </div>
+</div>

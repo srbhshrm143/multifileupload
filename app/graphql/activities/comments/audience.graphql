@@ -1,0 +1,27 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+) {
+  comments: records(
+    per_page: $limit
+    filter: {
+      id: { value: $id }
+      table: { value: "comment" }
+    }
+  ){
+    total_entries
+    results {
+      id
+      type: table
+      creator_id: property(name: "creator_id")
+      properties
+
+      commentable: related_record(table: ["profile", "item", "group", "comment", "post"], join_on_property: "commentable_uuid", foreign_property: "uuid") {
+        type: table
+        id
+        name: property(name: "name")
+      }
+    }
+  }
+}
+

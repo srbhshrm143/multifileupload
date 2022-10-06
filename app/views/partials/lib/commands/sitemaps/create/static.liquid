@@ -1,0 +1,33 @@
+<url>
+  <loc>https://{{ context.location.host }}</loc>
+  {%- for lang in available_languages %}
+    <xhtml:link rel="alternate" hreflang="{{ lang }}" href="https://{{ context.location.host }}?language={{ lang }}"/>
+  {% endfor %}
+  <lastmod>2021-07-07T09:51:28+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://{{ context.location.host }}/sessions/new</loc>
+  <lastmod>2021-07-07T09:51:28+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://{{ context.location.host }}/search</loc>
+  <lastmod>2021-07-07T09:51:28+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://{{ context.location.host }}/sellers</loc>
+  <lastmod>2021-07-07T09:51:28+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://{{ context.location.host }}/contact-us</loc>
+  <lastmod>2021-07-07T09:51:28+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://{{ context.location.host }}/faq</loc>
+  <lastmod>2021-07-07T09:51:28+00:00</lastmod>
+  <priority>0.80</priority>
+</url>

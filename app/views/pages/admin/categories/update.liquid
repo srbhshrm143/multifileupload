@@ -1,0 +1,20 @@
+---
+layout: admin
+method: put
+slug: admin/categories
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_admin'
+
+  function object = 'lib/queries/categories/find', id: context.params.id, withAllLangs: true
+  function object = 'lib/commands/categories/update', category: object, object: context.params.category
+
+  if object.valid
+    include 'redirect_to', url: '/admin/categories'
+  else
+    function _ = 'lib/extend_context', available_languages: true
+    include 'theme/simple/admin/categories/edit', object: object
+  endif
+%}

@@ -1,0 +1,9 @@
+{% liquid
+  function audience = 'lib/commands/audience/build'
+
+  function group = 'lib/queries/activities/groups/audience', id: event.object.id
+
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | concat: group.owners
+
+  render 'lib/commands/activities/publish_to_many', uuid: event.uuid, audience: audience, meta: 'user_asked_to_join_group'
+%}

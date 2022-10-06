@@ -1,0 +1,42 @@
+{% liquid
+  assign can = false
+  if project == blank
+    return false
+  endif
+
+  function can_be_admin = "lib/can", actor: actor, do: "be_admin", object: actor
+  if can_be_admin.valid
+    assign admin = true
+  endif
+
+  assign relation = actor.relationships['owner:project'] | detect: r_id: project.id
+  if relation
+    assign owner = true
+  else
+    assign owner = false
+  endif
+
+  case do
+  when 'view'
+    if project.status.name != 'app.statuses.projects.draft' or owner or admin
+      return true
+    endif
+
+  when 'manage_offers'
+    if owner or admin
+      return true
+    endif
+
+  when 'edit'
+    if owner or admin
+      return true
+    endif
+
+  when 'delete'
+    if owner or admin
+      return true
+    endif
+  endcase
+
+  return can
+%}

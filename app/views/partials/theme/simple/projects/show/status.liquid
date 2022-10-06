@@ -1,0 +1,22 @@
+{% liquid
+  assign status = project.status.name | t
+  case project.status.name
+  when 'app.statuses.projects.open'
+    assign status_class = 'bg-confirmation'
+  when 'app.statuses.projects.draft'
+    assign status_class = 'bg-frame'
+  when 'app.statuses.projects.under_evaluation'
+    assign status_class = 'bg-warning'
+  else
+    assign status_class = 'bg-danger'
+  endcase
+%}
+<time datetime="" class="{{ class }} sidenote inline-flex items-center gap-1 text-content-sidenote">
+  <i class="w-3 h-3 me-1 block {{ status_class }} rounded-full"></i>
+  <strong class="text-content">
+    {{ status }}
+  </strong>
+  {% if project.status.name == 'app.statuses.projects.open' and project.deadline %}
+    {{ 'app.projects.until' | t }} {{ project.deadline | l: 'date_compact' }}
+  {% endif %}
+</time>

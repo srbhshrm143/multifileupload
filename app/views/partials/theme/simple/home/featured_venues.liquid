@@ -1,0 +1,395 @@
+{%liquid
+  assign current_user = current_profile
+  graphql venues_main = 'venue/customers/display_venues', limit: 10
+%}
+{% for venue_data in venues_main.data.results %}
+{%- comment -%}
+  {% assign space_media = venue_data.venue_media | map: 'testing_media' | join: '[]' %}
+  {{ venue_data.venue_address }}<br><img src="{{ space_media }}" alt="">
+{%- endcomment -%}
+{% endfor %}
+{%- comment -%}
+{%- endcomment -%}
+<section class="mx-auto py-14 bg-featured-bg w-full bg-no-repeat bg-cover overflow-x-hidden">
+  <div class="wrapper">
+    <h3
+      class="flex items-center justify-center font-Work text-black text-4xl font-semibold text-center max-xxl:text-3xl max-sm:text-2xl">
+      {{ "Featured Venues" }}
+      <button data-tooltip-target="tooltip-animation" data-tooltip-placement="bottom" type="button">
+        <img class="ml-2" src="{{ 'images/event-hound/icon-1.png' | asset_url }}" />
+      </button>
+    </h3>
+    <p class="block font-Work text-black text-base text-center uppercase mt-1.5 max-xxl:text-sm">browse some of our favourite venues</p>
+  </div>
+  <div id="tooltip-animation" role="tooltip"
+    class="max-w-xs inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium font-Work text-primaryFieldBlue bg-white rounded-lg border border-gray-200 shadow-sm duration-300 opacity-0 tooltip">These venues have been sponsored
+    <div class="tooltip-arrow " data-popper-arrow></div>
+  </div>
+  <div class="wrapper">
+    <div class="responsive pt-10">
+      {% for venue_data in venues_main.data.results %}
+        <div>
+          {% assign venue = venue_data.properties %}
+          {% assign venue_media = venue_data.venue_media | first %}
+          {% assign venue_address = venue_data.venue_address | first %}
+          <!-- {{ venue.venue_name }}<br><br> -->
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+  
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              {%- comment -%}
+                <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+                  text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">
+                  {{ "Discount 30%" }}
+                </span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+  
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+              {%- endcomment -%}
+              <div class="mm">
+                {% if current_user.id %}
+                  {% render 'theme/simple/wishlists/button', profile_id: current_profile.id, item_id: venue_data.id  %}
+                {% endif %}
+              </div>
+            </div>
+            <a href="/venue_detail?venue_id={{venue_data.id}}">
+              <img src="{{ venue_media.testing_media.url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    <!-- Sunshine Hotel -->
+                    {{ venue.event_space_name }}
+                  </p>
+  
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">
+                    {{ "4 star hotel in Canada" }}
+                  </p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+                {%- comment -%} Venue Type {%- endcomment -%}
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start">
+                  <img
+                    src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">
+                    <!-- The Wedding Banquet -->
+                    {{ venue.event_type }}
+                </p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start">
+                  <img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">
+                    <!-- 98 E 7th St, New York -->
+                    {{ venue_address.address }}
+                  </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+
+      {%- comment -%}
+        <div>
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                30%</span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+            </div>
+            <a href="javascript:void(0);">
+              <img src="{{ 'images/event-hound/img1.png' | asset_url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    Sunshine Hotel</p>
+
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel in Canada</p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start"><img
+                  src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">The Wedding Banquet</p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start"><img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">98 E 7th St, New York</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                30%</span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+            </div>
+            <a href="javascript:void(0);">
+              <img src="{{ 'images/event-hound/img1.png' | asset_url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    Sunshine Hotel</p>
+
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel in Canada</p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start"><img
+                  src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">The Wedding Banquet</p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start"><img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">98 E 7th St, New York</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                30%</span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+            </div>
+            <a href="javascript:void(0);">
+              <img src="{{ 'images/event-hound/img1.png' | asset_url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    Sunshine Hotel</p>
+
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel in Canada</p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start"><img
+                  src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">The Wedding Banquet</p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start"><img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">98 E 7th St, New York</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                30%</span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+            </div>
+            <a href="javascript:void(0);">
+              <img src="{{ 'images/event-hound/img1.png' | asset_url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    Sunshine Hotel</p>
+
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel in Canada</p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start"><img
+                  src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">The Wedding Banquet</p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start"><img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">98 E 7th St, New York</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                30%</span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+            </div>
+            <a href="javascript:void(0);">
+              <img src="{{ 'images/event-hound/img1.png' | asset_url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    Sunshine Hotel</p>
+
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel in Canada</p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start"><img
+                  src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">The Wedding Banquet</p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start"><img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">98 E 7th St, New York</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="rounded-md border border-borderColor relative bg-white mx-2">
+
+            <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+              <span class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+              text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                30%</span>
+              <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                <span x-data="{ open: false }"
+                  class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" src="{{ 'images/event-hound/heart_fill.svg' | asset_url }}">
+                  <img x-bind:class="{ 'active': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'" src="{{ 'images/event-hound/heart_unfill.svg' | asset_url }}">
+                </span>
+              </div>
+            </div>
+            <a href="javascript:void(0);">
+              <img src="{{ 'images/event-hound/img1.png' | asset_url }}" class="rounded-t-md w-full h-56 max-xxl:h-44">
+              <div class="px-4 py-3">
+                <div class="flex justify-between items-center">
+                  <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-lg max-xl:text-base leading-2">
+                    Sunshine Hotel</p>
+
+                </div>
+                <div class="flex justify-between items-center">
+                  <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel in Canada</p>
+                </div>
+                <div class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work">
+                  <ul class="flex">
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                    <li><img src="{{ 'images/event-hound/single-star.svg' | asset_url }}" class="mr-1"></li>
+                  </ul>
+                </div>
+
+                <p class="mt-9 text-primaryLightBlue font-Work text-sm flex items-start"><img
+                  src="{{ 'images/event-hound/bank.svg' | asset_url }} " class="mr-1 mt-1">The Wedding Banquet</p>
+                <p class="text-primaryLightBlue font-Work text-sm  flex items-start"><img
+                    src="{{ 'images/event-hound/location1.svg' | asset_url }} " class="mr-1 mt-1">98 E 7th St, New York</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      {%- endcomment -%}
+
+    </div>
+    <div class="w-full text-center pt-10">
+      <a href="#"
+        class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+        View All
+      </a>
+    </div>
+  </div>
+</section>

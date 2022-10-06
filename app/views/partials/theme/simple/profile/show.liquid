@@ -1,0 +1,878 @@
+<section class="container">
+
+  <header class="card mt-8 mb-6 relative text-center">
+    {% render 'theme/simple/profile/card', user: user, current_profile: current_profile %}
+  </header>
+
+  <div class="flex flex-col md:flex-row gap-6">
+
+    {% liquid
+      assign sections_path = 'profile/' | append: user.slug | append: '/'
+    %}
+    {% render 'theme/simple/profile/nav', tab: section, user: user, path: sections_path, tags: tags, current_profile: current_profile %}
+
+    <section class="flex-1">
+      {% liquid
+        if section == 'feed'
+          render 'theme/simple/profile/sections/activity', list: list, current_profile: current_profile, context: context
+        elsif section == 'groups'
+          render 'theme/simple/profile/sections/groups', list: list, current_profile: current_profile, context: context
+        elsif section == 'projects'
+          render 'theme/simple/profile/sections/projects', list: list, current_profile: current_profile, context: context
+        elsif section == 'following'
+          render 'theme/simple/profile/sections/following', list: list, current_profile: current_profile, context: context
+        elsif section == 'followers'
+          render 'theme/simple/profile/sections/followers', list: list, current_profile: current_profile, context: context
+        elsif section == 'products'
+          render 'theme/simple/profile/sections/products', list: list, current_profile: current_profile, context: context
+        endif
+      %}
+    </section>
+
+  </div>
+
+</section>
+
+
+   <!-- Banner start -->
+   <section
+      class="bg-profile-bg1  bg-no-repeat bg-cover  bg-blend-multiply bg-PrimaryOverlay py-36 max-xxl:py-20 max-md:py-14 max-sm:py-8">
+      <div class="container mx-auto max-md:px-10 max-lg:max-w-full max-lg:px-5">
+         <div class="text-center">
+            <h2 class="text-white text-4xl max-xxl:text-text-head font-Railway font-semibold pb-2">
+               {{ "Profile" }}
+            </h2>
+         </div>
+      </div>
+   </section>
+   <!-- Banner end -->
+   <!--profile-->
+   <div class="px-6 pt-7 pb-14 max-sm:px-2 container mx-auto max-xl:max-w-full max-xl:px-5">
+      <div x-data="{ currentTab: 'tab1' }" class="">
+         <div class="flex max-lg:block w-full profile-btn">
+            <div class="flex max-sm:block w-full">
+               <div class="w-1/3  max-xxl:max-w-xs max-xxl:w-1/3 max-md:w-full ">
+                  <div class="flex mb-5 max-xxl:mb-1 max-md:flex max-lg:block">
+                     <div class="w-14 h-14 max-xxl:w-12 max-xxl:h-12 mr-3">
+                      {%- comment -%}
+                      <img src="{{ 'images/event-hound/pro_pro.png' | asset_url }}/assets/images/event-hound/pro_pro.png "
+                         class="object-cover mr-5 max-xxl:mr-3 w-14 h-14 max-xxl:w-12 max-xxl:h-12  rounded-full ">
+                      {%- endcomment -%}
+                      {% render 'theme/simple/ui/avatar', profile: current_profile, size: 48, class: 'object-cover mr-5 max-xxl:mr-3 w-14 h-14 max-xxl:w-12 max-xxl:h-12  rounded-full' %}
+                     </div>
+                     <div>
+                        <h2 class="font-bold text-xl  max-xxl:text-lg ">
+                          {{ context.exports.current_profile.first_name }}
+                        </h2>
+                        <p class=" font-medium text-base pb-3  font-Railway text-stone-400 max-xl:text-sm">
+                          {{ context.current_user.email }}
+                        </p>
+                     </div>
+                  </div>
+                  <ul class="flex flex-col border rounded-md mr-5 max-sm:mr-0">
+                    <li class="border-b">
+                      <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4': currentTab ===
+                        'tab1' }" x-on:click="currentTab= 'tab1'" class="font-semibold text-base 
+                          pl-5 py-3 text-left flex items-center max-xl:text-md 
+                        font-Railway active:text-themeBlue border-l-4 border-b-1 border-themeBlue 
+                        text-base rounded-t-md active max-xxl:text-sm  ">
+                        <img src="{{ 'images/event-hound/user_pro.svg' | asset_url }}"
+                        class="mr-5 max-xxl:w-4 ">
+                        {{ "Edit Profile" }}
+                      </button>
+                    </li>
+                    <li class="border-b">
+                    <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4': currentTab ===
+                      'tab2' }" x-on:click="currentTab= 'tab2'" class="flex items-center font-semibold text-base pl-6 py-3 text-left max-xl:text-md 
+                      font-Railway text-base  max-md:pr-7 max-xxl:text-sm ">
+                      <img src="{{ 'images/event-hound/heart_pro.svg' | asset_url }}"
+                        class="mr-5 max-xxl:w-4 ">
+                      {{ "Favourites" }}
+                    </button>
+                    </li>
+                    <li class="border-b">
+                    <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4': currentTab ===
+                      'tab3' }" x-on:click="currentTab= 'tab3'"
+                      class="flex items-center font-semibold text-base pl-6 py-3 text-left  max-xl:text-md font-Railway max-md:pr-7 max-xxl:text-sm ">
+                      <img
+                      src="{{ 'images/event-hound/bookings.svg' | asset_url }}" class="mr-5 max-xxl:w-4 ">
+                      {{ "My Bookings" }}
+                    </button>
+                  </li>
+                    <li class="border-b">
+                    <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4': currentTab ===
+                      'tab4' }" x-on:click="currentTab= 'tab4'"
+                      class="flex items-center font-semibold text-base pl-6 py-3 text-left max-xl:text-md font-Railway max-md:pr-7 max-xxl:text-sm ">
+                      <img
+                        src="{{ 'images/event-hound/password_pro.svg' | asset_url }}" class="mr-5 max-xxl:w-4 ">
+                        {{ "Change Password" }}
+                      </button>
+                    </li>
+                    <li>
+                      <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4': currentTab ===
+                      'tab5' }" x-on:click="currentTab= 'tab5'"
+                      class="flex items-center font-semibold text-base pl-6 py-3 text-left  max-xl:text-md font-Railway max-md:pr-7 max-xxl:text-sm ">
+                      <img
+                        src="{{ 'images/event-hound/refer_pro.svg' | asset_url }}" class="mr-5 max-xxl:w-4 ">
+                        {{ "Refer A Friend" }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+               <div
+                  class="tab-content main-tab border p-6 rounded-md w-3/5 max-lg:w-full max-xxl:w-3/4 max-md:p-3 max-sm:w-full max-sm:mt-4 xl:w-full">
+                  <div x-bind:class="{ 'hidden': currentTab !== 'tab1'
+                        }">
+                     <div class="overflow-x-auto relative">
+                        <div class="flex items-center max-sm:block">
+                           <div class="w-20 max-xxl:w-16 max-xxl:h-16 mr-3 ">
+                              {%- comment -%}
+                                <img src="{{ 'images/event-hound/pro_det.png' | asset_url }}" class="mr-5 max-xxl:mr-3  object-cover ">
+                              {%- endcomment -%}
+                              {% render 'theme/simple/ui/avatar', profile: current_profile, size: 48, class: 'object-cover mr-5 max-xxl:mr-3 w-14 h-14 max-xxl:w-12 max-xxl:h-12  rounded-full' %}
+                           </div>
+                           <div>
+                              <label class="font-Work w-full my-1 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border-2 border-themeBlue rounded-full text-xs font-medium text-white bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-sm:px-6 max-lg:px-6  max-md:py-2 max-md:text-xs"
+                                for="file_input">
+                                {{ "UPDATE PROFILE PICTURE" }}
+                              </label>
+                              <input class="  hidden" id="file_input" type="file">
+                           </div>
+
+
+                        </div>
+                        <form class="w-full pt-5 max-xxl:pt-3">
+                           <div class="flex flex-wrap ">
+                              <div class="w-full md:w-1/2 px-3 ">
+                                 <label class="block tracking-wide text-black text-base font-bold mb-2 max-xxl:text-sm "
+                                    for="grid-first-name">
+                                    First Name <span class="text-themeBlue text-base font-Work">*</span>
+                                 </label>
+                                 <input class="appearance-none block w-full bg-white text-gray-700 border rounded-full py-3 px-4 max-lg:py-2
+                                       leading-tight focus:outline-none focus:bg-white mb-3 text-primaryFieldBlue"
+                                    id="grid-first-name" type="text" placeholder="John">
+                              </div>
+                              <div class="w-full md:w-1/2 px-3 ">
+                                 <label
+                                    class="block  tracking-wide  text-black  text-base font-bold mb-2 max-xxl:text-sm"
+                                    for="grid-last-name">
+                                    Last Name <span class="text-themeBlue text-base font-Work">*</span>
+                                 </label>
+                                 <input class="text-primaryFieldBlue appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-full py-3 px-4 max-lg:py-2
+                                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500 mb-3"
+                                    id="grid-last-name" type="text" placeholder="Doe">
+                              </div>
+                              <div class="w-full md:w-1/2 px-3">
+                                 <label
+                                    class="block  tracking-wide  text-black  text-base font-bold mb-2 max-xxl:text-sm"
+                                    for="grid-last-name">
+                                    Birthday <span class="text-themeBlue text-base font-Work">*</span>
+                                 </label>
+                                 <input class=" text-primaryFieldBlue appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-full py-3 px-4 max-lg:py-2
+                                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500 mb-3"
+                                    id="grid-last-name" type="Date" placeholder="Doe">
+                              </div>
+                              <div class="w-full md:w-1/2 px-3">
+                                 <label
+                                    class="block  tracking-wide  text-black  text-base font-bold mb-2 max-xxl:text-sm"
+                                    for="grid-last-name">
+                                    Gender <span class="text-themeBlue text-base font-Work">*</span>
+                                 </label>
+                                 <div class="flex flex-wrap">
+                                    <div class="flex items-center w-1/3 mb-3 max-sm:w-1/2">
+                                       <input id="default-radio-2" type="radio" value="" name="default-radio"
+                                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                       <label for="default-radio-2"
+                                          class="ml-2  text-base  font-semibold max-xxl:text-sm">Male</label>
+                                    </div>
+                                    <div class="flex items-center w-1/3 mb-3 max-sm:w-1/2">
+                                       <input id="default-radio-2" type="radio" value="" name="default-radio"
+                                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                       <label for="default-radio-2"
+                                          class="ml-2  text-base  font-semibold max-xxl:text-sm">Female</label>
+                                    </div>
+                                    <div class="flex items-center w-1/3 mb-3 max-sm:w-1/2">
+                                       <input id="default-radio-2" type="radio" value="" name="default-radio"
+                                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                       <label for="default-radio-2"
+                                          class="ml-2  text-base  font-semibold max-xxl:text-sm">Other</label>
+                                    </div>
+                                    <div class="flex items-center w-full mb-3 max-sm:w-1/2">
+                                       <input id="default-radio-2" type="radio" value="" name="default-radio"
+                                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                       <label for="default-radio-2"
+                                          class="ml-2  text-base  font-semibold max-xxl:text-sm">Prefer not
+                                          to say</label>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="w-full md:w-1/2 px-3">
+                                 <label
+                                    class="block  tracking-wide  text-black  text-base font-bold mb-2 max-xxl:text-sm"
+                                    for="grid-last-name">
+                                    Phone Number <span class="text-themeBlue text-base font-Work">*</span>
+                                 </label>
+                                 <input type="text" id="mobile_code" class="text-primaryFieldBlue appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-full py-3 px-4 max-lg:py-2
+                                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500 mb-3"
+                                    placeholder="Phone Number" name="name">
+                              </div>
+                              <div class="w-full md:w-1/2 px-3 ">
+                                 <label
+                                    class="block  tracking-wide  text-black  text-base font-bold mb-2 max-xxl:text-sm max-md:mt-3"
+                                    for="grid-last-name">
+                                    Email <span class="text-themeBlue text-base font-Work">*</span>
+                                 </label>
+                                 <input class="text-primaryFieldBlue appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-full py-3 px-4 max-lg:py-2
+                                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500 "
+                                    id="grid-last-name" type="email" placeholder="john.doe@gmail.com">
+                              </div>
+                              <div class="flex items-center mb-3 max-sm:w-1/2">
+                                 <button type="submit"
+                                    class="mt-5 font-Work w-full m-1 whitespace-nowrap 
+                        inline-flex items-center justify-center px-7 py-2 border-2 border-themeBlue rounded-full text-sm font-medium 
+                        text-white bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-lg:px-6  max-md:py-2 max-xxl:text-xs">SAVE
+                                    CHANGES</button>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+                  <div class="hidden" x-bind:class="{ 'hidden':
+                        currentTab !== 'tab2' }">
+                     <div class="fav-tabs max-xxl:w-full lg:w-full xl:w-full ">
+                        <div class="grid  max-xxl:grid-cols-3 xl:grid-cols-3 max-xl:grid-cols-3 max-lg:grid-cols-2
+                              max-md:grid-cols-1  gap-4">
+                           <!--col-0-->
+                           <div class="rounded-md border border-borderColor relative bg-white ">
+
+                              <div class="flex px-3 py-4 absolute top-0 justify-end w-full">
+
+                                 <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                                    <span x-data="{ open: false }"
+                                       class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                                       <img x-bind:class="{ 'active': currentTab ===
+           'tab1' }" x-on:click="currentTab= 'tab1'" src="/assets/images/event-hound/heart_fill.svg">
+                                       <img x-bind:class="{ 'active': currentTab ===
+           'tab2' }" x-on:click="currentTab= 'tab2'" src="/assets/images/event-hound/heart_unfill.svg">
+                                    </span>
+                                 </div>
+                              </div>
+                              <a href="javascript:void(0);">
+                                 <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full h-56 max-xxl:h-44">
+                                 <div class="px-4 py-3">
+                                    <div class="flex justify-between items-center max-xs:block">
+                                       <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-base  leading-2">
+                                          Sunshine Hotel</p>
+                                       <span
+                                          class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img
+                                             src="/assets/images/event-hound/star.svg" class="mr-1"> 4.1</span>
+
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                       <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel
+                                          in
+                                          Canada</p>
+                                       <span class="inline-flex">
+                                          <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">1319 <span
+                                                class="text-primaryLightBlue">Reviews</span></p>
+                                       </span>
+                                    </div>
+                                    <p class="pt-1 pb-2"><span
+                                          class="text-xl text-primaryBlack font-semibold font-Work py-1.5 max-xxl:text-base line-through">$340.00</span>
+                                       <span
+                                          class="text-xl text-primaryDarkGreen  font-semibold font-Work py-1.5 max-xxl:text-base ml-4">$290.00</span>
+                                    </p>
+                                    <p class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start"><img
+                                          src="images/bank.svg " class="mr-1 mt-1">The Wedding Banquet</p>
+                                    <p class=" text-primaryGrey font-Work text-sm  flex items-start"><img
+                                          src="images/location1.svg " class="mr-1 mt-1">123 Green Avenue St, Toronto,
+                                       Canada</p>
+                                 </div>
+                              </a>
+                           </div>
+                           <!--col-0-end-->
+                           <!--col-0-->
+                           <div class="rounded-md border border-borderColor relative bg-white ">
+
+                              <div class="flex px-3 py-4 absolute top-0 justify-end w-full">
+
+                                 <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                                    <span x-data="{ open: false }"
+                                       class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                                       <img x-bind:class="{ 'active': currentTab ===
+           'tab1' }" x-on:click="currentTab= 'tab1'" src="/assets/images/event-hound/heart_fill.svg">
+                                       <img x-bind:class="{ 'active': currentTab ===
+           'tab2' }" x-on:click="currentTab= 'tab2'" src="/assets/images/event-hound/heart_unfill.svg">
+                                    </span>
+                                 </div>
+                              </div>
+                              <a href="javascript:void(0);">
+                                 <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full h-56 max-xxl:h-44">
+                                 <div class="px-4 py-3">
+                                    <div class="flex justify-between items-center max-xs:block">
+                                       <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-base  leading-2">
+                                          Sunshine Hotel</p>
+                                       <span
+                                          class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img
+                                             src="/assets/images/event-hound/star.svg" class="mr-1"> 4.1</span>
+
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                       <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel
+                                          in
+                                          Canada</p>
+                                       <span class="inline-flex">
+                                          <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">1319 <span
+                                                class="text-primaryLightBlue">Reviews</span></p>
+                                       </span>
+                                    </div>
+                                    <p class="pt-1 pb-2"><span
+                                          class="text-xl text-primaryBlack font-semibold font-Work py-1.5 max-xxl:text-base line-through">$340.00</span>
+                                       <span
+                                          class="text-xl text-primaryDarkGreen  font-semibold font-Work py-1.5 max-xxl:text-base ml-4">$290.00</span>
+                                    </p>
+                                    <p class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start"><img
+                                          src="images/bank.svg " class="mr-1 mt-1">The Wedding Banquet</p>
+                                    <p class=" text-primaryGrey font-Work text-sm  flex items-start"><img
+                                          src="images/location1.svg " class="mr-1 mt-1">123 Green Avenue St, Toronto,
+                                       Canada</p>
+                                 </div>
+                              </a>
+                           </div>
+                           <!--col-0-end-->
+                           <!--col-0-->
+                           <div class="rounded-md border border-borderColor relative bg-white ">
+
+                              <div class="flex px-3 py-4 absolute top-0 justify-end w-full">
+
+                                 <div class="mm" x-data="{ currentTab: 'tab1' }">
+
+                                    <span x-data="{ open: false }"
+                                       class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                                       <img x-bind:class="{ 'active': currentTab ===
+           'tab1' }" x-on:click="currentTab= 'tab1'" src="/assets/images/event-hound/heart_fill.svg">
+                                       <img x-bind:class="{ 'active': currentTab ===
+           'tab2' }" x-on:click="currentTab= 'tab2'" src="/assets/images/event-hound/heart_unfill.svg">
+                                    </span>
+                                 </div>
+                              </div>
+                              <a href="javascript:void(0);">
+                                 <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full h-56 max-xxl:h-44">
+                                 <div class="px-4 py-3">
+                                    <div class="flex justify-between items-center max-xs:block">
+                                       <p class=" text-primaryBlack font-semibold text-lg max-xxl:text-base  leading-2">
+                                          Sunshine Hotel</p>
+                                       <span
+                                          class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img
+                                             src="/assets/images/event-hound/star.svg" class="mr-1"> 4.1</span>
+
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                       <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4 star hotel
+                                          in
+                                          Canada</p>
+                                       <span class="inline-flex">
+                                          <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">1319 <span
+                                                class="text-primaryLightBlue">Reviews</span></p>
+                                       </span>
+                                    </div>
+                                    <p class="pt-1 pb-2"><span
+                                          class="text-xl text-primaryBlack font-semibold font-Work py-1.5 max-xxl:text-base line-through">$340.00</span>
+                                       <span
+                                          class="text-xl text-primaryDarkGreen  font-semibold font-Work py-1.5 max-xxl:text-base ml-4">$290.00</span>
+                                    </p>
+                                    <p class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start"><img
+                                          src="images/bank.svg " class="mr-1 mt-1">The Wedding Banquet</p>
+                                    <p class=" text-primaryGrey font-Work text-sm  flex items-start"><img
+                                          src="images/location1.svg " class="mr-1 mt-1">123 Green Avenue St, Toronto,
+                                       Canada</p>
+                                 </div>
+                              </a>
+                           </div>
+                           <!--col-0-end-->
+                        </div>
+                     </div>
+                  </div>
+                  <div class="hidden" x-bind:class="{ 'hidden':
+                        currentTab !== 'tab3' }">
+                     <!--Event Space-->
+                     <div class="">
+                        <!-- <div x-data="{ currentTab: 'tab1' }"> -->
+                           <div class="">
+                              <!-- <div>
+                                 <button x-bind:class="{ 'active text-white bg-themeBlue border-themeBlue': currentTab ===
+                                 'tab1' }" x-on:click="currentTab= 'tab1'"
+                                    class="rounded-full font-semibold text-sm font-Railway py-4  border w-28 text-center mr-2 max-lg:mb-3 max-xxl:py-3 max-sm:py-2">All</button>
+                                 <button x-bind:class="{ 'active text-white bg-themeBlue border-themeBlue': currentTab ===
+                                 'tab2' }" x-on:click="currentTab= 'tab2'"
+                                    class="rounded-full font-semibold text-sm font-Railway py-4  border w-28  mr-2 max-lg:mb-3 max-xxl:py-3 max-sm:py-2">Upcoming</button>
+                                 <button x-bind:class="{ 'active text-white bg-themeBlue border-themeBlue': currentTab ===
+                                 'tab3' }" x-on:click="currentTab= 'tab3'"
+                                    class="rounded-full font-semibold text-sm font-Railway py-4  border w-28  mr-2 max-lg:mb-3 max-xxl:py-3 max-sm:py-2">Requests</button>
+                                 <button x-bind:class="{ 'active text-white bg-themeBlue border-themeBlue': currentTab ===
+                                 'tab4' }" x-on:click="currentTab= 'tab4'"
+                                    class=" rounded-full font-semibold text-sm font-Railway py-4  border w-28  mr-2 max-lg:mb-3 max-xxl:py-3 max-sm:py-2">Past</button>
+                              </div> -->
+                                 <div class="text-right mb-5">
+                                    <div x-data="{ isOpen: false }" class="mt-1 relative">
+                                       <button @click="isOpen = !isOpen" type="button"
+                                          class="relative   pr-6  text-left cursor-default focus:outline-none lg:text-sm max-xs:pl-0"
+                                          aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                                          <span class="flex items-center">
+                                             <span
+                                                class="ml-3  text-lg max-xs:p-0 max-md:m-0 max-md:pl-0 max-xxl:text-base">
+                                                Sort:<span
+                                                   class="text-primaryBlack font-semibold text-lg  max-xxl:text-sm">
+                                                   Recommended</span>
+                                             </span>
+                                          </span>
+                                          <span
+                                             class="ml-1 absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none">
+                                             <img src="/assets/images/event-hound/down.svg" class="">
+                                          </span>
+                                       </button>
+                                       <ul x-show="isOpen"
+                                          x-transition:enter="transition ease-out duration-100 transform"
+                                          x-transition:enter-start="opacity-0 scale-95"
+                                          x-transition:enter-end="opacity-100 scale-100"
+                                          x-transition:leave="transition ease-in duration-75 transform"
+                                          x-transition:leave-start="opacity-100 scale-100"
+                                          x-transition:leave-end="opacity-0 scale-95"
+                                          class="absolute z-10 mt-1 p-4 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                                          tabindex="-1" role="listbox" aria-labelledby="listbox-label"
+                                          aria-activedescendant="listbox-option-3">
+                                          <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 max-xxl:pr-3 border-b border-borderColor"
+                                             id="listbox-option-0" role="option">
+                                             <div class="flex items-center  ">
+
+
+
+                                                <span
+                                                   class="block text-base text-primaryBlack font-normal font-Work max-xxl:text-sm">Upcoming
+                                                   Bookings
+                                                </span>
+                                             </div>
+                                             <span
+                                                class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                                                <img src="/assets/images/event-hound/check.svg" class="">
+                                             </span>
+                                          </li>
+                                          <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 max-xxl:pr-3 border-b border-borderColor"
+                                             id="listbox-option-0" role="option">
+                                             <div class="flex items-center  ">
+                                                <span
+                                                   class="block text-base text-primaryBlack font-normal font-Work max-xxl:text-sm">
+                                                   Completed Bookings
+                                                   low
+                                                </span>
+                                             </div>
+                                             <span
+                                                class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                                                <img src="/assets/images/event-hound/check.svg" class="">
+                                             </span>
+                                          </li>
+                                          <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 max-xxl:pr-3 border-b border-borderColor"
+                                             id="listbox-option-0" role="option">
+                                             <div class="flex items-center  ">
+                                                <span
+                                                   class="block text-base text-primaryBlack font-normal font-Work max-xxl:text-sm">
+                                                   Confirmed Bookings
+                                                   high
+                                                </span>
+                                             </div>
+                                             <span
+                                                class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                                                <img src="/assets/images/event-hound/check.svg" class="">
+                                             </span>
+                                          </li>
+                                          <li class="text-gray-900 cursor-default select-none relative py-2  pr-9 max-xxl:pr-3"
+                                             id="listbox-option-0" role="option">
+                                             <div class="flex items-center  ">
+                                                <span
+                                                   class="block text-base text-primaryBlack font-normal font-Work max-xxl:text-sm">
+                                                   Cancelled Bookings
+                                                </span>
+                                             </div>
+                                             <span
+                                                class="text-indigo-600 absolute inset-y-0 right-0 flex items-center ">
+                                                <img src="/assets/images/event-hound/check.svg" class="">
+                                             </span>
+                                          </li>
+                                          <!-- More items... -->
+                                       </ul>
+                                    </div>
+                                 </div>
+                           <!-- </div>
+                           <div class="tab-content rounded-md mt-4 max-md:mt-4"> -->
+                              <!-- <div x-bind:class="{ 'hidden': currentTab !== 'tab1'
+                                    }">
+                                 <div class="overflow-x-auto relative"> -->
+                                    <div class="grid  max-xxl:grid-cols-3 xl:grid-cols-3 max-xl:grid-cols-3 max-lg:grid-cols-2
+                                          max-md:grid-cols-1  gap-4">
+                                       <!--col-0-->
+                                       <div class="rounded-md border border-borderColor relative bg-white ">
+                                          <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+                                             <span
+                                                class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+                                                   text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                                                30%</span>
+                                             <div class="mm" x-data="{ currentTab: 'tab1' }">
+                                                <span x-data="{ open: false }"
+                                                   class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                                                   <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab1' }" x-on:click="currentTab= 'tab1'"
+                                                      src="/assets/images/event-hound/heart_fill.svg">
+                                                   <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab2' }" x-on:click="currentTab= 'tab2'"
+                                                      src="/assets/images/event-hound/heart_unfill.svg">
+                                                </span>
+                                             </div>
+                                          </div>
+                                          <a href="javascript:void(0);">
+                                             <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full ">
+                                             <div class="px-4 py-3">
+                                                <div class="flex justify-between items-center">
+                                                   <p class="   text-primaryBlack font-semibold text-lg max-xxl:text-base  leading-2
+          ">
+                                                      Sunshine Hotel
+                                                   </p>
+                                                   <span
+                                                      class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img
+                                                         src="/assets/images/event-hound/star.svg" class="mr-1"> 4.1</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                   <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4
+                                                      star hotel in Canada
+                                                   </p>
+                                                   <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">
+                                                      <span class="text-primaryBlack font-semibold">1319</span> Reviews
+                                                   </p>
+                                                </div>
+                                                <div class=" pt-1 mb-2 py-3">
+                                                   <ul class="flex ">
+                                                      <li class="border-r w-3/6">
+                                                         <div class="flex justify-between items-center">
+                                                            <div>
+                                                               <span
+                                                                  class="text-primaryLightBlue text-sm font-Work ">From</span>
+                                                               <p
+                                                                  class="text-black  text-base font-Work -my-1 font-semibold text-xs">
+                                                                  Fri, 22 Mar</p>
+                                                            </div>
+                                                            <div>
+                                                               <img src="/assets/images/event-hound/cal_dark.svg"
+                                                                  class="mr-4 max-xs:mr-2 max-xs:w-4">
+                                                            </div>
+                                                         </div>
+                                                      </li>
+                                                      <li class=" w-3/6">
+                                                         <div class="flex justify-between items-center ml-4">
+                                                            <div>
+                                                               <span
+                                                                  class="text-primaryLightBlue text-sm font-Work -mb-8 inline-block">From</span>
+                                                               <p
+                                                                  class="text-black text-base font-Work -my-1 font-semibold text-xs">
+                                                                  Fri, 22 Mar</p>
+                                                            </div>
+                                                            <div>
+                                                               <img src="/assets/images/event-hound/cal_dark.svg" class="  max-xs:w-4">
+                                                            </div>
+                                                         </div>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                                <div class="flex justify-between pb-2 max-xxl:block">
+                                                   <p
+                                                      class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start">
+                                                      <img src="images/bank.svg " class="mr-1 mt-1">The Wedding Banquet
+                                                   </p>
+                                                   <p
+                                                      class="text-primaryLightBlue font-Work text-xs  flex items-start w-3/6 max-xxl:w-full max-xxl:mb-1">
+                                                      <img src="/assets/images/event-hound/location.svg " class="mr-1  max-xs:w-3 ">123
+                                                      Green
+                                                      Avenue St, Toronto, Canada
+                                                   </p>
+                                                   <span class=" bg-badgeBlue-500 text-badgeBlue  h-7 inline-block flex justify-center items-center whitespace-nowrap w-24 px-3 py-1 rounded-full
+                                                         text-xs font-medium  font-Work  ">Upcoming</span>
+                                                </div>
+                                             </div>
+                                          </a>
+                                       </div>
+                                       <!--col-0-end-->
+                                       <!--col-1-->
+                                       <div class="rounded-md border border-borderColor relative bg-white ">
+                                          <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+                                             <span
+                                                class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+                                                   text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                                                30%</span>
+                                             <div class="mm" x-data="{ currentTab: 'tab1' }">
+                                                <span x-data="{ open: false }"
+                                                   class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                                                   <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab1' }" x-on:click="currentTab= 'tab1'"
+                                                      src="/assets/images/event-hound/heart_fill.svg">
+                                                   <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab2' }" x-on:click="currentTab= 'tab2'"
+                                                      src="/assets/images/event-hound/heart_unfill.svg">
+                                                </span>
+                                             </div>
+                                          </div>
+                                          <a href="javascript:void(0);">
+                                             <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full ">
+                                             <div class="px-4 py-3">
+                                                <div class="flex justify-between items-center">
+                                                   <p class="   text-primaryBlack font-semibold text-lg max-xxl:text-base  leading-2
+          ">
+                                                      Sunshine Hotel
+                                                   </p>
+                                                   <span
+                                                      class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img
+                                                         src="/assets/images/event-hound/star.svg" class="mr-1"> 4.1</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                   <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4
+                                                      star hotel in Canada
+                                                   </p>
+                                                   <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">
+                                                      <span class="text-primaryBlack font-semibold">1319</span> Reviews
+                                                   </p>
+                                                </div>
+                                                <div class=" pt-1 mb-2 py-3">
+                                                   <ul class="flex ">
+                                                      <li class="border-r w-3/6">
+                                                         <div class="flex justify-between items-center">
+                                                            <div>
+                                                               <span
+                                                                  class="text-primaryLightBlue text-sm font-Work ">From</span>
+                                                               <p
+                                                                  class="text-black  text-base font-Work -my-1 font-semibold text-xs">
+                                                                  Fri, 22 Mar</p>
+                                                            </div>
+                                                            <div>
+                                                               <img src="/assets/images/event-hound/cal_dark.svg"
+                                                                  class="mr-4 max-xs:mr-2 max-xs:w-4">
+                                                            </div>
+                                                         </div>
+                                                      </li>
+                                                      <li class=" w-3/6">
+                                                         <div class="flex justify-between items-center ml-4">
+                                                            <div>
+                                                               <span
+                                                                  class="text-primaryLightBlue text-sm font-Work -mb-8 inline-block">From</span>
+                                                               <p
+                                                                  class="text-black text-base font-Work -my-1 font-semibold text-xs">
+                                                                  Fri, 22 Mar</p>
+                                                            </div>
+                                                            <div>
+                                                               <img src="/assets/images/event-hound/cal_dark.svg" class="  max-xs:w-4">
+                                                            </div>
+                                                         </div>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                                <div class="flex justify-between pb-2 max-xxl:block">
+                                                   <p
+                                                      class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start">
+                                                      <img src="images/bank.svg " class="mr-1 mt-1">The Wedding Banquet
+                                                   </p>
+                                                   <p
+                                                      class="text-primaryLightBlue font-Work text-xs  flex items-start w-3/6 max-xxl:w-full max-xxl:mb-1">
+                                                      <img src="/assets/images/event-hound/location.svg " class="mr-1  max-xs:w-3 ">123
+                                                      Green
+                                                      Avenue St, Toronto, Canada
+                                                   </p>
+                                                   <span class=" bg-badgeRed-500 text-badgeRed  h-8 inline-block flex justify-center items-center whitespace-nowrap w-24 px-3 py-1 rounded-full
+                                                         text-xs font-medium  font-Work  ju">Pending</span>
+                                                </div>
+                                             </div>
+                                          </a>
+                                       </div>
+                                       <!--col-1-end-->
+                                       <!--col-2-->
+                                       <div class="rounded-md border border-borderColor relative bg-white ">
+                                          <div class="flex px-3 py-4 absolute top-0 justify-between w-full">
+                                             <span
+                                                class="inline-block whitespace-nowrap inline-flex items-center justify-center px-3 left-0 py-1 rounded-full
+                                                   text-xs font-medium text-white bg-primaryGreen font-Work xl:text-sm lg:text-xs">Discount
+                                                30%</span>
+                                             <div class="mm" x-data="{ currentTab: 'tab1' }">
+                                                <span x-data="{ open: false }"
+                                                   class="p-2 w-8 h-8 bg-white rounded-md inline-block flex justify-center items-center right-0 cursor-pointer">
+                                                   <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab1' }" x-on:click="currentTab= 'tab1'"
+                                                      src="/assets/images/event-hound/heart_fill.svg">
+                                                   <img x-bind:class="{ 'active': currentTab ===
+                                                      'tab2' }" x-on:click="currentTab= 'tab2'"
+                                                      src="/assets/images/event-hound/heart_unfill.svg">
+                                                </span>
+                                             </div>
+                                          </div>
+                                          <a href="javascript:void(0);">
+                                             <img src="/assets/images/event-hound/img1.png" class="rounded-t-md  w-full ">
+                                             <div class="px-4 py-3">
+                                                <div class="flex justify-between items-center">
+                                                   <p class="   text-primaryBlack font-semibold text-lg max-xxl:text-base  leading-2
+          ">
+                                                      Sunshine Hotel
+                                                   </p>
+                                                   <span
+                                                      class="inline-flex text-primaryBlack font-semibold max-xxl:text-sm font-Work"><img
+                                                         src="/assets/images/event-hound/star.svg" class="mr-1"> 4.1</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                   <p class="text-primaryLightBlue text-sm font-Work max-xxl:text-sm">4
+                                                      star hotel in Canada
+                                                   </p>
+                                                   <p class="text-PrimaryLightBlue text-sm font-Work max-xxl:text-xs">
+                                                      <span class="text-primaryBlack font-semibold">1319</span> Reviews
+                                                   </p>
+                                                </div>
+                                                <div class=" pt-1 mb-2 py-3">
+                                                   <ul class="flex ">
+                                                      <li class="border-r w-3/6">
+                                                         <div class="flex justify-between items-center">
+                                                            <div>
+                                                               <span
+                                                                  class="text-primaryLightBlue text-sm font-Work ">From</span>
+                                                               <p
+                                                                  class="text-black  text-base font-Work -my-1 font-semibold text-xs">
+                                                                  Fri, 22 Mar</p>
+                                                            </div>
+                                                            <div>
+                                                               <img src="/assets/images/event-hound/cal_dark.svg"
+                                                                  class="mr-4 max-xs:mr-2 max-xs:w-4">
+                                                            </div>
+                                                         </div>
+                                                      </li>
+                                                      <li class=" w-3/6">
+                                                         <div class="flex justify-between items-center ml-4">
+                                                            <div>
+                                                               <span
+                                                                  class="text-primaryLightBlue text-sm font-Work -mb-8 inline-block">From</span>
+                                                               <p
+                                                                  class="text-black text-base font-Work -my-1 font-semibold text-xs">
+                                                                  Fri, 22 Mar</p>
+                                                            </div>
+                                                            <div>
+                                                               <img src="/assets/images/event-hound/cal_dark.svg" class="  max-xs:w-4">
+                                                            </div>
+                                                         </div>
+                                                      </li>
+                                                   </ul>
+                                                </div>
+                                                <div class="flex justify-between pb-2 max-xxl:block">
+                                                   <p
+                                                      class=" text-primaryGrey font-Work font-semibold text-sm  flex items-start">
+                                                      <img src="images/bank.svg " class="mr-1 mt-1">The Wedding Banquet
+                                                   </p>
+                                                   <p
+                                                      class="text-primaryLightBlue font-Work text-xs  flex items-start w-3/6 max-xxl:w-full max-xxl:mb-1">
+                                                      <img src="/assets/images/event-hound/location.svg " class="mr-1  max-xs:w-3 ">123
+                                                      Green
+                                                      Avenue St, Toronto, Canada
+                                                   </p>
+                                                   <span class=" bg-badgeGreen-500 text-badgeGreen  h-8 inline-block flex justify-center items-center whitespace-nowrap w-24 px-3 py-1 rounded-full
+                                                         text-xs font-medium  font-Work  ">Completed</span>
+                                                </div>
+                                             </div>
+                                          </a>
+                                       </div>
+                                       <!--col-2-end-->
+                                    </div>
+                                 <!-- </div> -->
+                              <!-- </div> -->
+                              
+                           <!-- </div> -->
+                        </div>
+                     </div>
+                     <!--Event Space-end-->
+                  </div>
+                  <div class="hidden" x-bind:class="{ 'hidden':
+                        currentTab !== 'tab4' }">
+                     <form class="w-full pt-5">
+                        <div class="flex flex-wrap  ">
+                           <div class=" px-3 block w-1/2 ">
+                              <label class="block  tracking-wide text-black text-base font-bold mb-2 max-xxl:text-sm "
+                                 for="grid-first-name">
+                                 Old Password
+                              </label>
+                              <input class="appearance-none block w-full bg-white text-gray-700 border  rounded-full py-3 px-4 max-lg:py-2
+                                    focus:outline-none focus:bg-white mb-3 text-primaryFieldBlue" id="grid-first-name"
+                                 type="password" placeholder="*******">
+                           </div>
+                           <div class=" px-3 w-1/2  ">
+                              <label class="block  tracking-wide  text-black  text-base font-bold mb-2  max-xxl:text-sm"
+                                 for="grid-last-name">
+                                 New Password
+                              </label>
+                              <input class="text-primaryFieldBlue appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-full py-3 px-4 max-lg:py-2
+                                    leading-tight focus:outline-none focus:bg-white focus:border-gray-500 mb-3"
+                                 id="grid-last-name" type="password" placeholder="*******">
+                           </div>
+                           <div class=" px-3 w-1/2">
+                              <label class="block  tracking-wide  text-black  text-base font-bold mb-2  max-xxl:text-sm"
+                                 for="grid-last-name">
+                                 Confirm Password
+                              </label>
+                              <input class="text-primaryFieldBlue appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded-full py-3 px-4 max-lg:py-2
+                                    leading-tight focus:outline-none focus:bg-white focus:border-gray-500 mb-3"
+                                 id="grid-last-name" type="password" placeholder="*******">
+                           </div>
+                           <div class=" px-3 w-1/2 flex items-center">
+                              <button type="submit"
+                                 class="mt-5 font-Work m-1 whitespace-nowrap 
+                              inline-flex items-center justify-center px-7 py-2 border-2 border-themeBlue rounded-full text-sm font-medium 
+                              text-white bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-lg:px-6  max-md:py-2 max-xxl:text-xs">SAVE
+                                 CHANGES</button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                  <div class="hidden" x-bind:class="{ 'hidden':
+                        currentTab !== 'tab5' }">
+                     <div class="p-3 text-center">
+                        <h1 class="text-2xl font-semibold text-base mb-3 max-xxl:text-base max-sm:text-base">Share the
+                           love</h1>
+                        <img src="/assets/images/event-hound/packed_heart.svg" class="mx-auto mb-6 max-sm:w-14 max-xxl:w-14">
+                        <h3 class="font-semibold text-gray-600 text-2xl max-xxl:text-base max-sm:text-base font-Work">Us
+                           at <a href="#" class="text-themeBlue">EventHounds</a> love a Win-Win situation,
+                           Refer a Friend using the code below and you get $50 credit after your friend's first booking,
+                           and they get a $50 credit too!
+                        </h3>
+                        <div class="mt-5">
+                           <p class="text-gray-500 font-semibold text-grey-300 mb-1 text-base max-xxl:text-sm ">
+                              REFER CODE</p>
+                           <a href="#"
+                              class="bg-[url('/assets/images/event-hound/linked.svg')] font-semibold linked bg-no-repeat bg-right rounded-md border-2 py-5 px-28 max-md:px-24 max-md:py-2  text-themeBlue text-2xl inline-block max-xxl:py-3 max-xxl:px-18 max-xxl:text-base max-sm:text-base">
+                              VohWIH</a>
+                        </div>
+                        <ul class="flex justify-center mt-10 max-xxl:mt-6">
+                           <li> <a href="#"><img src="/assets/images/event-hound/fb.svg " class="mr-2.5 max-xxl:w-9"></a></li>
+                           <li> <a href="#"><img src="/assets/images/event-hound/twitter.svg " class="mr-2.5 max-xxl:w-9"></a>
+                           </li>
+                           <li> <a href="#"><img src="/assets/images/event-hound/google.svg" class="mr-2.5 max-xxl:w-9"></a>
+                           </li>
+                           <li> <a href="#"><img src="/assets/images/event-hound/whtspp.svg" class="mr-2.5 max-xxl:w-9"></a>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div x-bind:class="{'close': currentTab !== 'tab1',  'open': currentTab !== 'tab4'}"
+               class="profile-btn w-1/6 ml-5 max-lg:ml-auto max-lg:mt-2 max-sm:w-1/2 max-md:w-1/4 max-sm:ml-0 invisible ">
+               <button type="submit"
+                  class="font-Work w-full m-1 whitespace-nowrap 
+                     inline-flex items-center justify-center px-7 py-2 border-2 border-themeBlue rounded-full text-sm font-medium 
+                     text-white bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-lg:px-6  max-md:py-2 max-md:text-xs">SAVE
+                  CHANGES</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!--profile-end-->
+
+   {{ current_profile }}

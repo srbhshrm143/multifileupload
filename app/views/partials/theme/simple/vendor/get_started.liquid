@@ -1,0 +1,66 @@
+<div class="w-full h-full sm:flex sm:h-full md:flex relative items-center justify-start">
+  <div
+    class="lg:w-1/2 md:w-1/2 md:mx-0 sm:w-full lg:h-screen xs:h-auto sm:relative sm:z-10 sm:bg-white sm:w-4/5 sm:flex sm:items-center sm:justify-center sm:mx-auto sm:my-8 ">
+    <div class="py-3 px-2 flex items-center sm:px-6 sm:w-full sm:h-full md:h-screen xs:h-full ">
+      <div class="pb-10 sm:py-3 sm:w-full lg:max-w-lg md:px-3 lg:p-0 m-auto">
+        <div>
+          <img class="w-auto mx-0 h-12 sm:w-40 sm:h-auto md:w-48 lg:w-56 xl:w-80" src="{{ 'images/vendor/logo.png' | asset_url }}"
+            alt="Workflow">
+          <h2
+            class="pt-7 text-left text-3xl tracking-tight font-semibold font-Work sm:text-base md:text-lg lg:text-3xl xl:text-4xl sm:pt-2 text-blackColor">
+            {{ "Register Your Venue Today!" }}
+          </h2>
+        </div>
+        <div class="mt-8 space-y-6 sm:mt-3 pb-3" >
+          <div>                            
+            <h2
+              class="pt-7 text-left text-2xl tracking-tight font-semibold font-Work sm:text-base md:text-lg lg:text-2xl xl:text-3xl sm:pt-2 text-blackColor">
+              {{ "Who We Are?" }}
+            </h2>
+            <p
+              class="sm:pt-1 md:pt-1 pt-4 text-left text-sm text-gray-600 font-Work lg:text-base xl:text-xl sm:text-xs text-paragraphTextColor">
+              {{ "We are EventHounds. We connect customers with venues by providing them a platform, where they con search and book online. Join us today for free!" }}
+            </p>
+          </div>
+          <div>
+            <h2
+              class="pt-7 text-left text-2xl tracking-tight font-semibold font-Work sm:text-base md:text-lg lg:text-2xl xl:text-3xl sm:pt-2 text-blackColor">
+              {{ "How it Works?" }}
+            </h2>
+            <h6
+              class="text-left text-lg tracking-tight font-semibold font-Work sm:text-base md:text-lg lg:text-lgxl:text-l sm:pt-2 text-pPurple">
+              {{ "Upload Your Venue for Free!" }}
+            </h6>
+            <p
+              class="sm:pt-1 md:pt-1 pt-4 text-left text-sm text-gray-600 font-Work lg:text-base xl:text-xl sm:text-xs text-paragraphTextColor">
+              {{ "Our team will review and approve your application then you will go LIVE on our site. You'll recieve an email when someone has booked your Venue (or requested to book). The customer selects their options online with the pricing you set. We collect the initial deposit and pay you via cheque or EFT. It's that Simple." }}
+            </p>
+          </div>
+          <div>
+            <a type="submit"
+              class="w-full rounded-3xl flex justify-center py-3 px-2 border font-medium text-white bg-themeBlue hover:bg-themeBlue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 text-base uppercase font-Work sm:text-sm lg:text-sm xl:text-lg md:font-medium sm:p-3 lg:py-3.5 xl:py-3"
+              href="/vendor/sign_up">
+              {{ "Start Application" }}
+            </a>
+          </div>
+          
+          <div
+            class="text-center xs:relative sm:relative md:fixed md:bottom-5 xl:fixed xl:bottom-5 sm:w-full md:m-auto lg:max-w-lg flex justify-center max-xxl:static ">
+            <p class="sm:text-xs lg:text-sm xl:text-lg md:font-medium font-Work ">
+              {{ "Already have an account?" }}
+              <a class="text-themeBlue font-Work md:font-semibold "
+                href="/vendor/vendor_sign-in">
+                {{ "Login" }}
+              </a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="md:fixed md:w-1/2 sm:w-full fixed sm:fixed xs:relative top-0 right-0 h-screen xs:h-auto ">
+    <img class="mx-auto h-screen w-full xs:h-screen absolute top-0 right-0 object-cover"
+      src="{{ 'images/vendor/login.png' | asset_url }}" />
+  </div>
+</div>

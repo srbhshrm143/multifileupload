@@ -1,0 +1,24 @@
+{% liquid
+  function object = 'lib/commands/photos/create_from_remote/build', object: object, current_profile: current_profile
+  function object = 'lib/commands/photos/create_from_remote/check', object: object
+
+  if object.valid
+
+    for i in (0..3)
+      try_rc
+        function res = 'lib/commands/execute', mutation_name: 'photos/create_from_remote' object: object
+      catch err
+        log object, type: 'ERROR:'
+        log err, type: 'ERROR:'
+      endtry_rc
+
+      if res
+        assign object = res
+        break
+      endif
+    endfor
+
+  endif
+
+  return object
+%}

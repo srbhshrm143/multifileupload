@@ -1,0 +1,14 @@
+---
+slug: language/update/:language
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+
+  function object = 'lib/commands/profiles/update_language', object: context.params, profile: current_profile
+  if object
+    assign return_to = context.params.return_to | url_decode | default: '/'
+    include 'redirect_to', url: return_to
+  else
+    log object, type: 'ERROR: language/update'
+  endif
+%}

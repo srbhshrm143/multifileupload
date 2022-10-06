@@ -1,0 +1,79 @@
+mutation update_project(
+  $id: ID!
+  $name: String
+  $deadline: String
+  $promoted: Boolean
+  $summary: String
+  $award: String
+  $tags: [String]
+  $description: String
+  $terms_and_conditions: String
+  $offer_info: String
+  $commentable: Boolean
+  $development_partners: String
+  $sent_by: String
+  $group_id: String
+  $status: String
+  $steps_json: String
+  $video_urls: [String!]
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "project"
+      properties: [
+        { name: "name" value: $name }
+        { name: "deadline" value: $deadline }
+        { name: "promoted" value_boolean: $promoted }
+        { name: "summary" value: $summary }
+        { name: "award" value: $award }
+        { name: "tags" value_array: $tags }
+        { name: "description" value: $description }
+        { name: "terms_and_conditions" value: $terms_and_conditions }
+        { name: "offer_info" value: $offer_info }
+        { name: "commentable" value_boolean: $commentable }
+        { name: "development_partners" value: $development_partners }
+        { name: "sent_by" value: $sent_by }
+        { name: "group_id" value: $group_id }
+        { name: "steps" value: $steps_json }
+        { name: "video_urls" value_array: $video_urls }
+        { name: "c__status" value: $status }
+      ]
+    }
+  ){
+    id
+    created_at
+    updated_at
+    type: table
+
+    name: property(name: "name")
+    deadline: property(name: "deadline")
+    promoted: property_boolean(name: "promoted")
+    summary: property(name: "summary")
+    award: property(name: "award")
+    tags: property_array(name: "tags")
+    description: property(name: "description")
+    terms_and_conditions: property(name: "terms_and_conditions")
+    offer_info: property(name: "offer_info")
+    commentable: property_boolean(name: "commentable")
+    development_partners: property(name: "development_partners")
+    sent_by: property(name: "sent_by")
+    group_id: property(name: "group_id")
+    steps: property_object(name: "steps")
+    video_urls: property_array(name: "video_urls")
+
+    status: related_record(
+      join_on_property: "id"
+      foreign_property: "object_id"
+      table: "status"
+      sort: { created_at: { order: ASC } }
+    ) {
+      id
+      type: table
+
+      created_at
+      name: property(name: "name")
+      object_id: property(name: "object_id")
+    }
+  }
+}

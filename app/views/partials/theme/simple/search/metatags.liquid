@@ -1,0 +1,9 @@
+<title>{{ 'app.title' | t }} - {{ seo_description }}</title>
+<meta property="og:locale" content="{{ lang }}" />
+<meta property="og:title" content="{{ 'app.title' | t }} - {{ seo_description }}" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ context.location.url }}" />
+<meta property="og:image" content="{{ 'images/home/hero.jpg' | asset_url }}" />
+<meta property="og:locale" content="{{ lang }}" />
+<meta property="og:description" content="{{ 'app.seo.search.description' | t: seo_description: seo_description }}" />
+<meta name="description" content="{{ 'app.seo.search.description' | t: seo_description: seo_description }}">

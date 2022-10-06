@@ -1,0 +1,25 @@
+{% if namespace == 'admin' %}
+
+  <header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+    <div class="flex items-center gap-4">
+      <a href="{% render 'link_to', promo_code: true, namespace: namespace %}" class="w-8 h-8 flex items-center justify-center rounded-full bg-panel text-content-sidenote">
+        {% render 'theme/simple/ui/icon', icon: 'arrowLeft', class: 'w-3.5' %}
+      </a>
+      <h2 class="title !mb-0 flex items-center gap-4">
+        {{ 'app.promo_codes.new.new' | t }}
+      </h2>
+    </div>
+  </header>
+{% else %}
+
+  <h2 class="bigtitle">{{ 'app.promo_codes.new.new' | t }}</h2>
+
+  <a href="{% render 'link_to', promo_code: true, namespace: namespace %}" class="flex gap-1 items-center">
+    {% render 'theme/simple/ui/icon', icon: 'dashLeft' %}
+    {{ 'app.promo_codes.title' | t }}
+  </a>
+
+{% endif %}
+
+
+{% render 'theme/simple/promo_codes/form', object: object, context: context, profile: profile, namespace: namespace, organizations: organizations %}

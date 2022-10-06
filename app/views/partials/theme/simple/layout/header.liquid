@@ -1,0 +1,868 @@
+{% liquid
+  if profile and profile.user_id != blank
+    assign registered_profile = true
+    function profile_url = 'link_to', profile: profile
+  endif
+   
+  graphql category_gql = 'categories/search', limit: 10
+
+%}
+<header class="py-3 shadow mb-10 bg-white {% if context.params.slug == 'sessions' and context.params.slug2 == 'new' %}hide_header_footer{% endif %} 
+{% if context.params.slug == 'sessions' and context.params.slug2 == 'create' %}hide_header_footer{% endif %}
+{% if context.params.slug == 'passwords' and context.params.slug2 == 'reset' %}hide_header_footer{% endif %}
+{% if context.params.slug == 'users' %}hide_header_footer{% endif %}
+{% if context.params.slug == 'passwords' and context.params.slug2 == 'new' %}hide_header_footer{% endif %}
+ {% if context.params.slug == 'passwords' %}hide_header_footer{% endif %}
+ {% if context.params.slug == 'sign-up' %}hide_header_footer{% endif %} hidden">
+  <div class="container flex flex-wrap items-center">
+
+    <a class="flex items-center order-1 font-light" href="/">
+      {% render 'theme/simple/ui/icon', icon: 'home', class: 'w-6 ms-4' %}
+      {% render 'theme/simple/ui/logo', context: context %}
+    </a>
+
+    {% comment %} desktop search {% endcomment %}
+    <div class="hidden md:ms-auto lg:block lg:order-2">
+      {% render 'theme/simple/home/quick_search_form', qkeyword: context.params.qkeyword %}
+    </div>
+
+    {% comment %} mobile separator {% endcomment %}
+    <div class="order-3 w-full mt-4 md:hidden"></div>
+
+    <nav class="order-4 w-full md:w-auto md:ms-auto">
+      <ul class="flex flex-wrap items-center justify-center w-full">
+
+        {% comment %} mobile search {% endcomment %}
+        <li class="-ms-3 md:ms-auto lg:ms-0 me-auto md:me-0 lg:hidden">
+          {% capture 'header_search_label' %}
+            {% render 'theme/simple/ui/icon', icon: 'search', class: 'w-6' %}
+          {% endcapture %}
+          {% capture 'header_search_content' %}
+            <div class="px-8 py-4">
+              {% render 'theme/simple/home/quick_search_form', qkeyword: context.params.qkeyword %}
+            </div>
+          {% endcapture %}
+
+          {% render 'theme/simple/ui/dropdown',
+            name: 'quickSearch',
+            toggle_title_key: 'app.quick_search.name',
+            label: header_search_label,
+            toggle_class: 'p-3 focus:outline-none focus:text-interaction hover:text-interaction-hover',
+            content: header_search_content
+          %}
+        </li>
+
+        {% comment %} notifications {% endcomment %}
+        {% if registered_profile %}
+          {% render 'theme/simple/notifications/box' %}
+        {% endif %}
+
+        {% comment %} wishlist {% endcomment %}
+        {% if profile %}
+        <li class="relative">
+          <a href="/wishlist" data-header-wishlist title="{{ 'app.header.wishlist' | t }}" class="relative block p-3 focus:outline-none focus:text-interaction hover:text-interaction-hover" data-tc="wishlist">
+            {% render 'theme/simple/ui/icon', icon: 'heart', class: 'w-6' %}
+            {% render 'theme/simple/ui/icon', icon: 'heartFull', class: 'w-6 absolute top-3 left-3 text-interaction hidden' %}
+          </a>
+        </li>
+        {% endif %}
+
+        {% comment %} add content dropdown {% endcomment %}
+        {% if registered_profile %}
+        <li>
+          {% capture 'header_add_label' %}
+            {% render 'theme/simple/ui/icon', icon: 'circlePlus', class: 'w-6' %}
+          {% endcapture %}
+          {% capture 'header_add_content' %}
+            <ul class="whitespace-nowrap">
+              <li><a href="/dashboard" class="block py-3 px-7 md:rounded-t-md hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.add_post' | t }}</a></li>
+              <li><a href="/posts/new" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.add_question' | t }}</a></li>
+              <li><a href="/groups/new" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.add_group' | t }}</a></li>
+              <li><a href="/dashboard/items/new" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.add_item' | t }}</a></li>
+              <li><a href="/projects/new" class="block py-3 px-7 rounded-b-md hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.add_project' | t }}</a></li>
+            </ul>
+          {% endcapture %}
+
+          {% render 'theme/simple/ui/dropdown',
+            toggle_title_key: 'app.header.add_content',
+            toggle_class: 'p-3 focus:outline-none focus:text-interaction hover:text-interaction-hover',
+            label: header_add_label,
+            content: header_add_content
+          %}
+        </li>
+        {% endif %}
+
+        <li class="flex">
+          <ul style="display: inherit" {% if profile %} x-data="navigationStats()" {% endif %}>
+            {% comment %} chat {% endcomment %}
+            {% if registered_profile %}
+            <li>
+              <a href="/inbox" class="relative block p-3 focus:outline-none focus:text-interaction hover:text-interaction-hover" title="{{ 'app.header.chat' | t }}" id="notifications-chat" data-current-user-id="{{ profile.id }}" data-current-user-slug="{{ profile.slug }}">
+                {% render 'theme/simple/ui/icon', icon: 'commentText', class: 'w-6' %}
+                <span id="notification-bell"
+                  class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-content-inverted rounded-full bg-interaction"
+                  x-cloak x-show="inboxUnread" x-text="inboxUnread"
+                >
+                </span>
+              </a>
+            </li>
+            {% endif %}
+
+
+            {% comment %} cart {% endcomment %}
+            <li>
+              <a href="/dashboard/buy/cart" title="{{ 'app.header.cart' | t }}"
+                class="relative block p-3 focus:outline-none focus:text-interaction hover:text-interaction-hover"
+              >
+                {% render 'theme/simple/ui/icon', icon: 'shoppingCart', class: 'w-6' %}
+                {% if profile %}
+                  <span
+                    class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-content-inverted rounded-full bg-interaction"
+                    x-cloak x-show="cartQuantity" x-text="cartQuantity"
+                    data-cart-counter>
+                  </span>
+                {% endif %}
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+        <div class="user__buttons">
+          <label for="dropdown_exp" class="button button-small ms-3">{{ "User & Venue" }}</label>
+          <input type="checkbox" name="dropdown_exp" id="dropdown_exp">
+          <ul class="user__list">
+            <li>
+              <a href='/media_form' class="ps-3 user__links"> {{ "Media Form" }} </a>
+            </li>
+            {% unless context.current_user.email %}
+              <li>
+                <a href="/sessions/new" class="ps-3 user__links">
+                  {{ 'app.login' | t }}
+                </a>
+              </li>
+              <li>
+                  <a href='/sign-up' class="ps-3 user__links">User {{ 'app.login_form.register' | t }}</a>
+              </li>
+              <li>
+                  <a href='/sign-up_vendor' class="ps-3 user__links"> Vendor {{ 'app.login_form.register' | t }}</a>
+              </li>
+            {% endunless %}
+            <li>
+                <a href='/passwords/reset' class="ps-3 user__links">{{ 'app.login_form.reset' | t }} Password</a>
+            </li>
+            <li class="hidden">
+                <a href='/venue_owner/login' class="ps-3 user__links">Venue Owner {{ "Login" }}</a>
+            </li>
+            <li class="hidden">
+                <a href='/venue_owner/register' class="ps-3 user__links">Venue Owner {{ 'app.owner_profile.owner_account_reg' | t }}</a>
+            </li>
+            {% if context.exports.current_profile.user_type == "venue_owner" %}
+              <li>
+                  <a href='/venue/new' class="ps-3 user__links">New {{ 'app.venue.venue_new' | t }}</a>
+              </li>
+              <li>
+                  <a href='/venue/show' class="ps-3 user__links"> {{ "Show Venue List" }}</a>
+              </li>
+            {% endif %}
+            <li>
+                <a href='/contact_us/form' class="ps-3 user__links"> Contact Us </a>
+            </li>
+            <!-- <li>
+
+              <fb:login-button 
+              scope="public_profile,email"
+              onlogin="checkLoginState();">
+              </fb:login-button>
+
+              <div class="fb-login-button" data-width="" data-size="medium" data-button-type="login_with" data-layout="rounded" data-auto-logout-link="true" data-use-continue-as="false"></div>
+              
+            </li> -->
+          </ul>
+        </div>
+        {% comment %} profile {% endcomment %}
+        {% if registered_profile %}
+        <li class="ms-2" data-tc="profile-menu-dropdown">
+            {% capture 'header_profile_label' %}
+              <div class="flex items-center px-3 py-1 rounded-md bg-page" data-tc="username">
+                {{ profile.first_name | default: initial_name }}
+                {% render 'theme/simple/ui/avatar', profile: profile, size: 48, class: 'w-5 h-5 ms-2 text-2xs' %}
+              </div>
+            {% endcapture %}
+            {% capture 'header_profile_content' %}
+              <ul class="whitespace-nowrap">
+                <li>
+                  <a href="/dashboard" class="block py-3 px-7 md:rounded-t-md hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.dashboard' | t }}</a>
+                </li>
+                <li>
+                  <a href="/my/feed" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.my_feed' | t }}</a>
+                </li>
+                <li class="border-t"><a href="/dashboard/sell/items" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.selling' | t }}</a></li>
+                <li class="border-t"><a href="/dashboard/buy/orders" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.purchases' | t }}</a></li>
+                <li><a href="/dashboard/reviews/items" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.reviews' | t }}</a></li>
+                <li class="border-t"><a href="/projects/manage" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.projects' | t }}</a></li>
+                <li><a href="/offers/manage" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.project_offers' | t }}</a></li>
+                {% function can_be_admin = "lib/can", actor: profile, do: "be_admin", object: profile %}
+                {% if can_be_admin.valid %}
+                  <li class="border-t"><a href="/admin" class="block py-3 px-7 hover:bg-interaction hover:text-content-inverted transition-colors">{{ 'app.header.admin' | t }}</a></li>
+                {% endif %}
+                <li class="border-t">
+                  <form action="/sessions/destroy" method="post">
+                    {% include 'authenticity_token' %}
+                    <button type="submit" class="block w-full py-3 px-7 rounded-b-md hover:bg-interaction hover:text-content-inverted text-start transition-colors">
+                      {{ 'app.header.log-out' | t }}
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            {% endcapture %}
+            {% render 'theme/simple/ui/dropdown',
+              class: '-me-3',
+              label: header_profile_label,
+              toggle_class: 'p-3',
+              content: header_profile_content
+            %}
+        </li>
+        {% endif %}
+
+        {% comment %} login button {% endcomment %}
+        {% unless registered_profile %}
+          <li class="ms-2">
+            <a href="/sessions/new" class="button button-small ms-3 user__login">
+              {{ 'app.login' | t }}
+            </a>
+          </li>
+        {% endunless %}
+
+        {% render 'theme/simple/layout/language_switch', context: context, class: 'p-3' %}
+      </ul>
+    </nav>
+
+  </div>
+</header>
+
+
+<!-- Header start -->
+<div x-data="{ isOpen: false }" x-bind:class="{
+  'close': !isOpen,
+  'open': isOpen
+  }" class="relative bg-white bg-hero-image {% if context.params.slug == 'sessions' and context.params.slug2 == 'new' %}hide_header_footer{% endif %} 
+  {% if context.params.slug == 'sessions' and context.params.slug2 == 'create' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'vendor' and context.params.slug2 == 'get_start' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'vendor' and context.params.slug2 == 'vendor_sign-in' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'vendor' and context.params.slug2 == 'sign_up' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'vendor' and context.params.slug2 == 'forget-password' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'users' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'passwords' and context.params.slug2 == 'reset' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'passwords' and context.params.slug2 == 'new' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'passwords' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'sign-up' %}hide_header_footer{% endif %}">
+  <div class="mx-auto px-4 sm:px-10 max-sm:px-5">
+    <div class="flex justify-between items-center py-6 md:justify-between md:space-x-10">
+      {%- comment -%}
+        {% unless context.exports.current_profile.user_type != "venue_owner" %}
+        {% endunless %}
+      {%- endcomment -%}
+      <div class="lg:w-1/3">
+        <div class="inline-flex rounded-full shadow md:space-x-20">
+          <a href="/vendor/get_start"
+            class="inline-flex items-center justify-center px-5 py-3 border border-borderColor text-base font-medium rounded-full text-black max-sm:px-1 max-sm:py-1">
+            <span class="font-Work max-sm:hidden sm:text-sm lg:text-base xl:text-lg">
+              {{ "Vendor Portal" }}
+            </span>
+            <img
+                src="{{ 'images/event-hound/cad-flag.png' | asset_url }}" class="ml-4 w-6 max-sm:ml-0 max-sm:w-4">
+          </a>
+        </div>
+      </div>
+          <div class="lg:w-1/3 flex justify-center flex-1">
+            <a href="/">
+              <span class="sr-only font-Work ">
+                {{ "Workflow" }}
+              </span>
+              <img class="w-auto h-auto md:w-3/5 sm:w-40 max-sm:w-4/5 mx-auto" src="{{ 'images/event-hound/main-logo.png' | asset_url }}" alt="main_logo">
+            </a>
+          </div>
+          <div class="relative max-lg:flex hidden" x-data="{ isOpen: false }">
+            <a @click="isOpen = !isOpen" class="ml-3 relative sm:w-4 sm:h-4 md:w-6 md:h-6" href="#">
+              <img
+              src="{{ 'images/event-hound/notification-icon.png' | asset_url }}" />
+            <div
+              class="bg-primaryGreen text-white p-0.5 absolute sm:-top-2 sm:-right-2 md:-top-2 md:-right-2 text-xs rounded-full  md:w-5 md:h-5 text-center font-Work">
+              {{ "4" }}
+            </div>
+          </a>
+          <a class="ml-3 relative sm:w-4 sm:h-4 md:w-6 md:h-6" href="#">
+            <img src="{{ 'images/event-hound/heart-icon.png' | asset_url }}" />
+            <div
+              class="bg-primaryGreen text-white p-0.5 absolute sm:-top-2 sm:-right-2 md:-top-2 md:-right-2 text-xs rounded-full md:w-5 md:h-5 text-center font-Work">
+              {{ "20" }}
+            </div>
+          </a>
+          <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
+            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75 transform"
+            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+            class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-md sm:px-0">
+            <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+              <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                <ul>
+                  <li class="pb-2">
+                    <p class="font-Work text-base text-black ">{{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been accepted" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">
+                      {{ "2 hrs ago" }}
+                    </span>
+                  </li>
+                  <li class="border-t-2 pb-2 pt-2">
+                    <p class="font-Work text-base text-black">
+                      {{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been Rejected" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">
+                      {{ "3 hrs ago" }}
+                    </span>
+                  </li>
+                  <li class="border-t-2 pb-2 pt-2">
+                    <p class="font-Work text-base text-black">
+                      {{ "Your Payment has been completed Successfully at" }}
+                      <a class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Brooklyn Centre" }}
+                      </a>
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">
+                      {{ "3 hrs ago" }}
+                    </span>
+                  </li>
+                  <li class="border-t-2 pb-2 pt-2">
+                    <p class="font-Work text-base text-black">
+                      {{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been accepted" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">
+                      {{ "2 hrs ago" }}
+                    </span>
+                  </li>
+                  <li class="border-t-2 pt-2">
+                    <p class="font-Work text-base text-black">
+                      {{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been accepted" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">
+                      {{ "2 hrs ago" }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="-mr-2 -my-2 max-lg:flex md:hidden">
+          <button @click="isOpen = !isOpen" type="button"
+            class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400" aria-expanded="false">
+            <span class="font-Work sr-only">{{ "Open menu" }}</span>
+            <!-- Heroicon name: outline/menu -->
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+        <nav class="hidden md:hidden space-x-10">
+          <div class="relative">
+            <button type="button"
+              class="text-gray-500 group bg-white font-Work rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              aria-expanded="false">
+              <span>
+                {{ "Solutions" }}
+              </span>
+
+              <svg class="text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
+          <a href="#" class="text-base font-Work font-medium text-gray-500 hover:text-gray-900">
+            {{ "Pricing" }}
+          </a>
+          <a href="#" class="text-base font-Work font-medium text-gray-500 hover:text-gray-900">
+            {{ "Docs" }}
+          </a>
+
+          <div class="relative">
+            <!-- Item active: "text-gray-900", Item inactive: "text-gray-500" -->
+            <button type="button"
+              class="text-gray-500 group font-Work bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              aria-expanded="false">
+              <span>
+                {{ "More" }}
+              </span>
+              <!--
+                Heroicon name: solid/chevron-down
+                Item active: "text-gray-600", Item inactive: "text-gray-400"
+              -->
+              <svg class="text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <!--
+              'More' flyout menu, show/hide based on flyout menu state.
+              Entering: "transition ease-out duration-200"
+                From: "opacity-0 translate-y-1"
+                To: "opacity-100 translate-y-0"
+              Leaving: "transition ease-in duration-150"
+                From: "opacity-100 translate-y-0"
+                To: "opacity-0 translate-y-1"
+            -->
+
+          </div>
+        </nav>
+        <div class="lg:w-1/3 relative" x-data="{ isOpen: false }">
+          <div class="hidden md:flex items-center justify-end max-lg:hidden">
+            {% if context.exports.current_profile.user_type == "customer" %}
+              <a href="/cart"
+                class="sm:text-sm lg:text-base xl:text-lg font-medium font-Work whitespace-nowrap text-black hover:text-gray-900 mr-3">
+                {{ "My Bookings" }}
+              </a>
+            {% elsif context.exports.current_profile.user_type == "venue_owner" %}
+              <a href="/vendor"
+                class="sm:text-sm lg:text-base xl:text-lg font-medium font-Work whitespace-nowrap text-black hover:text-gray-900 mr-3">
+                {{ "Add Venue" }}
+              </a>
+            {% endif %}
+            <a href="/dashboard/profile"
+              class="sm:text-sm lg:text-base xl:text-lg font-medium font-Work text-black hover:text-gray-900 mr-3">
+              {{ "Profile" }}
+            </a>
+            <a @click="isOpen = !isOpen" class="ml-2.5 relative" href="#">
+              <img src="{{ 'images/event-hound/notification-icon.png' | asset_url }}" />
+              <div
+                class="bg-primaryGreen text-white p-0.5 absolute -top-2 -right-2 font-Work text-xs rounded-full w-5 h-5 text-center">
+                {{ "4" }}
+              </div>
+            </a>
+            {%- comment -%}
+              {% unless registered_profile %}
+                <a href="/sessions/new"
+                  class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase font-Work max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5 ml-2.5">
+                  {{ "Login" }}
+                </a>
+                <a href="/venue_owner/register"
+                  class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase font-Work max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5 ml-2.5">
+                  {{ "Vendor Register" }}
+                </a>
+              {% endunless %}
+            {%- endcomment -%}
+            {% if profile %}
+              <a class="ml-2.5 relative" href="/wishlist">
+                <img src="{{ 'images/event-hound/heart-icon.png' | asset_url }}" />
+                {%- comment -%}
+                  <div
+                    class="bg-primaryGreen text-white p-0.5 absolute -top-2 -right-2 font-Work text-xs rounded-full w-5 h-5 text-center">
+                    {{ "20" }}
+                  </div>
+                {%- endcomment -%}
+              </a>
+            {% endif %}
+
+            {% if registered_profile %}
+            <div class="flex items-center ml-5">
+              {% render 'theme/simple/ui/avatar', profile: profile, size: 48, class: 'w-10 h-10' %}
+              <div class="ml-2">
+                <div class="sm:text-sm lg:text-base xl:text-lg font-medium font-Work text-black text-Work">
+                  {{ profile.first_name | default: initial_name }}
+                </div>
+
+                <form action="/sessions/destroy" method="post">
+                  {% include 'authenticity_token' %}
+                  <button type="submit" class="flex items-center sm:text-sm lg:text-base font-Work font-medium text-Work text-themeBlue uppercase">
+                    <img
+                    class="mr-1" src="{{ 'images/event-hound/logout-icon.png' | asset_url }}" />
+                    {{ "Logout" }}
+                  </button>
+                </form>
+              </div>
+            </div>
+            {% endif %}
+            {%- comment -%} Login  Button {%- endcomment -%}
+            {% unless registered_profile %}
+              <a href="sessions/new" class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5 ml-4">
+                {{ "Login" }}
+              </a>
+              <a href="/sign-up" class="ml-2 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-themeBlue bg-transparent hover:text-white hover:bg-themeBlue uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                {{ "Sign up" }}
+              </a>
+            {% endunless %}
+          </div>
+
+          <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
+            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75 transform"
+            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+            class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-md sm:px-0">
+            <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+              <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                <ul>
+                  <li class="pb-2">
+                    <p class="font-Work text-base text-black">{{ "Your Booking at" }} <a
+                      class="font-Work text-base text-themeBlue font-medium" href="#">{{ "Hotel Sunshine" }}</a>
+                      {{ "has been accepted" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">{{ "2 hrs ago" }}</span>
+                  </li>
+                  <li class="border-t-2 pb-2 pt-2">
+                    <p class="font-Work text-base text-black">{{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been Rejected" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">
+                      {{ "3 hrs ago"}}
+                    </span>
+                  </li>
+                  <li class="border-t-2 pb-2 pt-2">
+                    <p class="font-Work text-base text-black">
+                      {{ "Your Payment has been completed
+                      Successfully at" }}
+                      <a class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Brooklyn
+                        Centre" }}
+                      </a>
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">{{ "3 hrs ago" }}</span>
+                  </li>
+                  <li class="border-t-2 pb-2 pt-2">
+                    <p class="font-Work text-base text-black">{{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been accepted" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">{{ "2 hrs ago" }}</span>
+                  </li>
+                  <li class="border-t-2 pt-2">
+                    <p class="font-Work text-base text-black">{{ "Your Booking at" }}
+                      <a
+                        class="font-Work text-base text-themeBlue font-medium" href="#">
+                        {{ "Hotel Sunshine" }}
+                      </a>
+                      {{ "has been accepted" }}
+                    </p>
+                    <span class="text-linkColor font-Work text-sm">{{ "2 hrs ago" }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    Mobile menu, show/hide based on mobile menu state.
+
+    Entering: "duration-200 ease-out"
+      From: "opacity-0 scale-95"
+      To: "opacity-100 scale-100"
+    Leaving: "duration-100 ease-in"
+      From: "opacity-100 scale-100"
+      To: "opacity-0 scale-95"
+  -->
+    <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
+      x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100"
+      x-transition:leave-end="opacity-0 scale-95"
+      class="absolute top-0 inset-x-0 p-2 transition transform origin-top-right">
+      <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+        <div class="pt-5 pb-6 px-5">
+          <div class="flex items-center justify-between">
+            <div class="flex justify-start flex-1">
+              <a href="#">
+                <span class="font-Work sr-only">
+                  {{ "Workflow" }}
+                </span>
+                <img class="h-8 w-auto sm:h-10 max-sm:h-auto max-sm:w-9/12" src="images/main-logo.png" alt="logo">
+              </a>
+            </div>
+            <div class="-mr-2">
+              <button @click="isOpen = false" x-ref="modalCloseButton" type="button"
+                class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500">
+                <span class="font-Work sr-only">
+                  {{ "Close menu" }}
+                </span>
+                <!-- Heroicon name: outline/x -->
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                  stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="mt-6">
+            <nav class="grid gap-y-8">
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/chart-bar -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "Analytics" }} </span>
+              </a>
+
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/cursor-click -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "Engagement" }} </span>
+              </a>
+
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/shield-check -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "Security" }} </span>
+              </a>
+
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/view-grid -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "Integrations" }} </span>
+              </a>
+
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/refresh -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "Automations" }} </span>
+              </a>
+
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/refresh -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "My Bookings" }} </span>
+              </a>
+
+              <a href="#" class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                <!-- Heroicon name: outline/refresh -->
+                <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span class="ml-3 font-Work text-base font-medium text-gray-900"> {{ "Profile" }} </span>
+              </a>
+
+            </nav>
+          </div>
+        </div>
+        <div class="py-6 px-5 space-y-6">
+          <div class="md:flex items-center justify-center text-center">
+            {% unless registered_profile %}
+              <a href="/sessions/new"
+                class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase font-Work max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                {{ "Login" }}
+              </a>
+            {% else %}
+              <a href="/sign-up"
+                class="ml-2 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-themeBlue bg-transparent hover:text-white hover:bg-themeBlue font-Work uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                {{ "Sign up" }}
+              </a>
+            {% endunless %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Header end -->
+
+{% if context.page.slug == "/" or context.page.slug == "quick_search" %}
+  <!-- Banner start -->
+  <section class="px-4 sm:px-10 max-sm:p-0">
+    {% if  context.page.slug == "/" %} {% endif %}
+    <div
+      class="pb-20 px-2 max-sm:py-24 {% if  context.page.slug == "/" %}pt-80 bg-hero-image1{% elsif  context.page.slug == "quick_search" %}pt-20 bg-venue-bg_new1{% endif %} w-full bg-no-repeat bg-cover rounded-md max-xxl:px-10 max-xl:pt-60 max-sm:px-5">
+      <div class="max-w-screen-2xl mx-auto">
+        {% if  context.page.slug == "/" %}
+          <div class="text-center">
+            <h2 class="text-primaryCream sm:text-2xl lg:text-4xl font-Work font-semibold xl:text-5xl">
+              {{ "Venue Booking Simplified" }}
+            </h2>
+            <p class="text-white sm:text-sm xl:text-base font-Work uppercase mt-1.5">
+              {{ "Explore top-rated Canadian venues to book for your next EVENT" }}
+            </p>
+          </div>
+        {% endif %}
+
+        <div class="bg-formBg mt-8 rounded-lg">
+          <form action="/quick_search" name="search" method="get">
+            <div class="shadow overflow-hidden sm:rounded-md">
+              <div class="px-4 py-5 bg-formBg sm:p-6 bg-center">
+                <div class="columns-2 md:columns-4 lg:columns-8">
+                  <div class="wrapper max-xl:mb-5">
+                    <label class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Location" }}
+                    </label>
+                    <input
+                      class="h-12 mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor cst-placeholder focus:outline-themeBlue opacity-100 max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                      id="username" type="text" name="qkeyword_location" placeholder="New York" value="{{context.params.qkeyword_location}}">
+                  </div>
+                  <div class="wrapper max-xl:mb-5">
+                    <label class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Type of event" }}
+                    </label>
+                    <div class="cst-arrow">
+                      <select
+                        class="h-12 appearance-none mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor placeholder-placeholderColor::placeholder focus:outline-themeBlue max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                        name="event_type" id="frm-whatever">
+                        {% for category in category_gql.categories.results limit: 6 %}
+                          {% for category_name in category.category_details %}
+                            {% if category_name.lang == "en" %}
+                              <option value="{{ category_name.name }}" {% if category_name.name == context.params.event_type %} selected{% endif %}>
+                                {{ category_name.name }}
+                              </option>
+                            {% endif %}
+                          {% endfor %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="wrapper max-xl:mb-5">
+                    <label class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Time" }}
+                    </label>
+                    <div class="cst-arrow">
+                      <select
+                        class="h-12 appearance-none mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor placeholder-placeholderColor::placeholder focus:outline-themeBlue max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                        name="event_time" id="frm-whatever">
+                        <option value="">{{ "Select Event Timing" }}</option>
+                        <option value="Morning">{{ "Morning" }}</option>
+                        <option value="Afternoon">{{ "Afternoon" }}</option>
+                        <option value="Evening">{{ "Evening" }}</option>
+                        <option value="Night">{{ "Night" }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="wrapper max-xl:mb-5">
+                    <label
+                      class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Date" }}
+                    </label>
+                    <div class="cst-calender">
+                      <input
+                        class="h-12 relative mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor placeholder-placeholderColor::placeholder focus:outline-themeBlue appearance-none max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                        id="username"
+                        value="2018-07-22"
+                        type="date"
+                        name="event_date">
+                    </div>
+                  </div>
+                  <div class="wrapper max-xl:mb-5">
+                    <label
+                      class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Guest Count" }}
+                    </label>
+                    <input
+                      class="h-12 mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor cst-placeholder focus:outline-themeBlue opacity-100 max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                      id="username"
+                      type="text"
+                      placeholder="50"
+                      name="guest_count" value="{{context.params.guest_count}}">
+                  </div>
+                  <div class="wrapper max-xl:mb-5">
+                    <label
+                      class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Min Price" }}
+                    </label>
+                    <input
+                      class="h-12 mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor cst-placeholder focus:outline-themeBlue opacity-100 max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                      id="username"
+                      type="text"
+                      placeholder="$2500"
+                      name="min_price" value="{{context.params.min_price}}">
+                  </div>
+                  <div class="wrapper max-xl:mb-5">
+                    <label
+                      class="block font-Railway text-base sm:text-sm text-black uppercase font-medium max-sm:text-xs"
+                      for="username">
+                      {{ "Max Price" }}
+                    </label>
+                    <input
+                      class="h-12 mt-1 bg-transparent px-4 py-3 w-full font-Work lg:text-sm xl:text-base sm:text-sm border border-borderColor rounded-md text-placeholderColor cst-placeholder focus:outline-themeBlue opacity-100 max-xxl:px-3 max-sm:py-2.5 max-sm:h-10"
+                      id="username"
+                      type="text"
+                      placeholder="$3500"
+                      name="max_price" value="{{context.params.max_price}}">
+                  </div>
+                  <div class="wrapper">
+                    <label class="block font-Railway text-base sm:text-sm text-black uppercase font-medium invisible"
+                      for="username">
+                      {{ "Max Price" }}
+                    </label>
+                    <button type="submit"
+                      id="search_btn"
+                      class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-themeBlue bg-transparent hover:text-white hover:bg-themeBlue uppercase max-lg:px-6 max-sm:text-xs max-sm:py-3 max-sm:px-5 max-sm:h-10">
+                      {{ "Search" }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Banner end -->
+{% endif %}

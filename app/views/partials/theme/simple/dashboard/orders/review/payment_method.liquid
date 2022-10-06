@@ -1,0 +1,27 @@
+{% liquid
+  function payment_methods = 'lib/queries/payment_methods/all'
+%}
+<section>
+  {% if payment_methods.size > 1 %}
+    {{ 'app.orders.checkout.select_prefered_option' | t }}
+    {% render 'theme/simple/field_error', errors: object.errors.payment_type %}
+
+    {% for payment_method in payment_methods %}
+      <fieldset class="flex items-center mt-2 gap-1">
+        {% liquid
+          if object.payment_type == blank and forloop.first
+            assign first_blank = true
+          else
+            assign first_blank = false
+          endif
+        %}
+        <input type="radio" name="cart[payment_type]" id="payment_type_{{payment_method}}" value="{{ payment_method }}" required {% if object.payment_type == payment_method or first_blank %}checked{% endif %} />
+        <label for="payment_type_{{ payment_method }}">{{ 'app.models.orders.form.payment_type_' | append: payment_method | t }}</label>
+      </fieldset>
+    {% endfor %}
+  {% else %}
+    {% render 'theme/simple/field_error', errors: object.errors.payment_type %}
+    {% assign payment_method = payment_methods[0] %}
+    <input type="hidden" name="cart[payment_type]" id="payment_type_{{payment_method}}" value="{{ payment_method }}" />
+  {% endif %}
+</section>

@@ -1,0 +1,23 @@
+---
+slug: projects/:slug(/:section)
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+
+  assign id = context.params.slug | split: '-' | last
+  assign section = context.params.section | default: 'description'
+  function project = 'lib/queries/projects/find', id: id, with_offer: true
+  include 'lib/can_do_or_unauthorized', object: project, do: "view", actor: current_profile
+
+  function activities = 'lib/queries/activities/search_with_records', feed: 'group-public', feed_id: project.group.id, limit: 20
+  hash_assign project['group_activities'] = activities
+
+  function can_manage_offers = 'lib/can', actor: current_profile, do: "manage_offers", object: project
+  if can_manage_offers.valid
+    assign project_offers = project.project_offers
+  endif
+
+  function _ = 'lib/extend_context', photo_presign: true
+
+  render 'theme/simple/projects/show', project: project, project_offers: project_offers, section: section, current_profile: current_profile, authenticity_token: context.authenticity_token, context: context
+%}

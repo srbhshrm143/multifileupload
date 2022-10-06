@@ -1,0 +1,9 @@
+---
+properties:
+- name: category_id
+  type: string
+- name: lang
+  type: string
+- name: name
+  type: string
+---

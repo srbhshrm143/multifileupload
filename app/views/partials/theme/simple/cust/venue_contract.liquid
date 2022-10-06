@@ -1,0 +1,217 @@
+{%liquid
+  graphql menus_main = 'venue/customers/venue_contract', limit: 1
+%}
+
+{% for menus_data in menus_main.data.results %}
+  {% assign menus = menus_data.properties.venue_menu | parse_json %}
+  {{ menus_data  }}
+  {{ menus.menu_1 }}<br>
+{% endfor %}
+{%- comment -%}
+	{{ context.headers.HTTP_REFERER }}
+{%- endcomment -%}
+
+    <!-- Banner start -->
+    <section
+        class="bg-profile-bg1 bg-no-repeat bg-cover bg-blend-multiply bg-PrimaryOverlay py-36 max-xxl:py-20 max-md:py-14 max-sm:py-8">
+        <div class="container mx-auto max-md:px-10 max-lg:max-w-full max-lg:px-5">
+            <div class="text-center">
+                <h2 class="text-white text-4xl max-xxl:text-text-head font-Railway font-semibold pb-2">
+                    Contracts
+                </h2>
+            </div>
+        </div>
+    </section>
+    <!-- Banner end -->
+
+    <div class="container mx-auto max-xl:max-w-full md:my-16 sm:px-2 sm:my-5">
+        <div class="w-full xs:h-auto sm:mb-5">
+            <div class="flex pb-6 px-5 justify-between sm:px-3 items-center">
+                <div class="md:w-1/2 sm:text-sm md:text-xl font-semibold font-Railway">View List of Contracts </div>
+                <div class="md:w-1/2 sm:text-sm lg:text-2xl font-medium font-Work text-right">
+                    <a
+                      href="{{ context.headers.HTTP_REFERER }}"
+                      class="border rounded-full text-themeBlue border-themeBlue sm:text-sm md:text-base sm:py-2 sm:px-3 max-xxl:py-2 py-3 md:px-6">
+                      {{ "Go Back" }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- table-start -->
+            <div class="overflow-x-auto relative sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead>
+                        <tr class="text-xs text-gray-700 bg-themeBlue rounded rounded-md">
+                            <th scope="col"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm md:text-base font-normal whitespace-nowrap rounded-l-md font-Work text-white">
+                                Name
+                            </th>
+                            <th scope="col"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm md:text-base font-normal whitespace-nowrap rounded-r-md font-Work text-white text-right">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% for menus_data in menus_main.data.results %}
+                        <tr class="bg-white dark:bg-gray-900 dark:border-gray-700 rounded-md">
+                            <th scope="row"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm text-sm font-medium font-Work text-gray-900 whitespace-nowrap dark:text-white">
+                                <!-- Bridal Shower -->
+                                {{ menus_data.properties.venue_contract1 }}
+                            </th>
+                            <td class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm flex justify-end">
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500 mr-3 ">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-900 dark:border-gray-700 rounded-md">
+                            <th scope="row"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm text-sm font-medium font-Work text-gray-900 whitespace-nowrap dark:text-white">
+                                <!-- Bridal Shower -->
+                                {{ menus_data.properties.venue_contract2 }}
+                            </th>
+                            <td class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm flex justify-end">
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500 mr-3 ">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                      {%- comment -%}
+                        <tr class="bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-md">
+                            <th scope="row"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm text-sm font-medium font-Work text-gray-900 whitespace-nowrap dark:text-white">
+                                Bridal Shower
+                            </th>
+                            <td class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm flex justify-end">
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500 mr-3 ">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-900 dark:border-gray-700 rounded-md">
+                            <th scope="row"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm text-sm font-medium font-Work text-gray-900 whitespace-nowrap dark:text-white">
+                                Bridal Shower
+                            </th>
+                            <td class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm flex justify-end">
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500 mr-3 ">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded-md">
+                            <th scope="row"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm text-sm font-medium font-Work text-gray-900 whitespace-nowrap dark:text-white">
+                                Bridal Shower
+                            </th>
+                            <td class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm flex justify-end">
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500 mr-3 ">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="bg-white dark:bg-gray-900 dark:border-gray-700 rounded-md">
+                            <th scope="row"
+                                class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm text-sm font-medium font-Work text-gray-900 whitespace-nowrap dark:text-white">
+                                Bridal Shower
+                            </th>
+                            <td class="sm:px-2 py-6 max-xxl:py-4 md:px-6 sm:text-sm flex justify-end">
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500 mr-3 ">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="#" class="font-medium text-gray-600 dark:text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                      {%- endcomment -%}
+                    </tbody>
+                </table>
+            </div>
+            <!-- table close -->
+        </div>
+    </div>

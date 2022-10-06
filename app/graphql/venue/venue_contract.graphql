@@ -1,0 +1,22 @@
+mutation create(
+  $venue_id: String!
+  $uuid: String!
+  $contract_name1: String!
+  $contract_name2: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_contract"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "media_uuid", value: $uuid }
+        { name: "venue_contract1", value: $contract_name1 }
+        { name: "venue_contract2", value: $contract_name2 }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

@@ -1,0 +1,28 @@
+{% liquid
+  assign valid_orders = '[]' | parse_json
+  assign recalculate = false
+  for order in object.orders.results
+    if order.line_items.size > 0
+      assign valid_orders = valid_orders | add_to_array: order
+    else
+      if order.status.name == 'app.statuses.orders.placed'
+        function res = 'lib/commands/orders/delete', object: order
+        assign recalculate = true
+        if res.valid != true
+          log res, type: 'ERROR: remove_orders_without_line_items'
+        endif
+      else
+        log order, 'ERROR: cant remove confirmed order'
+      endif
+    endif
+  endfor
+
+  hash_assign object['orders']['results'] = valid_orders
+
+  if recalculate
+    function orders = 'lib/commands/orders/recalculate/build', object: object.orders
+    hash_assign object['orders'] = orders
+  endif
+
+  return object
+%}

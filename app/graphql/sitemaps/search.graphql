@@ -1,0 +1,22 @@
+query sitemaps_search($limit: Int = 1) {
+  sitemaps: records(
+    filter: {
+      table: { value: "sitemap" }
+    }
+    per_page: $limit
+    sort: [
+      { created_at: { order: DESC } }
+    ]
+  ){
+    total_entries
+    results {
+      id
+      created_at
+      type: table
+
+      file: property_upload(name: "file", expires_in: 60) {
+        url
+      }
+    }
+  }
+}

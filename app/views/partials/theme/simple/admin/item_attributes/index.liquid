@@ -1,0 +1,68 @@
+<header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+  <h2 class="title flex items-center gap-4">
+    {{ 'admin.navigation.item_attributes' | t }}
+  </h2>
+
+  <div class="flex gap-4">
+      <div class="pe-4 border-frame text-center">
+        <strong class="subtitle leading-tight">{{ item_attributes.total_entries }}</strong>
+        <div class="sidenote">{{ 'app.admin.item_attributes.title' | t }}</div>
+      </div>
+  </div>
+</header>
+
+<form action="" id="admin-form"></form>
+
+<div class="flex min-h-screen">
+
+  <div class="w-full">
+
+    <nav class="flex items-center justify-end gap-4">
+
+      <a href="/admin/item_attributes/new" class="button button-small">
+        {{ 'app.admin.item_attributes.list.add' | t }}
+        {% render 'theme/simple/ui/icon', icon: 'plus' %}
+      </a>
+
+    </nav>
+
+    <section class="table">
+
+      <header>
+        <div>{{ 'app.item_attributes.attr.name' | t }}</div>
+        <div>{{ 'app.item_attributes.attr.value' | t }}</div>
+        <div>{{ 'app.created_at' | t }}</div>
+        <div></div>
+      </header>
+
+      <div class="table-content">
+        {% for item_attribute in item_attributes.results %}
+          <ul data-tc="item_attribute-admin-panel">
+            <li>
+              <span class="lg:hidden">{{ 'app.item_attributes.attr.name' | t }}</span>
+              {{ item_attribute.name }}
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.item_attributes.attr.value' | t }}</span>
+              {{ item_attribute.value }}
+            </li>
+            <li>
+              <span class="lg:hidden">{{ 'app.item_attributes.attr.created_at' | t }}</span>
+              {{ item_attribute.created_at | l: 'compact' }}
+            </li>
+            <li class="lg:text-end">
+              <a href="/admin/item_attributes/{{ item_attribute.name }}/edit" class="button button-secondary button-small">
+                {{ 'app.edit' | t }}
+              </a>
+            </li>
+          </ul>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% liquid
+      assign page = page | default: 1 | plus: 0
+    %}
+    {% render 'theme/simple/ui/pagination', form: 'admin-form' collection: item_attributes, current_page: filters.page %}
+  </div>
+</div>

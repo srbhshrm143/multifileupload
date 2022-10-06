@@ -1,0 +1,74 @@
+mutation create(
+  $buyer: String!
+  $item_id: String!
+  $seller: String
+  $currency: String
+  $delivery_fee: Int
+  $shipping_first_name: String
+  $shipping_last_name: String
+  $shipping_email: String
+  $shipping_phone: String
+  $shipping_type: String
+  $shipping_address_id: String
+  $shipping_pickup_point: String
+  $payment_type: String
+  $c__status: String
+  $total_price_cents: Int
+  $products_price_cents: Int
+) {
+  record: record_create(
+    record: {
+      table: "order"
+      properties: [
+        { name: "buyer", value: $buyer }
+        { name: "item_id", value: $item_id }
+        { name: "seller", value: $seller }
+        { name: "currency", value: $currency }
+        { name: "delivery_fee", value_int: $delivery_fee }
+        { name: "shipping_first_name", value: $shipping_first_name }
+        { name: "shipping_last_name", value: $shipping_last_name }
+        { name: "shipping_email", value: $shipping_email }
+        { name: "shipping_phone", value: $shipping_phone }
+        { name: "shipping_type", value: $shipping_type }
+        { name: "shipping_pickup_point", value: $shipping_pickup_point }
+        { name: "shipping_address_id", value: $shipping_address_id }
+        { name: "payment_type", value: $payment_type }
+        { name: "c__status", value: $c__status }
+        { name: "total_price_cents", value_int: $total_price_cents }
+        { name: "products_price_cents", value_int: $products_price_cents }
+      ]
+    }
+  ) {
+    id
+    type: table
+
+    currency: property(name: "currency")
+    item_id: property(name: "item_id")
+    buyer: related_record(
+      table: "profile",
+      join_on_property: "buyer",
+      foreign_property: "id"
+    ) {
+      id
+    }
+    seller: related_record(
+        table: "venues"
+        join_on_property: "seller"
+        foreign_property: "profile_id"
+      # table: "organization"
+      # join_on_property: "seller"
+      # foreign_property: "id") 
+    ){
+      id
+    }
+    status: related_record(
+      table: "status"
+      join_on_property: "id"
+      foreign_property: "object_id"
+    ) {
+      id
+      created_at
+      name: property(name: "name")
+    }
+  }
+}

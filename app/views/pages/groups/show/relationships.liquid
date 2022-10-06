@@ -1,0 +1,15 @@
+---
+slug: groups/:id/relationships
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+
+  assign group_id = context.params.id | split: '-' | last
+  function group = 'lib/queries/groups/find', id: group_id, with_owner: false, current_profile: current_profile
+  include 'lib/can_do_or_unauthorized', object: group, do: "edit", actor: current_profile
+
+  function members = 'lib/queries/relationships/search_by_right', limit: 20, name: 'membership', r_id: group_id, include_related: true
+  function owners = 'lib/queries/relationships/search_by_right', limit: 20, name: 'owner', r_id: group_id, include_related: true
+
+  render 'theme/simple/groups/relationships/index', group: group, current_profile: current_profile, members: members, owners: owners, context: context
+%}

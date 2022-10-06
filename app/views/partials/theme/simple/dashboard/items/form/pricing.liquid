@@ -1,0 +1,21 @@
+<h2 class="title mt-8">{{ 'app.items.pricing' | t }}</h2>
+<div class="card flex flex-col md:flex-row gap-4 md:gap-12">
+  <fieldset>
+    <label class="block" for="price">{{ 'app.items.form.price' | t }}:</label>
+    <!-- TODO: Add currency prefix $[input]  -->
+    <div class="flex items-center gap-3">
+      <input type="number" id="price" name="item[price]" step="any" min="0" value="{{ item.price | default: 1000 | fractional_to_amount: currency }}" class="md:w-36">
+      {{ currency }}
+    </div>
+    {% render 'theme/simple/field_error', errors: item.errors.price %}
+  </fieldset>
+  <fieldset>
+    <label class="block" for="original_price">{{ 'app.items.form.original_price' | t }}:</label>
+    <!-- TODO: Add currency prefix $[input]  -->
+    <div class="flex items-center gap-3">
+      <input type="number" id="original_price" name="item[original_price]" step="any" min="0" value="{% if item.original_price != blank %}{{ item.original_price | fractional_to_amount: currency }}{% endif %}" class="md:w-36">
+      {{ currency }}
+    </div>
+    {% render 'theme/simple/field_error', errors: item.errors.original_price %}
+  </fieldset>
+</div>

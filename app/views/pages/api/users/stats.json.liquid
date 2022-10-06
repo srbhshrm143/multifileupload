@@ -1,0 +1,29 @@
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id, membership: true
+  if current_profile == blank
+    function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  endif
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile
+
+  if current_profile.representative
+    assign buyer = current_profile.representative.id
+  else
+    assign buyer = current_profile.id
+  endif
+  function cart_quantity = 'lib/queries/orders/number_of_items_in_cart', buyer: buyer
+
+  function inbox_unread = 'modules/chat/lib/queries/conversations/number_of_unread_by_participant', participant_id: current_profile.id
+
+  assign object = '{"valid": true}' | parse_json
+  hash_assign object['cart_quantity'] = cart_quantity
+  hash_assign object['inbox_unread'] = inbox_unread
+  hash_assign object['relationships'] = current_profile.relationships | default: current_profile.representative.relationships
+  unless object.relationships
+    hash_assign object['relationships'] = '{}' | parse_json
+  endunless
+
+  function unread_count = 'lib/queries/activities/unread_count', feed: 'user-notifications', feed_id: current_profile.id
+  hash_assign object['notifications'] = unread_count
+
+  include 'theme/json/shared/show', object: object
+%}

@@ -1,0 +1,122 @@
+{%liquid
+  
+  graphql category_gql = 'categories/search', limit: 10
+%}
+
+{%- comment -%}
+  {{ category_gql.categories.results | json }}
+  <br><br>
+  {% for category in category_gql.categories.results %}
+    {{ category.categoty_image | json }}<br><br>
+  {% endfor %}
+{%- endcomment -%}
+
+{%- comment -%}
+  <article class="flex flex-col">
+    <div class="bg-panel rounded shadow">
+      <a class="block w-full h-64 overflow-hidden rounded-tl rounded-tr" href="{% render 'link_to', category: object.key %}">
+        {% render 'theme/simple/ui/picture-placeholder' %}
+      </a>
+
+      <div class="p-4">
+        <h2 class="text-lg font-medium">
+          <a href="{% render 'link_to', category: object.key %}">{{ object.key | t: scope: 'categories' }}</a>
+        </h2>
+
+        <p class="mt-2 break-all">
+          {{ object.key | capitalize }}
+        </p>
+      </div>
+    </div>
+  </article>
+{%- endcomment -%}
+
+<section class="max-w-7xl mx-auto ">
+  <div class="wrapper max-sm:px-5">
+    <h3 class="block font-Work text-black text-4xl font-semibold text-center max-xxl:text-3xl max-sm:text-2xl">
+      {{ "Featured Categories" }}
+    </h3>
+    <p class="block font-Work text-black text-base text-center uppercase mt-1.5 max-xxl:text-sm">
+      {{ "Discover OUR best CATEGORIES AND MORE"}}
+    </p>
+  </div>
+
+  <div class="wrapper">
+    <div class="container px-5 sm:pt-4 md:pt-10 mx-auto max-xl:max-w-full max-xl:px-10 max-sm:px-5">
+      <div class="flex flex-wrap -m-1 md:-m-2">
+
+        <div class="flex flex-wrap w-full max-lg:w-full">
+          {% for category in category_gql.categories.results limit: 6 %}
+            {%- comment -%}
+              {{ category | json }}<br><br>
+              {% if forloop.first or forloop.last %} {% else %} {% endif %}
+            {%- endcomment -%}
+            <div class="{% if forloop.first or forloop.last %} w-1/2 {% else %} w-1/4 {% endif %} p-1 md:p-2 h-72 relative max-sm:h-auto">
+              {% for category_image in category.categoty_image %}
+                <img alt="gallery" class="block object-cover object-center w-full h-full rounded-lg"
+                  src="{{ category_image.image_url.url }}">
+              {% endfor %}
+              {% for category_name in category.category_details %}
+                <a href="/quick_search?event_type={{ category_name.name }}"
+                  class="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:bg-themeBlue-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                  {% if category_name.lang == "en" %}
+                    {{ category_name.name }}
+                  {% endif %}
+                </a>
+              {% endfor %}
+            </div>
+            {%- comment -%}
+              <div class="w-1/4 p-1 md:p-2 h-72 relative max-sm:h-auto">
+                <img alt="gallery" class="block object-cover object-center w-full h-full rounded-lg"
+                  src="{{ 'images/event-hound/grid-img-2.png' | asset_url }}">
+                <a href="#"
+                  class="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-primaryBlue rounded-full text-sm font-medium text-white bg-primaryBlue hover:bg-primaryBlue-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                  {{ "Corporate" }}
+                </a>
+              </div>
+              <div class="w-1/4 p-1 md:p-2 h-72 relative max-sm:h-auto">
+                <img alt="gallery" class="block object-cover object-center w-full h-full rounded-lg"
+                  src="{{ 'images/event-hound/grid-img-3.png' | asset_url }}">
+                <a href="#"
+                  class="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-primaryLightGreen rounded-full text-sm font-medium text-white bg-primaryLightGreen hover:bg-primaryLightGreen-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                  {{ "Religious" }}
+                </a>
+              </div>
+              <div class="w-1/4 p-1 md:p-2 h-72 relative max-sm:h-auto">
+                <img alt="gallery" class="block object-cover object-center w-full h-full rounded-lg"
+                  src="{{ 'images/event-hound/grid-img-4.png' | asset_url }}">
+                <a href="#"
+                  class="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-primaryRed rounded-full text-sm font-medium text-white bg-primaryRed hover:bg-primaryRed-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                  {{ "Anniversary" }}
+                </a>
+              </div>
+              <div class="w-1/4 p-1 md:p-2 h-72 relative max-sm:h-auto">
+                <img alt="gallery" class="block object-cover object-center w-full h-full rounded-lg"
+                  src="{{ 'images/event-hound/grid-img-5.png' | asset_url }}">
+                <a href="#"
+                  class="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-primaryPink rounded-full text-sm font-medium text-white bg-primaryPink hover:bg-primaryPink-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                  {{ "Birthday" }}
+                </a>
+              </div>
+              <div class="w-1/2 p-1 md:p-2 h-72 relative max-sm:h-auto">
+                <img alt="gallery" class="block object-cover object-center w-full h-full rounded-lg"
+                  src="{{ 'images/event-hound/grid-img-6.png' | asset_url }}">
+                <a href="#"
+                  class="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border-2 border-primaryYellow rounded-full text-sm font-medium text-white bg-primaryYellow hover:bg-primaryYellow-500 uppercase max-lg:px-6 max-sm:text-xs max-sm:py-2 max-sm:px-5">
+                  {{ "Baby Shower" }}
+                </a>
+              </div>
+            {%- endcomment -%}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="text-center sm:pt-6 sm:pb-8 md:pt-10 md:pb-14">
+        <a class="text-base text-black font-medium cursor-pointer">
+          {{ "Show More Activities" }}
+          <img
+            src="{{ 'images/event-hound/drop-arrow.svg' | asset_url }}" class="inline-block" alt="" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

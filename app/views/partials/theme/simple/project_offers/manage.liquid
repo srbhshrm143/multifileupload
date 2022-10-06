@@ -1,0 +1,70 @@
+<section>
+  <h1 class="pagetitle">{{ 'app.project_offers.my_applications' | t }}</h1>
+
+  <nav class="py-5 mb-8 bg-frame">
+    <div class="container">
+      <form action="" class="flex items-center" id="project-offers-list">
+        <input type="text" name="keyword" value="{{filters.keyword}}" placeholder="{{ 'app.project_offers.search_in_applications' | t }}" class="lg:w-60 pe-16">
+        <button type="submit" class="-ms-12 button button-compact">
+          <span class="sr-only">{{ 'app.search.search' | t }}</span>
+          {% render 'theme/simple/ui/icon', icon: 'search' %}
+        </button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="table">
+      <header>
+        <div></div>
+        <div>{{ 'app.project_offers.solution_title' | t }}</div>
+        <div class="text-end">{{ 'app.models.shared.id' | t }}</div>
+        <div>{{ 'app.models.shared.date' | t }}</div>
+        <div>{{ 'app.projects.project' | t }}</div>
+        <div>{{ 'app.projects.project_status' | t }}</div>
+        <div></div>
+      </header>
+
+      <div class="table-content">
+        {% for offer in project_offers.results %}
+          <ul>
+            <li></li>
+            <li><a href="{% render 'link_to': object: offer %}">{{offer.name}}</a></li>
+            <li class="text-end">{{offer.id}}</li>
+            <li class="text-content-sidenote">{{ offer.created_at | to_time | l: 'date_compact' }}</li>
+            <li><a href="{% render 'link_to': object: offer.project %}">{{offer.project.name}}</a></li>
+            <li>
+              {% render 'theme/simple/projects/show/status', project: offer.project %}
+            </li>
+            <li>
+              <div class="flex items-center justify-end gap-2">
+                {% if offer.status.name == 'app.statuses.project_offers.draft' %}
+                  <a href="{% render 'link_to', object: offer, action: 'edit' %}" title="{{ 'app.models.shared.edit' | t }}" class="button button-compact">
+                    <span class="sr-only">{{ 'app.models.shared.edit' | t }}</span>
+                    {% render 'theme/simple/ui/icon', icon: 'pencil' %}
+                  </a>
+                  <form action="{% render 'link_to', object: offer %}" method="post" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }">
+                    {% render 'authenticity_token', authenticity_token: context.authenticity_token %}
+                    <input type="hidden" name="_method" value="delete" />
+                    <input type="hidden" name="id" value="{{ offer.id }}">
+                    <button type="submit" title="{{ 'app.delete' | t }}" class="button button-compact button-secondary">
+                      <span class="sr-only">{{ 'app.delete' | t }}</span>
+                      {% render 'theme/simple/ui/icon', icon: 'trash' %}
+                    </button>
+                  </form>
+                {% else %}
+                  <a href="{% render 'link_to': object: offer %}" title="{{ 'app.models.shared.show' | t }}" class="button button-compact">
+                    <span class="sr-only">{{ 'app.models.shared.show' | t }}</span>
+                    {% render 'theme/simple/ui/icon', icon: 'binocular' %}
+                  </a>
+                {% endif %}
+              </div>
+            </li>
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% render 'theme/simple/ui/pagination', collection: projects, current_page: filters.page, form: 'project-offers-list' %}
+</section>

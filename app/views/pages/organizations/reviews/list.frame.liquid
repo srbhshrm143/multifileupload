@@ -1,0 +1,13 @@
+---
+slug: o/:slug/reviews_frame
+layout: null
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+
+  function organization = 'lib/queries/organizations/search', limit: 1, slugs: context.params.slug
+  function reviews = 'lib/queries/organization_reviews/search_by_organization', organization_id: organization.results[0].id, score_gte: "1", limit: 5, page: context.params.page, recommend: context.params.recommend
+
+  render 'theme/simple/organizations/reviews/list', reviews: reviews, organization: organization.results[0]
+%}

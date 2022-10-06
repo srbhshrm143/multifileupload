@@ -1,0 +1,20 @@
+mutation (
+  $name: String!
+  $colors: String!
+) {
+  record: record_create(
+    record: {
+      table: "theme_settings"
+      properties: [
+        { name: "name", value: $name }
+        { name: "colors", value: $colors }
+      ]
+    }
+  ) {
+    id
+    created_at
+
+    name: property(name: "name")
+     colors: property_object(name: "colors")
+  }
+}

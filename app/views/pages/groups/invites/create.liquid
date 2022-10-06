@@ -1,0 +1,17 @@
+---
+slug: groups/:id/invites
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+
+  assign group_id = context.params.id | split: '-' | last
+  function group = 'lib/queries/groups/find', id: group_id, with_owner: false
+  include 'lib/can_do_or_unauthorized', object: group, do: "invite", actor: current_profile
+
+  assign emails = context.params.email_list | split: ','
+  function object = 'lib/commands/groups/invite_many/create', group: group, emails: emails, current_profile: current_profile
+
+  function url = 'link_to', object: group, action: 'relationships'
+  include 'redirect_to', url: url, notice: 'app.groups.invites.sent'
+%}

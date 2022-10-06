@@ -1,0 +1,13 @@
+---
+slug: groups.frame
+layout: null
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, followships: true
+
+  function filters = 'lib/queries/groups/filters', params: context.params
+  function list = 'lib/queries/groups/search', limit: 6, page: filters.page, tags: filters.tags, sort: filters.sort, meta_visible: 'anonymous', current_profile: current_profile
+
+  render 'theme/simple/groups/index/list', list: list, page: filters.page, filters: filters, current_profile: current_profile, context: context
+%}

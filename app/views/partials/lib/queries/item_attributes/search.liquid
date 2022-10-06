@@ -1,0 +1,7 @@
+{% liquid
+  assign limit = limit | default: 100
+  assign page = page | to_positive_integer: 1
+  graphql r = 'item_attributes/search', limit: limit, page: page, name: name, disabled_exists: disabled_exists
+
+  return r.item_attributes
+%}

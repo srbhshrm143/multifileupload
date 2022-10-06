@@ -1,0 +1,63 @@
+{% liquid
+  for item in payload
+    assign o = item[1]
+    if o.type == "collection"
+      assign urls = '[]' | parse_json
+      for c_item in o.items
+        function url = 'theme/simple/activities/html/a', object: c_item, namespace: namespace, role: role
+        assign urls = urls | add_to_array: url
+      endfor
+      hash_assign o['url'] = urls | join: ', '
+
+    elsif o.type
+      if o.type == 'post'
+        function url = 'theme/simple/activities/html/a', object: payload, type: 'activity'
+      else
+        function url = 'theme/simple/activities/html/a', object: o, namespace: namespace, role: role
+      endif
+      hash_assign o['url'] = url
+    endif
+  endfor
+
+  if payload.attributed_to
+
+    if payload.attributed_to.type == 'collection'
+      assign urls = '[]' | parse_json
+      for item in payload.attributed_to.items
+        function url = 'theme/simple/activities/html/a', object: item, namespace: namespace, role: role
+        assign urls = urls | add_to_array: url
+      endfor
+
+      assign urls = urls | join: ", "
+    else
+      function url = 'theme/simple/activities/html/a', object: payload.attributed_to, namespace: namespace, role: role
+    endif
+
+  else
+    function url = 'theme/simple/activities/html/a', object: event.object, namespace: namespace, role: role
+  endif
+
+  assign type = type | default: payload.type
+%}
+
+{% liquid
+  if payload.attributed_to.type == 'project'
+    assign target_url = payload.attributed_to.url
+  else
+    assign target_url = payload.target.url
+  endif
+%}
+
+{% print type | t:
+  target: payload.target.name,
+  object_url: payload.object.url,
+  target_url: target_url,
+  attributed_to_url: payload.attributed_to.url,
+  url: url,
+  scope: 'app.activities.types',
+  title: payload.object.name,
+  name: payload.object.name,
+  object_id: payload.object.id,
+  meta: meta,
+  urls: urls
+%}

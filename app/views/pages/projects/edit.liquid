@@ -1,0 +1,13 @@
+---
+slug: projects/:id/edit
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+
+  function project = 'lib/queries/projects/find', id: context.params.id
+  include 'lib/can_do_or_unauthorized', object: project, do: "edit", actor: current_profile
+  function _ = 'lib/extend_context', tags: true, photo_presign: true
+
+  render 'theme/simple/projects/edit', object: project, current_profile: current_profile, context: context
+%}

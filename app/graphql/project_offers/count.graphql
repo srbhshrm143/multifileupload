@@ -1,0 +1,14 @@
+query records(
+  $project_id: String!
+){
+  records(
+    per_page: 1
+    filter: {
+      properties: [
+        { name: "project_id" value: $project_id }
+      ]
+    }
+  ){
+    total_entries
+  }
+}

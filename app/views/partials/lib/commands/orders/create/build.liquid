@@ -1,0 +1,35 @@
+{% comment %}
+  params: @item
+          @current_user_id
+          
+          {% liquid
+            assign quantity = params.quantity | to_positive_integer: 1
+          %}
+{% endcomment %}
+
+{% parse_json data %}
+{
+  "buyer":   "{% print current_profile.id %}",
+  "seller":  "{% print item.seller.profile_id %}",
+  "currency": {{ "USD" | json }},
+  "item_id": {{ item.id | json }},
+  "total_price_cents": {{ params.item_price | times: 1 | json }},
+  "products_price_cents": {{ item.products_price_cents | times: 1 | json }},
+  "delivery_fee":  {{ item.item_inventory.owner.delivery_fee | json }},
+  "c__status": "app.statuses.orders.placed",
+
+  "shipping_first_name":   {{ object.shipping_first_name | json }},
+  "shipping_last_name":   {{ object.shipping_last_name | json }},
+  "shipping_email":   {{ object.shipping_email | json }},
+  "shipping_phone":   {{ object.shipping_phone | json }},
+  "shipping_type":   {{ object.shipping_type | json }},
+  "shipping_address_id":   {{ object.shipping_address_id | json }},
+  "shipping_pickup_point":   {{ object.shipping_pickup_point | json }},
+  "payment_type":   {{ object.payment_type | json }}
+}
+{% endparse_json %}
+
+{% liquid
+  return data
+%}
+

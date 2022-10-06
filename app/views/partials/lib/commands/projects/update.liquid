@@ -1,0 +1,15 @@
+{%  liquid
+  function object = 'lib/commands/projects/update/build', object: object
+  function object = 'lib/commands/projects/update/check', object: object
+
+  if object.valid
+    function result = 'lib/commands/execute', mutation_name: 'projects/update' object: object
+
+    if result.valid and object.status
+      function status = 'lib/commands/statuses/create', profile_id: profile.id, object_id: result.id, name: object.status, scope: 'app.statuses.projects'
+      hash_assign result['status'] = status
+    endif
+  endif
+
+  return result
+%}

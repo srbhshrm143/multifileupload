@@ -1,0 +1,22 @@
+---
+slug: relationships/:id
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign data = context.params
+  function relation = 'lib/queries/relationships/find', name: data.name, l_id: data.l_id, r_id: data.r_id
+
+  include 'lib/present_or_404', property: relation.id
+  include 'lib/can_do_or_unauthorized', object: relation, do: "delete", actor: current_profile
+
+  function object = 'lib/commands/relationships/delete', object: relation
+  if object.valid
+    function _event = 'lib/commands/events/create', type: 'relationship_deleted', actor_id: object.l_id, target_id: object.r_id
+    include 'redirect_to', url: context.params.return_to, notice: context.params.notice_key
+  else
+    include 'redirect_to', url: context.params.return_to, error: context.params.error_key
+  endif
+%}

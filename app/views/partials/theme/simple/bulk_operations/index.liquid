@@ -1,0 +1,71 @@
+<div class="table">
+  <header>
+    <div>{{ 'app.bulk_operations.attr.operation_type' | t }}</div>
+    <div>{{ 'app.bulk_operations.attr.status' | t }}</div>
+    <div class="lg:text-end">{{ 'app.bulk_operations.attr.date' | t }}</div>
+    <div></div>
+  </header>
+
+  <div class="table-content">
+    {% for operation in operations.results %}
+      <ul>
+        <li>
+          <div class="flex items-center gap-2 capitalize">
+            <span class="lg:hidden">{{ 'app.bulk_operations.attr.operation_type' | t }}:</span>
+            {% liquid
+              if operation.operation_type == 'import'
+                assign icon = 'upload'
+              elsif operation.operation_type == 'export'
+                assign icon = 'download'
+              endif
+            %}
+            {% render 'theme/simple/ui/icon', icon: icon %}
+            {{ operation.operation_type }}
+          </div>
+        </li>
+
+        <li>
+          <span class="lg:hidden">{{ 'app.bulk_operations.attr.status' | t }}:</span>
+          {% liquid
+           assign final_status = operation.statuses | last
+           assign first_status = operation.statuses | first
+
+            case final_status.name
+              when 'app.statuses.bulk_operations.import.created', 'app.statuses.bulk_operations.export.created'
+                assign status_class = 'border-frame'
+              when 'app.statuses.bulk_operations.import.started', 'app.statuses.bulk_operations.export.started'
+                assign status_class = 'bg-warning-disabled border-warning'
+              when 'app.statuses.bulk_operations.import.done', 'app.statuses.bulk_operations.export.done'
+                assign status_class = 'bg-confirmation-disabled border-confirmation'
+              when 'app.statuses.bulk_operations.import.failure', 'app.statuses.bulk_operations.export.failure'
+                assign status_class = 'bg-danger-disabled border-danger'
+            endcase
+          %}
+          <span class="px-2 py-1 inline-block rounded border leading-normal uppercase {{ status_class }}">{{ final_status.name | t }}</span>
+        </li>
+
+        <li class="lg:text-end">
+          <span class="lg:hidden">{{ 'app.bulk_operations.attr.status' | t }}:</span>
+          <time datetime="{{ first_status.created_at }}" class="timeago capitalize">{{ first_status.created_at }}</time>
+        </li>
+
+        <li class="lg:text-end">
+          {% for file in operation.files %}
+            {% if file.document_type == 'report' %}{% continue %}{% endif %}
+            <a href="{% render 'link_to', object: file %}" class="button button-compact">
+              <span class="sr-only">{{ file.document_type }}</span>
+              {% render 'theme/simple/ui/icon', icon: 'download' %}
+            </a>
+          {% endfor %}
+          {% if operation.operation_type == 'import' %}
+          <a href="{% render 'link_to', object: operation %}" class="button button-compact">
+            <span class="sr-only">{{ 'app.show_more' | t }}</span>
+            {% render 'theme/simple/ui/icon', icon: 'focusEye' %}
+          </a>
+          {% endif %}
+        </li>
+
+      </ul>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,33 @@
+{% liquid
+   function current_profile = 'lib/current_profile', user_id: context.current_user.id
+   assign limit = 3
+   function records = 'lib/queries/quick_search/search', keyword: context.params.qkeyword_location, limit: limit, lang: context.language
+ 
+   graphql get_records = 'quick_search/searchByCatgeory', keyword: context.params.qkeyword_location, event_type: context.params.event_type, limit: limit
+ 
+  
+   render 'theme/simple/quick_search/index', records: get_records.records, current_profile: current_profile, limit: limit
+ %}
+
+{% if records.venues.total_entries > 0 %}
+  {% for location_data in records.venues.results %}
+    {%- comment -%}
+      {% assign event_type = location_data.venue_space | map: 'properties' | map: 'event_type' | join: '[]' %}
+      {% if event_type == context.params.event_type %}
+      {{ location_data }}<br><br>
+      {% endif %}
+    {%- endcomment -%}
+    {%- comment -%}
+      {% for event_type in location_data.venue_space %}
+      {% if event_type.properties.event_type == context.params.event_type %}
+      {{event_type}}
+      {% endif %}
+      {% endfor %}
+    {%- endcomment -%}
+  {% endfor %}
+{% endif %}
+{%- comment -%}
+  <br>
+  <br>
+  {{ context.params | json }}
+  render 'theme/simple/quick_search/index', records: records, current_profile: current_profile, limit: limit{%- endcomment -%}}

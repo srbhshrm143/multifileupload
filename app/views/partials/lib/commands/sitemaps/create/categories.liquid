@@ -1,0 +1,11 @@
+{%- graphql r = 'categories/search', limit: 999, page: 1 -%}
+{%- for category in r.categories.results -%}
+  <url>
+    <loc>https://{{ context.location.host }}/categories/{{ category.key }}</loc>
+    {% for lang in available_languages %}
+      <xhtml:link rel="alternate" hreflang="{{ lang }}" href="https://{{ context.location.host }}/categories/{{ category.key }}?language={{ lang }}"/>
+    {%- endfor -%}
+    <lastmod>{{ category.created_at }}</lastmod>
+    <priority>0.80</priority>
+  </url>
+{%- endfor -%}

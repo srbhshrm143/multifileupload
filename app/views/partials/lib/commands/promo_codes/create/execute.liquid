@@ -1,0 +1,13 @@
+{% liquid
+  function promo_code = 'lib/commands/execute', mutation_name: 'promo_codes/create' object: object
+
+  for detail_arr in object.details
+    function d = 'lib/commands/promo_code_details/create', object: detail_arr[1], promo_code: promo_code, lang: detail_arr[0]
+    unless d.valid
+      log d, type: 'ERROR: promo_code_details/create'
+    endunless
+  endfor
+  hash_assign object['id'] = promo_code.id
+
+  return object
+%}

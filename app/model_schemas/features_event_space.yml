@@ -1,0 +1,6 @@
+name: features_event_space
+properties:
+  - name: venue_id
+    type: integer
+  - name: self_parking
+    type: string

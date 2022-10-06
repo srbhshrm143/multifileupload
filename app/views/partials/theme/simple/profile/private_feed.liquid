@@ -1,0 +1,30 @@
+<div class="container flex flex-col md:flex-row gap-6">
+
+  {% render 'theme/simple/profile/nav', tab: section, current_profiler: current_profile, path: 'my/', context: context %}
+
+  <section class="flex-1">
+    <div class="mb-4 md:mb-0">
+      {% liquid
+        if section == 'feed'
+          if uuid == blank
+            render 'theme/simple/activities/feed_new_entry', current_profile: current_profile, placeholder: 'app.models.comments.placeholder', group: current_profile, context: context
+          endif
+          render 'theme/simple/profile/sections/activity', list: list, current_profile: current_profile, context: context, role: role, page: 1, uuid: uuid
+        elsif section == 'groups'
+          render 'theme/simple/profile/sections/groups', list: list, current_profile: current_profile, context: context
+        elsif section == 'projects'
+          render 'theme/simple/profile/sections/projects', list: list, current_profile: current_profile, context: context
+        elsif section == 'following'
+          render 'theme/simple/profile/sections/following', list: list, suggested: suggested, current_profile: current_profile, show: show
+        elsif section == 'followers'
+          render 'theme/simple/profile/sections/followers', list: list, current_profile: current_profile
+        elsif section == 'products'
+          render 'theme/simple/profile/sections/products', list: list, current_profile: current_profile
+        elsif section == 'tags'
+          render 'theme/simple/tags/index', tags: list
+        endif
+      %}
+    </div>
+  </div>
+
+</section>

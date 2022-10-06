@@ -1,0 +1,29 @@
+name: venue_payments
+properties:
+  - name: venue_id
+  - name: deposit_percentage
+    type: string
+  - name: remaining_payments
+    type: string
+  - name: security_deposits
+    type: string
+  - name: special_instructions
+    type: string
+  - name: by_cheque_to_account1
+    type: string
+  - name: by_cheque_to_account2
+    type: string
+  - name: by_cheque_to_account3
+    type: string
+  - name: payment_by_cheque
+    type: string
+  - name: upload_void_check
+    type: upload
+  # - name: payments_percentage_deposit
+  #   type: string
+  # - name: payments_remains
+  #   type: string
+  # - name: payments_instructions
+  #   type: string
+  # - name: payment_deposit
+  #   type: string

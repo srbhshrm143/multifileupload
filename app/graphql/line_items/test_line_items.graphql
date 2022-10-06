@@ -1,0 +1,126 @@
+query search(
+  $id: ID!
+  # $item_id: ID
+  # $ids: [ID!]
+  # $not_ids: [ID!]
+  # $page: Int = 1
+  $limit: Int = 20
+  # $category: String
+  $sort: [ RecordsSortInput! ] = [
+    {
+      created_at: {
+        order: DESC
+      }
+    }
+  ]
+  # $lang: String!
+  # $withResults: Boolean = true
+) {
+  items: records(
+    per_page: $limit
+    # page: $page
+    filter: {
+      table: { value: "venue_rooms" }
+      id: { value: $id }
+      # deleted_at: { exists: false }
+    }
+    sort: $sort
+  ) {
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      type: table
+      # properties
+      
+      # the '...item' fragment is delared at the end of this GraphQL.
+      ...item
+      # venue_id: property(name: "venue_id")
+      # venue_name: property(name: "venue_room_name")
+      # venue_capacity: property(name: "venue_room_capacity")
+      # products_price_cents: property(name: "price_cents")
+      # tags: property_array(name: "tags")
+      # lang: property(name: "lang")
+
+      seller: related_record(
+        table: "venues"
+        join_on_property: "venue_id"
+        foreign_property: "id"
+        # filter: { properties: { name: "lang", value: $lang } }
+      ) {
+        id
+        type: table
+        profile_id: property(name: "profile_id")
+        # properties
+        # description: property(name: "description")
+        # tags: property_array(name: "tags")
+        # lang: property(name: "lang")
+      }
+    }
+  }
+}
+
+
+# query search(
+#   $id: ID
+#   $item_id: ID
+#   # $ids: [ID!]
+#   # $not_ids: [ID!]
+#   $limit: Int = 20
+#   # $page: Int = 1
+#   $category: String
+#   $sort: [ RecordsSortInput! ] = [ { created_at: { order: DESC } } ]
+#   $lang: String!
+#   $withResults: Boolean = true
+# ) {
+#   items: records(
+#     per_page: $limit
+#     # page: $page
+#     filter: {
+#       table: { value: "venue_rooms" }
+#       id: { value: $id }
+#       # deleted_at: { exists: false }
+#       properties: [
+#         { name: "venue_room_name", value: $category }
+#         { name: "venue_id", value: $item_id }
+#       ]
+#     }
+#     sort: $sort
+#   ) {
+#     total_entries
+#     total_pages
+#     has_previous_page
+#     has_next_page
+#     results @include(if: $withResults) {
+#       ...item
+
+#       item_detail: related_record(
+#         table: "item_detail"
+#         join_on_property: "item_detail_ids"
+#         foreign_property: "id"
+#         filter: { properties: { name: "lang", value: $lang } }
+#       ) {
+#         id
+#         type: table
+#         name: property(name: "name")
+#         description: property(name: "description")
+#         tags: property_array(name: "tags")
+#         lang: property(name: "lang")
+#       }
+#     }
+#   }
+# }
+
+fragment item on Record {
+  id
+  # properties
+  created_at
+  type: table
+  venue_id: property(name: "venue_id")
+      # venue_id: property(name: "venue_id")
+      venue_name: property(name: "venue_room_name")
+      venue_capacity: property(name: "venue_room_capacity")
+      products_price_cents: property(name: "price_cents")
+}

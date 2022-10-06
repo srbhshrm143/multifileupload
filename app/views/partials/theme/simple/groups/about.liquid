@@ -1,0 +1,42 @@
+{% render 'theme/simple/groups/header', group: group, current_profile: current_profile, context: context %}
+
+<div class="container flex flex-col md:flex-row gap-6">
+  {% render 'theme/simple/groups/nav', tab: tab, group: group, current_profile: current_profile %}
+
+  <article class="card flex-1">
+    <span class="capitalize font-semibold">{{ group.group_type }}</span>
+    <span class="lowercase font-semibold">{{ 'app.groups.group' | t }}</span>
+
+    <div class="mt-4 flex items-center gap-4">
+      {% render 'theme/simple/ui/avatar', profile: group.owner.profile, size: 64, class: 'w-16 h-16' %}
+      <div>
+        <a class="subtitle" href="/profile/{{ group.owner.profile.slug }}">
+          {{ group.owner.profile.first_name }} {{ group.owner.profile.last_name }}
+        </a>
+        <span class="subtitle">{{ 'app.groups.owner' | t }}</span>
+        <div class="sidenote">{{ 'app.groups.created' | t  }}: {{ group.created_at | l: 'date_compact' }}</div>
+      </div>
+    </div>
+
+    <hr class="border-t mt-6 mb-6">
+
+    <h2 class="subtitle">
+      {{ 'app.groups.description' | t }}
+    </h2>
+    <div class="prose">
+      {{ group.description | markdown }}
+    </div>
+
+    {% if group.code_of_conduct %}
+      <hr class="border-t mt-6 mb-6">
+
+      <h2 class="subtitle" id="refid-rules">
+        {{ 'app.groups.code_of_conduct' | t }}
+      </h2>
+
+      <div class="prose">
+        {{ group.code_of_conduct | markdown }}
+      </div>
+    {% endif %}
+    </article>
+</div>

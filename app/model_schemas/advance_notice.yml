@@ -1,0 +1,8 @@
+name: advance_notice
+properties:
+  - name: venue_id
+    type: string
+  - name: booking_before
+    type: string
+  - name: booking_confirmation
+    type: string

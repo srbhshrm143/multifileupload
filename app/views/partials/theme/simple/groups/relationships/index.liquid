@@ -1,0 +1,14 @@
+{% render 'theme/simple/groups/header_manage', group: group, context: context %}
+
+<div class="container">
+
+  <h2 class="sidenote ms-4 mb-2 text-content-sidenote uppercase">
+    {{ 'app.groups.relationships.members_count' | t: count: members.total_entries  }}
+  </h2>
+
+  <div class="card">
+    {% render 'theme/simple/groups/relationships/list', group: group, list: owners, title: 'app.groups.relationships.admins', context: context %}
+    {% render 'theme/simple/groups/relationships/list', group: group, list: members, title: 'app.groups.relationships.general_members', context: context %}
+  </div>
+
+</div>

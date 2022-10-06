@@ -1,0 +1,7 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+
+  function _ = 'lib/extend_context', photo_presign: true
+  render 'theme/simple/dashboard/profile/edit', object: current_profile, context: context
+%}

@@ -1,0 +1,49 @@
+---
+slug: contact_us/form_submit
+method: post
+---
+
+<div class="pagetitle"> Form Submited </div>
+
+
+<!-- {{ context }} -->
+
+{% assign subject = context.params.form_subject %}
+{% assign booking_id = context.params.form_booking_id %}
+{% assign form_content = context.params.form_text_content %}
+
+
+{%liquid
+  graphql new_contact_us = 'custom-contact-us/contact-us', form_subject: subject, form_booking_id: booking_id, form_text_content: form_content
+%}
+
+<!-- {{ new_contact_us }} -->
+
+<table>
+  <tr class="bigtitle">
+    <td> Form Id : </td>
+    <td> {{ new_contact_us.model_create.id }} </td>
+  </tr>
+  <tr>
+    <td> Subject : </td>
+    <td> {{ new_contact_us.model_create.properties.subject }} </td>
+  </tr>
+  <tr>
+    <td> Booking Id : </td>
+    <td> {{ new_contact_us.model_create.properties.booking-id }} </td>
+  </tr>
+  <tr>
+    <td> Content : </td>
+    <td> {{ new_contact_us.model_create.properties.text-content }} </td>
+  </tr>
+</table>
+
+
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/contact_us/form";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

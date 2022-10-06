@@ -1,0 +1,19 @@
+{% liquid
+  if profile_id == blank
+    log 'profile_id cannot be blank', type: 'ERROR: /lib/commands/items/export/current_state'
+    break
+  endif
+
+  function item_inventories = 'lib/queries/item_inventories/search_by_owner', owner: profile_id, withAllVariants: true, withAllLangs: true, limit: 1000
+  function export = 'lib/commands/items/export/csv/v1/build', item_inventories: item_inventories.results
+
+  function data = 'lib/commands/items/import/csv/read_file', rows: export.data
+  function data = 'lib/commands/items/export/group_by_primary_key', list: data
+
+  assign current = '{}' | parse_json
+
+  hash_assign current['item_inventories'] = export.item_inventories
+  hash_assign current['data'] = data
+
+  return current
+%}

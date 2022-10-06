@@ -1,0 +1,104 @@
+{% liquid
+  assign buyer = data.order.buyer
+  assign order = data.order
+  assign shipped_at = order.order_delivery.status.created_at | l
+  assign pickup_until = order.order_delivery.status.created_at | l: 'day_month_year'
+  function order_url = 'link_to_url', object: order, type: 'buyer_order'
+  function seller_url = 'link_to_url', object: order.seller
+%}
+
+<p>
+  {{ 'app.emails.orders.delivered.buyer.greeting' | t: first_name: buyer.first_name, last_name: buyer.last_name }}<br/>
+  {% case order.shipping_type %}
+  {% when 'personal_pickup' %}
+    {{ 'app.emails.orders.delivered.buyer.info_personal_pickup' | t: pickup_address: 'Yellow street 14', pickup_until: pickup_until, opening_hours: '8 – 16' | markdown }}
+  {% when 'delivery' %}
+    {{ 'app.emails.orders.delivered.buyer.info_delivery' | t: shipped_at: shipped_at, delivery_time: '7 days' }}
+  {% when 'digital' %}
+    {{ 'app.emails.orders.delivered.buyer.info_digital' | t }}
+  {% endcase %}
+</p>
+
+{% if order.shipping_type != 'digital' %}
+  <p>
+    {{ 'app.emails.orders.delivered.buyer.merchant_provided_info' | t}}:<br>
+    {{ order.order_delivery.delivery_information }}
+  </p>
+{% endif %}
+
+
+<div class="mt border"></div>
+
+
+<h2 class="mt subtitle">{{ 'app.emails.orders.delivered.buyer.order_summary' | t }}</h2>
+
+<div class="mt">
+  <b>{{ order.seller.name }}</b> (<a href="{{ order_url }}">{{ 'app.emails.orders.delivered.buyer.contact_link' | t: name: order.seller.name }}</a>)<br>
+  <span class="sidenote">{{ 'app.emails.orders.delivered.buyer.order_id' | t }}: {{ order.id }}</span>
+</div>
+
+<table cellspacing="0" class="mt-2 w-full">
+  {% for item in order.line_items %}
+    <tr>
+      <td>
+        {% render 'theme/simple/items/cover', item: item.item %}
+      </td>
+      <td class="table-spacing"></td>
+      <td>{{ item.item.item_detail.name }}</td>
+      <td class="table-spacing"></td>
+      <td class="text-right">{{ item.quantity }}</td>
+      <td class="table-spacing"></td>
+      <td class="text-right">{% render 'theme/simple/price', amount_cents: item.total_price_cents, currency: item.currency %}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+{% case order.shipping_type %}
+{% when 'digital' %}
+  {% render 'theme/simple/emails/delivery_digital', order: order %}
+{% else %}
+  <div class="mt-2">
+    <h2 class="mt subtitle">{{ 'app.emails.orders.delivered.buyer.delivery' | t }}</h2>
+    {{ order.shipping_type | t: scope: 'app.orders.checkout.delivery_type' }} – {% render 'theme/simple/price', amount_cents: order.total_shipping_cost_cents, currency: order.currency %}<br>
+    {% render 'theme/simple/emails/delivery', shipping_address: order.shipping_address, pickup_point: data.order.shipping_pickup_point %}
+  </div>
+{% endcase %}
+
+
+<h2 class="mt subtitle">{{ 'app.emails.orders.delivered.buyer.order_total' | t }}</h2>
+<table cellspacing="0">
+  <tr>
+    <td>{{ 'app.emails.orders.delivered.buyer.subtotal' | t }}:</td>
+    <td class="table-spacing"></td>
+    <td>{% render 'theme/simple/price', amount_cents: order.products_price_cents, currency: order.currency %}</td>
+  </tr>
+  {% unless order.shipping_type == 'digital' %}
+    <tr>
+      <td>{{ 'app.emails.orders.delivered.buyer.delivery' | t }}:</td>
+      <td class="table-spacing"></td>
+      <td>{% render 'theme/simple/price', amount_cents: order.total_shipping_cost_cents, currency: order.currency %}</td>
+    </tr>
+  {% endunless %}
+  <tr>
+    <td><b>{{ 'app.emails.orders.delivered.buyer.total_price' | t }}:</b></td>
+    <td class="table-spacing"></td>
+    <td>{% render 'theme/simple/price', amount_cents: order.total_price_cents, currency: order.currency %}</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>{{ 'app.emails.orders.delivered.buyer.payment_method' | t }}:</td>
+    <td class="table-spacing"></td>
+    <td>{{ 'app.orders.payment_types.' | append: order.payment_type | t }}</td>
+  </tr>
+</table>
+
+
+<div class="mt border"></div>
+
+<p class="mt">
+  <a href="{{ order_url }}">{{ 'app.emails.orders.delivered.buyer.contact_info' | t: name: order.seller.name }}</a>
+</p>

@@ -1,0 +1,15 @@
+<section class="md:h-64 card flex flex-col md:flex-row justify-center items-center text-center md:text-start">
+  <div class="order-2 md:order-1">
+    <h2 class="title !mb-2">{{ 'app.organizations.new' | t }}</h2>
+    <p>{{ 'app.organizations.new_desc' | t }}</p>
+    <form action="/dashboard/sell/organizations" method="post" class="block">
+      {% include 'authenticity_token' %}
+      <button class="button mt-4" type="submit">
+        {{ 'app.organizations.create' | t }}
+      </button>
+    </form>
+  </div>
+  <div class="w-16 mb-6 md:mb-0 md:w-32 md:ms-10 md:ps-10 md:mt-1 order-1 md:order-last md:border-s">
+    {% render 'theme/simple/ui/icon', icon: 'usersMoney', class: 'w-full text-interaction-disabled' %}
+  </div>
+</section>

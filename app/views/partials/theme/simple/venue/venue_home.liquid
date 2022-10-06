@@ -1,0 +1,90 @@
+<h1 class="pagetitle"> Venue </h1>
+
+{%liquid
+  graphql show_venue = "venue/read" | fetch: "models"
+  assign read_data = show_venue | fetch: "results"
+%}
+
+<!-- {{ context }} -->
+
+{% for venue in read_data %}
+  {% if venue.id == context.params.id %}
+  <!-- {{ venue }}<br> -->
+    <div class="card-lg w-full md:w-1/2 mx-auto">
+      <!-- <h1 class="bigtitle text-center"> {{ venue.id }} </h1> -->
+      <table>
+        <tr>
+          <img class="venue_image" src="https://t3.ftcdn.net/jpg/04/34/72/82/360_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg" alt="no-image">
+        </tr>
+        {% if venue.id != blank %}
+          <tr class="bigtitle text-center">
+            <td> Id : </td>
+            <td> {{ venue.id }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_name != blank %}
+          <tr>
+            <td> Venue Name : </td>
+            <td> {{ venue.properties.venue_name }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_address != blank %}
+          <tr>
+            <td> Venue Address : </td>
+            <td> {{ venue.properties.venue_address }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_contact != blank %}
+          <tr>
+            <td> Venue Contact : </td>
+            <td> {{ venue.properties.venue_contact }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_services != blank %}
+          <tr>
+            <td> Venue Services : </td>
+            <td> {{ venue.properties.venue_services }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_menu != blank %}
+          <tr>
+            <td> Venue Menu : </td>
+            <td> {{ venue.properties.venue_menu }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_features != blank %}
+          <tr>
+            <td> Venue Features : </td>
+            <td> {{ venue.properties.venue_features }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_description != blank %}
+          <tr> 
+            <td> Venue Description : </td>
+            <td> {{ venue.properties.venue_description }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_capacity != blank %}
+          <tr>
+            <td> Venue Capacity : </td>
+            <td> {{ venue.properties.venue_capacity }} </td>
+          </tr>
+        {% endif %}
+        {% if venue.properties.venue_rental_hours != blank %}
+          <tr>
+            <td> Venue Rental Hours : </td>
+            <td> {{ venue.properties.venue_rental_hours }} </td>
+          </tr>
+        {% endif %}
+        <tr>
+          <!-- <td></td> -->
+          <td>
+            <a href="/venue/venue_rooms?id={{ venue.id }}" class="button button-small"> Rooms </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- {{ venue }} -->
+  {% endif %}
+{% endfor %}
+<!-- {{ context }} -->

@@ -1,0 +1,21 @@
+---
+slug: admin/organizations/:id
+method: put
+layout: admin
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_admin'
+
+  function organization = 'lib/queries/organizations/find', id: context.params.id
+  include 'lib/present_or_404', property: organization.id
+
+  function object = 'lib/commands/organizations/update_promoted', object: context.params.organization
+  if object.valid
+    function organization_url = 'link_to', object: organization, namespace: 'admin'
+    include 'redirect_to', url: organization_url, notice: 'app.models.shared.updated'
+  else
+    render 'theme/simple/admin/organizations/edit', object: organization, context: context
+  endif
+%}

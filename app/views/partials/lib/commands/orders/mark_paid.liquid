@@ -1,0 +1,40 @@
+{% liquid
+  for order in orders
+    function status_paid = 'lib/commands/statuses/create', profile_id: profile_id, object_id: order.id, name: 'app.statuses.orders.paid', scope: 'app.statuses.orders'
+
+    function merchant_auto_confirm = 'lib/queries/constants/find' name: "ORDER_MERCHANT_AUTO_CONFIRM", type: "boolean"
+    if merchant_auto_confirm != true
+      if status_paid.valid
+        function _event = 'lib/commands/events/create', type: 'status_created', actor_id: profile_id, object_id: status_paid.id, target_id: status_paid.object_id, delay: 0
+        function _event = 'lib/commands/events/create', type: 'order_paid_and_waiting_for_merchant_confirmation', actor_id: profile_id, object_id: order.id, target_id: order.id
+      endif
+    else
+      function status_in_progress = 'lib/commands/statuses/create', profile_id: profile_id, object_id: order.id, name: 'app.statuses.orders.in_progress', scope: 'app.statuses.orders'
+      if status_in_progress.valid
+        function _event = 'lib/commands/events/create', type: 'status_created', actor_id: profile_id, object_id: status_in_progress.id, target_id: status_in_progress.object_id, delay: 0
+      endif
+    endif
+
+    if order.shipping_type == 'digital'
+      assign digital_delivery = '{}' | parse_json
+      hash_assign digital_delivery['order_id'] = order.id
+      function digital_code = 'lib/commands/orders/generate_digital_code', object: order
+      hash_assign digital_delivery['delivery_information'] = digital_code
+      hash_assign digital_delivery['delivered'] = true
+
+      function object = 'lib/commands/order_deliveries/create', object: digital_delivery, current_profile: order.seller
+      if object.valid
+        assign seller = order.seller
+        function delivery_status = 'lib/commands/statuses/create', profile_id: seller.id, object_id: object.id, name: 'app.statuses.order_deliveries.delivered', scope: 'app.statuses.order_deliveries'
+        function _event = 'lib/commands/events/create', type: 'order_delivered', actor_id: seller.id, target_id: order.id, object_id: object.id, delay: 0
+
+        function order_status = 'lib/commands/statuses/create', profile_id: seller.id, object_id: order.id, name: 'app.statuses.orders.delivered', scope: 'app.statuses.orders'
+        function _event = 'lib/commands/events/create', type: 'status_created', actor_id: seller.id, object_id: order_status.id, target_id: order_status.object_id, delay: 0
+      else
+        log object, type: 'ERROR: order_deliveries/create digital'
+      endif
+    endif
+  endfor
+
+  return true
+%}

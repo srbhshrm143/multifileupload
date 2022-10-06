@@ -1,0 +1,10 @@
+{% liquid
+  unless email
+    assign email = 6 | random_string | append: 'testuser@example.com'
+  endunless
+
+  assign password = password | default: 'password'
+  graphql r = 'users/create', email: email, password: password
+
+  return r.user_create
+%}

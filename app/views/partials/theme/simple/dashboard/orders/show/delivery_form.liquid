@@ -1,0 +1,32 @@
+{% liquid
+  if object.id
+    assign method = 'put'
+  else
+    assign method = 'post'
+  endif
+%}
+
+<form action="/dashboard/sell/order_deliveries" method="POST" class="flex flex-wrap items-start" x-data="{tip: false}">
+  {% render 'authenticity_token', context: context %}
+  <input  type="hidden" name="_method" value="{{method}}">
+  {% if object.id %}
+    <input type="hidden" name="order_delivery[id]" value="{{ object.id }}">
+  {% endif %}
+  <input type="hidden" name="order_delivery[order_id]" value="{{ order.id }}">
+  <input type="hidden" id="order_delivered" name="order_delivery[delivered]" value="1">
+
+  <input type="text" class="w-full mb-2" name="order_delivery[delivery_information]" value="{{object.delivery_information}}" {% if cancelled %} disabled {% endif %} x-on:focus="tip = true">
+
+  {% unless cancelled %}
+    <div class="w-full lg:flex justify-between items-start gap-4">
+      <div>
+        <div class="sidenote">{{ 'app.orders.checkout.delivery_link' | t }}</div>
+        <div class="mt-4" x-cloak x-show.transition="tip">
+          {% render 'theme/simple/ui/form-tip', content_key: 'app.orders.checkout.delivery_notice' %}
+        </div>
+      </div>
+      <button type="submit" class="button mt-4 lg:mt-0">{{ 'app.orders.show.mark_as_delivered' | t }}</button>
+    </div>
+  {% endunless %}
+
+</form>

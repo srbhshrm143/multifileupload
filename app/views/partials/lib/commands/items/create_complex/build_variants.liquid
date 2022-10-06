@@ -1,0 +1,38 @@
+{% liquid
+  assign variants = '[]' | parse_json
+
+  if object.variants.size > 0
+    for variant_object in object.variants
+      assign variant = '{}' | parse_json
+      assign variant = variant | hash_merge: base_variant
+      unless forloop.first
+        hash_assign variant['main_variant'] = false
+      endunless
+      if variant_object['price'] != blank
+        hash_assign variant['price'] = variant_object.price | default: base_variant.price | plus: 0 | amount_to_fractional: object.currency
+      endif
+      if variant_object.original_price != blank
+        hash_assign variant['original_price'] = variant_object.original_price | default: base_variant.original_price | plus: 0 | amount_to_fractional: object.currency
+      endif
+      hash_assign variant['sku'] = variant_object.sku | default: base_variant.sku
+      hash_assign variant['quantity'] = variant_object.quantity | to_positive_integer: 0
+      if variant_object.tax_rate != blank
+        hash_assign variant['tax_rate'] = variant_object.tax_rate
+      endif
+      if variant_object.photo_ids != blank
+        hash_assign variant['photo_ids'] = variant_object.photo_ids | split: ','
+      endif
+      hash_assign variant['attributes_json_raw'] = variant_object.attributes_json
+      hash_assign variant['attributes_json'] = variant_object.attributes_json | parse_json
+      hash_assign variant['attributes_ids'] = variant_object.attributes_ids
+      hash_assign variant['_row_id'] = variant_object._row_id
+      hash_assign variant['_photo_urls'] = variant_object._photo_urls
+
+      assign variants = variants | add_to_array: variant
+    endfor
+  else
+    assign variants = variants | add_to_array: base_variant
+  endif
+
+  return variants
+%}

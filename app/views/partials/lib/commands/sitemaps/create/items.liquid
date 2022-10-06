@@ -1,0 +1,12 @@
+{%- assign limit = 500 -%}
+{%- graphql r = 'items/seo', limit: limit -%}
+{%- for item in r.items.results -%}
+  {%- render 'lib/commands/sitemaps/create/item', context: context, item: item, available_languages: available_languages -%}
+{%- endfor -%}
+{%- assign total_pages = r.items.total_pages -%}
+{%- for page in (2..total_pages) -%}
+  {%- graphql items_r = 'items/seo', limit: limit, page: page -%}
+  {%- for item in items_r.items.results -%}
+    {%- render 'lib/commands/sitemaps/create/item', context: context, item: item, available_languages: available_languages -%}
+  {%- endfor -%}
+{%- endfor -%}

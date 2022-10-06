@@ -1,0 +1,12 @@
+{% liquid
+  case transaction.gateway
+  when 'example'
+    function url = 'lib/commands/orders/example_payment_gateway_url', transaction: transaction
+  when 'stripe'
+    assign url = '/dashboard/buy/pay_stripe/' | append: transaction.id
+  when 'zero'
+    assign url = '/payments/zero/' | append: transaction.id
+  endcase
+
+  return url
+%}

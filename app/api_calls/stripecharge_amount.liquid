@@ -1,0 +1,15 @@
+---
+to: 'https://api.stripe.com/v1/charges'
+format: https
+callback: >
+  {% log response, type: 'response object' %}
+request_type: POST
+request_headers: '{
+  "Authorization": "Bearer sk_test_5qV1hs11McpgCmAkj6s4LzCX00p1Nqvkn3",
+  "Content-Type": "application/x-www-form-urlencoded"
+}' 
+---
+
+amount={{data.price}}&currency=USD&source={{data.stripetoken}}&description=swapcs
+
+ 

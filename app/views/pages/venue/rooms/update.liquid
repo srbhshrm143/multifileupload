@@ -1,0 +1,8 @@
+---
+slug: dashboard/rooms/update
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+%}
+
+{% include 'theme/simple/venue/rooms/update' %}

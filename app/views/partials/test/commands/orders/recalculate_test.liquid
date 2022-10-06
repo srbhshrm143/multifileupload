@@ -1,0 +1,91 @@
+{% parse_json buyer %} {"id": "5999"} {% endparse_json %}
+
+{% comment %}before{% endcomment %}
+{% liquid
+  function item = 'test/fixtures/item', quantity: 6, contract: contract
+  function orders = 'lib/queries/orders/search', buyer: buyer.id, limit: 100
+  assign msg = 'deleting orders for seller: ' | append: buyer.id
+  for order in orders.results
+    function r = 'lib/commands/orders/delete', object: order
+  endfor
+  function order = 'lib/commands/line_items/find_or_create_order', item: item, current_profile: buyer
+  assign params = '{"quantity": "2"}' | parse_json
+
+  function line_item = 'lib/commands/line_items/create', item: item, params: params, current_profile: buyer, order: order
+  include 'test/assertions/valid_object', contract: contract, object: line_item, field_name: 'line_item'
+  function order = 'lib/queries/orders/find_new_by_seller_and_buyer', seller: item.item_inventory.owner.id, buyer: buyer.id
+
+  include 'test/assertions/equal', contract: contract, field_name: 'total_price_cents', given: order.total_price_cents, expected: 2000
+  include 'test/assertions/equal', contract: contract, field_name: 'products_price_cents', given: order.products_price_cents, expected: 2000
+  include 'test/assertions/equal', contract: contract, field_name: 'total_shipping_cost_cents', given: order.total_shipping_cost_cents, expected: 0
+%}
+
+{% comment %}with promo{% endcomment %}
+{% liquid
+  function promo_code = 'test/fixtures/promo_code', profile: item.item_inventory.owner, contract: contract
+  function update_promo = 'lib/commands/orders/update_promo', object: order, promo_code: promo_code
+  include 'test/assertions/valid_object', contract: contract, object: update_promo, field_name: 'update_promo'
+
+  function order = 'lib/queries/orders/find', id: order.id
+
+  include 'test/assertions/equal', contract: contract, field_name: 'total_price_cents', given: order.total_price_cents, expected: 1800
+  include 'test/assertions/equal', contract: contract, field_name: 'products_price_cents', given: order.products_price_cents, expected: 2000
+  include 'test/assertions/equal', contract: contract, field_name: 'total_shipping_cost_cents', given: order.total_shipping_cost_cents, expected: 0
+  include 'test/assertions/equal', contract: contract, field_name: 'promo_code_discount', given: order.promo_code_discount, expected: 200
+%}
+
+{% comment %}with promo that use upper limit{% endcomment %}
+{% liquid
+  function promo_code = 'test/fixtures/promo_code', profile: item.item_inventory.owner, contract: contract, total_discount: 50
+  function update_promo = 'lib/commands/orders/update_promo', object: order, promo_code: promo_code
+  include 'test/assertions/valid_object', contract: contract, object: update_promo, field_name: 'update_promo'
+
+  function order = 'lib/queries/orders/find', id: order.id
+
+  include 'test/assertions/equal', contract: contract, field_name: 'total_price_cents', given: order.total_price_cents, expected: 1700
+  include 'test/assertions/equal', contract: contract, field_name: 'products_price_cents', given: order.products_price_cents, expected: 2000
+  include 'test/assertions/equal', contract: contract, field_name: 'total_shipping_cost_cents', given: order.total_shipping_cost_cents, expected: 0
+  include 'test/assertions/equal', contract: contract, field_name: 'promo_code_discount', given: order.promo_code_discount, expected: 300
+%}
+
+{% comment %}with global promo that use upper limit{% endcomment %}
+{% liquid
+  assign offline_stores = 'Blue store,Red store' | split: ','
+  function seller2 = 'test/fixtures/organization', name: "organization 5889", offline_stores: offline_stores
+  function item2 = 'test/fixtures/item', quantity: 3, contract: contract, seller: seller2
+  function order2 = 'lib/commands/line_items/find_or_create_order', item: item2, current_profile: buyer
+  assign params = '{"quantity": "1"}' | parse_json
+  function line_item = 'lib/commands/line_items/create', item: item2, params: params, current_profile: buyer, order: order2
+  include 'test/assertions/valid_object', contract: contract, object: line_item, field_name: 'line_item'
+
+  function seller3 = 'test/fixtures/organization', name: "organization 5890", offline_stores: offline_stores
+  function item3 = 'test/fixtures/item', quantity: 1, contract: contract, seller: seller3
+  function order3 = 'lib/commands/line_items/find_or_create_order', item: item3, current_profile: buyer
+  function line_item = 'lib/commands/line_items/create', item: item3, params: params, current_profile: buyer, order: order3
+
+  function promo_code = 'test/fixtures/promo_code', profile: item.item_inventory.owner, contract: contract, total_discount: 50, code_type: 'global'
+  function update_promo = 'lib/commands/orders/update_promo', object: order, promo_code: promo_code
+  include 'test/assertions/valid_object', contract: contract, object: update_promo, field_name: 'update_promo'
+  function update_promo = 'lib/commands/orders/update_promo', object: order2, promo_code: promo_code
+  include 'test/assertions/valid_object', contract: contract, object: update_promo, field_name: 'update_promo'
+
+  assign order_ids = '[]' | parse_json | add_to_array: order.id | add_to_array: order2.id | add_to_array: order3.id
+  function orders_result = 'lib/queries/orders/search', ids: order_ids, limit: 10
+  assign orders = orders_result.results
+
+  assign order = orders | detect: id: order.id
+  assign order2 = orders | detect: id: order2.id
+  assign order3 = orders | detect: id: order3.id
+
+  include 'test/assertions/equal', contract: contract, field_name: 'order.total_price_cents', given: order.total_price_cents, expected: 1800
+  include 'test/assertions/equal', contract: contract, field_name: 'order.products_price_cents', given: order.products_price_cents, expected: 2000
+  include 'test/assertions/equal', contract: contract, field_name: 'order.promo_code_discount', given: order.promo_code_discount, expected: 200
+
+  include 'test/assertions/equal', contract: contract, field_name: 'order2.total_price_cents', given: order2.total_price_cents, expected: 900
+  include 'test/assertions/equal', contract: contract, field_name: 'order2.products_price_cents', given: order2.products_price_cents, expected: 1000
+  include 'test/assertions/equal', contract: contract, field_name: 'order2.promo_code_discount', given: order2.promo_code_discount, expected: 100
+
+  include 'test/assertions/equal', contract: contract, field_name: 'order3.total_price_cents', given: order3.total_price_cents, expected: 1000
+  include 'test/assertions/equal', contract: contract, field_name: 'order3.products_price_cents', given: order3.products_price_cents, expected: 1000
+  include 'test/assertions/equal', contract: contract, field_name: 'order3.promo_code_discount', given: order3.promo_code_discount, expected: null
+%}

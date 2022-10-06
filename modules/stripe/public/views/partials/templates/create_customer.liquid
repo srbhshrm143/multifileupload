@@ -1,0 +1,7 @@
+<script src="https://checkout.stripe.com/checkout.js" defer></script>
+<script src="{{ 'modules/stripe/javascripts/CheckoutPaymentForm.js' | asset_url }}" defer></script>
+
+<input type="hidden" name="{{ data_attribute }}[source]" value="" data-cc-token />
+
+{% include 'modules/stripe/card/form', data: data, config: config %}
+

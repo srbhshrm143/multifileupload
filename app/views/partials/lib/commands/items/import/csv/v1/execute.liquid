@@ -1,0 +1,85 @@
+{% liquid
+  assign update = '[]' | parse_json
+  assign create = '[]' | parse_json
+
+  function status = 'lib/commands/statuses/create', profile_id: owner.id, object_id: operation.id, name: 'app.statuses.bulk_operations.import.validation_succeeded', scope: 'app.statuses.bulk_operations.import'
+
+  for ch in diff.changes.update
+    function path = 'lib/commands/items/import/csv/diff_path_to_item', path: ch[1]
+
+    if path.column == '_row_id'
+      continue
+    endif
+
+    if path.product_uuid
+      assign update = update | add_to_array: path.product_uuid
+    endif
+  endfor
+
+  for ch in diff.changes.create
+    function path = 'lib/commands/items/import/csv/diff_path_to_item', path: ch[1]
+
+    if path.product_uuid and current_state.item_inventories[path.product_uuid]
+      assign update = update | add_to_array: path.product_uuid
+    elsif path.product_uuid
+      assign create = create | add_to_array: path.product_uuid
+    endif
+  endfor
+
+  function status = 'lib/commands/statuses/create', profile_id: owner.id, object_id: operation.id, name: 'app.statuses.bulk_operations.import.diff_calculated', scope: 'app.statuses.bulk_operations.import'
+
+  hash_assign import['owner'] = owner
+  assign update = update | uniq
+
+  assign changes = '[]' | parse_json
+  for product_uuid in update
+    assign items = import.items | select: product_uuid: product_uuid
+    for item in items
+      function object = 'lib/commands/items/create_version', object: item, owner: owner.id
+      hash_assign object['source_item'] = item
+      hash_assign object['new_item_ids'] = object.items.ids
+      hash_assign object['old_item_ids'] = object.source_item.item_ids
+      hash_assign object['item_inventory_id'] = object.source_item.item_inventory_id
+      hash_assign object['quantity'] = object.quantity
+      hash_assign object['command'] = 'items/publish_version'
+      if item['published'] == 'true'
+        hash_assign object['command'] = 'items/publish_version'
+      else
+        hash_assign object['command'] = 'items/unpublish_version'
+      endif
+
+      assign changes = changes | add_to_array: object
+    endfor
+  endfor
+
+  function status = 'lib/commands/statuses/create', profile_id: owner.id, object_id: operation.id, name: 'app.statuses.bulk_operations.import.updating_completed', scope: 'app.statuses.bulk_operations.import'
+
+  assign create = create | uniq
+  for product_uuid in create
+    assign items = import.items | select: product_uuid: product_uuid
+    for item in items
+      function object = 'lib/commands/items/create_complex', object: item, owner: owner.id
+      hash_assign object['source_item'] = item
+      if item['published'] == 'true'
+        hash_assign object['command'] = 'items/publish'
+      else
+        hash_assign object['id'] = object.item_inventory.id
+        hash_assign object['command'] = 'items/unpublish'
+      endif
+
+      assign changes = changes | add_to_array: object
+    endfor
+  endfor
+
+  function status = 'lib/commands/statuses/create', profile_id: owner.id, object_id: operation.id, name: 'app.statuses.bulk_operations.import.creating_completed', scope: 'app.statuses.bulk_operations.import'
+
+  for object in changes
+    if sync
+      function _result = 'lib/commands/items/import/csv/v1/complete_import', object: object, owner: owner, object_uuid: operation.uuid
+    else
+      function _result = 'lib/commands/items/import/csv/v1/complete_import_job', object: object, owner: owner, object_uuid: operation.uuid
+    endif
+  endfor
+
+  return import
+%}

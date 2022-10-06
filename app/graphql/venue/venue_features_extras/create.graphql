@@ -1,0 +1,56 @@
+mutation create(
+  $venue_id: String!
+  $fireworks: String!
+  $wifi: String!
+  $microphone: String!
+  $podium: String!
+  $audio_speakers: String!
+  $dry_ice: String!
+  $chair_tables: String!
+  $napkins: String!
+  $chaircovers: String!
+  $glassware: String!
+  $spotlights: String!
+  $security: String!
+  $dj: String!
+  $projector: String!
+  $tv_screens: String!
+  $coat_check: String!
+  $room_rental_fee: String!
+  $day_of_coordinator: String!
+  $gratuity: String!
+  $admin_fees: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_features_extras"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "fireworks", value: $fireworks }
+        { name: "wifi", value: $wifi }
+        { name: "microphone", value: $microphone }
+        { name: "podium", value: $podium }
+        { name: "audio_speakers", value: $audio_speakers }
+        { name: "dry_ice", value: $dry_ice }
+        { name: "chair_tables", value: $chair_tables }
+        { name: "napkins", value: $napkins }
+        { name: "chaircovers", value: $chaircovers }
+        { name: "glassware", value: $glassware }
+        { name: "spotlights", value: $spotlights }
+        { name: "security", value: $security }
+        { name: "dj", value: $dj }
+        { name: "projector", value: $projector }
+        { name: "tv_screens", value: $tv_screens }
+        { name: "coat_check", value: $coat_check }
+        { name: "room_rental_fee", value: $room_rental_fee }
+        { name: "day_of_coordinator", value: $day_of_coordinator }
+        { name: "gratuity", value: $gratuity }
+        { name: "admin_fees", value: $admin_fees }
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+  
+}

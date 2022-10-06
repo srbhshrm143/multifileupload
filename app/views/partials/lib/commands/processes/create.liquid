@@ -1,0 +1,12 @@
+{%  liquid
+  function object = 'lib/commands/processes/create/build', payload: payload, command: command, profile: profile, run_in_background: run_in_background
+  function object = 'lib/commands/processes/create/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'processes/create' object: object
+    function status = 'lib/commands/statuses/create', object_id: object.id, name: 'app.statuses.processes.requested', scope: 'app.statuses.processes', profile_id: profile.id
+    include 'lib/commands/events/create', type: 'status_created', actor_id: profile.id, object_id: status.id, target_id: status.object_id
+  endif
+
+  return object
+%}

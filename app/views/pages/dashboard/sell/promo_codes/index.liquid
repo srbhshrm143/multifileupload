@@ -1,0 +1,8 @@
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function promo_codes = 'lib/queries/promo_codes/search', limit: 100, page: 1, lang: context.language, creator_ids: current_profile.id, code_types: 'merchant'
+
+  render 'theme/simple/promo_codes/index', promo_codes: promo_codes, context: context, current_profile: current_profile, namespace: 'dashboard/sell'
+%}

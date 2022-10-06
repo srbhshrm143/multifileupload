@@ -1,0 +1,10 @@
+name: project_offer
+properties:
+  - name: uuid
+  - name: name
+  - name: project_id
+  - name: creator_id
+  - name: video_urls
+    type: array
+  - name: collaborator_emails
+    type: array

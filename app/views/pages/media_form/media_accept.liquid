@@ -1,0 +1,70 @@
+---
+method: post
+slug: media_accept
+---
+
+{{ context.params }}
+<br><br>
+{% assign object_uuid = context.params.media_form_uuid %}
+
+
+{% graphql search_data, object_uuid: object_uuid %}
+  query search(
+    $id: ID
+    $limit: Int = 20
+    $object_uuid: String
+    # $origin_urls: [String!]
+    $photo_type: String
+  ) {
+    photos: records(
+      per_page: $limit
+      filter: {
+        id: { value: $id }
+        table: { value: "form_media_testing" }
+        properties: [
+          { name: "media_uuid", value: $object_uuid }
+          # { name: "origin_url", value_in: $origin_urls }
+          { name: "media_type", value: $photo_type }
+        ]
+      }
+    ) {
+      results {
+        id
+        # properties
+      }
+    }
+  }
+{% endgraphql %}
+
+<!-- {{ search_data.photos.results }} -->
+  <br>
+{% assign photos_ids = search_data.photos.results | map: 'id' %}
+{% assign photo_ids = photos_ids %}
+{{ photos_ids }}<br><br>
+
+{%- comment -%}
+{% for abc in photo_ids %}
+  {{ forloop.index }} - {{ abc.id }}<br>
+  {% assign abcd = abc.id | json %}
+{% endfor %}
+{%- endcomment -%}
+  {% graphql record, media_ids :photo_ids, object_uuid: object_uuid  %}
+    mutation record_create (
+      $media_ids: [String!],
+      $object_uuid: String!
+    )
+    {
+      record_create(
+        record: {
+          table: "testing_media_ids"
+          properties: [
+            { name: "media_ids" value_array: $media_ids }
+            { name: "media_uuid" value: $object_uuid }
+          ]
+        }
+      ) {
+        id
+      }
+    }
+  {% endgraphql %}  
+

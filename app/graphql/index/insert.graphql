@@ -1,0 +1,3 @@
+mutation insert($name: String! $id: ID! $document: HashObject!) {
+  record: documents_insert_rc(search_index: $name, id: $id, document: $document)
+}

@@ -1,0 +1,10 @@
+{% liquid
+  function object = 'lib/commands/photos/update_origin_url/build', object: object, current_profile: current_profile
+  function object = 'lib/commands/photos/update_origin_url/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'photos/update_origin_url' object: object
+  endif
+
+  return object
+%}

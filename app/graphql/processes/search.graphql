@@ -1,0 +1,93 @@
+query search(
+  $id: ID
+  $limit: Int = 20
+  $page: Int = 1
+  $payload: String
+  $from: String
+  $to: String
+  $command: String
+  $command_contains: String
+  $profile_id: ID
+  $status: [String]
+  $sort_order: SortOrderEnum = DESC
+  $with_statuses: Boolean = false
+) {
+  processes: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "process" }
+      created_at: { lte: $to, gte: $from }
+      properties: [
+        { name: "payload" contains: $payload }
+        { name: "command" value: $command contains: $command_contains }
+        { name: "profile_id" value: $profile_id }
+        { name: "c__status" value_in: $status }
+      ]
+    }
+    sort: [
+      { created_at: { order: $sort_order }}
+    ]
+  ){
+    total_entries
+    total_pages
+    has_previous_page
+    has_next_page
+    results {
+      id
+      created_at
+      type: table
+
+      payload: property_object(name: "payload")
+      command: property(name: "command")
+      name: property(name: "name")
+      run_in_background: property_boolean(name: "run_in_background")
+      profile_id: property(name: "profile_id")
+      profile: related_record(
+        table: ["profile", "organization"]
+        join_on_property: "profile_id"
+        foreign_property: "id"
+      ) { ...profile }
+
+      status: related_record(
+        join_on_property: "id"
+        foreign_property: "object_id"
+        table: "status"
+        sort: { created_at: { order: ASC } }
+      ) {
+        id
+        created_at
+        name: property(name: "name")
+        timestamp: property(name: "timestamp")
+
+        profile: related_record(
+          join_on_property: "profile_id"
+          foreign_property: "id"
+          table: ["profile", "organization"]
+        ) {...profile }
+      }
+
+      statuses: related_records(
+        table: "status" join_on_property: "id" foreign_property: "object_id"
+        sort: { created_at: { order: ASC } }
+      ) @include(if: $with_statuses) {
+        id
+        created_at
+        name: property(name: "name")
+        profile: related_record(table: ["profile", "organization"] join_on_property: "profile_id" foreign_property: "id") {
+          ...profile
+        }
+      }
+    }
+  }
+}
+
+fragment profile on Record {
+  id
+  type: table
+  first_name: property(name: "first_name")
+  last_name: property(name: "last_name")
+  name: property(name: "name")
+}
+

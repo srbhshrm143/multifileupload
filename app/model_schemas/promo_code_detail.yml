@@ -1,0 +1,6 @@
+name: promo_code_detail
+properties:
+  - name: description
+    type: string
+  - name: lang
+  - name: promo_code_id

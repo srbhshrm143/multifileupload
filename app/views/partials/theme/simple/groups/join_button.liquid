@@ -1,0 +1,15 @@
+{% function can = "lib/can", actor: current_profile, do: "join", object: group %}
+{% if can.valid or member %}
+  <form action="/relationships" method="post">
+    {% render 'authenticity_token', context: context %}
+    <input type="hidden" name="l_id" value="{{ current_profile.id }}">
+    <input type="hidden" name="r_id" value="{{ group.id }}">
+    <input type="hidden" name="name" value="membership">
+    <input type="hidden" name="return_to" value="{% render 'link_to', object: group %}">
+    <input type="hidden" name="notice_key" value="app.groups.joined">
+
+    <button class="button {{ class }}">
+      {{ 'app.groups.join' | t }}
+    </button>
+  </form>
+{% endif %}

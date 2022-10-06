@@ -1,0 +1,28 @@
+{% capture 'notifications_label' %}
+  {% render 'theme/simple/ui/icon', icon: 'bell', class: 'w-6' %}
+  <span x-data x-cloak
+    x-show="$store.notifications.unread_count"
+    x-text="$store.notifications.unread_count"
+    class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-content-inverted bg-danger rounded-full">
+  </span>
+{% endcapture %}
+
+{% capture 'notifications_content' %}
+  <section class="w-100 max-w-full p-4 rounded bg-panel-highlight">
+    <div x-data='frames()' x-frames-target="notifications">
+      <div class="flex items-center justify-center" x-show="spinner" x-cloak>
+        {% render 'theme/simple/ui/spinner', size: 8 %}
+      </div>
+
+      <form action="/notifications.frame" method="GET" x-ref="form" x-on:load-notifications.window="replace({target: 'notifications'})"></form>
+    </div>
+  </section>
+{% endcapture %}
+
+{% render 'theme/simple/ui/dropdown',
+  toggle_title_key: 'app.quick_search.name',
+  label: notifications_label,
+  toggle_class: 'p-3 focus:outline-none focus:text-interaction hover:text-interaction-hover',
+  content: notifications_content,
+  on_click: "$dispatch('load-notifications')"
+%}

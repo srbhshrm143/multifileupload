@@ -1,0 +1,30 @@
+{% liquid
+  assign lang = lang | default: context.language
+
+  if use_search_index
+    function query = 'lib/queries/index/search/build', limit: limit, owner_id: owner, params: params, withStatuses: withStatuses, status: status, statuses: statuses, lang: lang, main_variant: main_variant, promoted: promoted, withAllVariants: withAllVariants, ids: ids, sort: sort, not_ids: not_ids, category: category, withAllLangs: withAllLangs
+    function items = 'lib/queries/index/search/execute', query: query
+  else
+    function query = 'lib/queries/items/search/build', limit: limit, owner: owner, params: params, withStatuses: withStatuses, status: status, statuses: statuses, lang: lang, main_variant: main_variant, promoted: promoted, withAllVariants: withAllVariants, ids: ids, sort: sort, not_ids: not_ids, category: category, withAllLangs: withAllLangs, item_inventory_id: item_inventory_id
+    function items = 'lib/queries/items/search/execute', query: query
+
+  for _item in items.results
+    assign item = _item
+    hash_assign item['use_search_index'] = 'DB'
+    hash_assign item['photo'] = '{}' | parse_json | hash_merge: item.photos[0].photo.versions
+    hash_assign item['photo']['width']  = item.photos[0].photo_width
+    hash_assign item['photo']['height'] = item.photos[0].photo_height
+
+    hash_assign item['owner'] = '{}' | parse_json
+    hash_assign item['owner']['id'] = item.item_inventory.owner.id
+    hash_assign item['owner']['name'] = item.item_inventory.owner.name
+    hash_assign item['owner']['type'] = item.item_inventory.owner.type
+    hash_assign item['owner']['slug'] = item.item_inventory.owner.slug
+  endfor
+  endif
+
+  hash_assign items['query'] = query
+
+
+  return items
+%}

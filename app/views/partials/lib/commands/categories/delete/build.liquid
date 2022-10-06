@@ -1,0 +1,10 @@
+{% parse_json data %}
+  {
+    "id": {{ object.id | json }},
+    "category_id": {{ object.id | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return data
+%}

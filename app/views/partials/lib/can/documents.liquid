@@ -1,0 +1,17 @@
+{% liquid
+  assign can = false
+
+  case do
+  when 'delete'
+    function can_delete = "lib/can", actor: actor, do: "edit", object: document.object
+    if can_delete.valid
+      return true
+    endif
+  when 'show'
+    if document.creator_id == actor.id or document.creator_id == actor.representative.id
+      return true
+    endif
+  endcase
+
+  return can
+%}

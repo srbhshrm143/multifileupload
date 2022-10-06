@@ -1,0 +1,51 @@
+{% liquid
+  assign method = 'post'
+  assign object_uuid = '' | uuid
+%}
+
+<form action="/bulk_operations" method="post" class="card max-w-2xl">
+
+  <div class="flex items-center justify-between gap-4">
+    <h3 class="bigtitle">{{ 'app.bulk_operations.form.import.title' | t }}</h3>
+
+    <button type="button" x-on:click="action = undefined;" class="mb-3 hover:text-interaction-hover">
+      <span class="sr-only">{{ 'app.close' | t }}</span>
+      {% render 'theme/simple/ui/icon', icon: 'x', class: 'w-5' %}
+    </button>
+
+  </div>
+
+  {{ 'app.bulk_operations.form.import.desc' | t }}
+
+  {% render 'authenticity_token', context: context %}
+  <input type="hidden" name="_method" value="{{ method }}">
+  <input name="bulk_operation[uuid]" type="hidden" value="{{ object_uuid }}">
+  <input name="bulk_operation[operation_type]" type="hidden" value="import">
+  <div id="drag-drop-area-files" class="mt-8"></div>
+
+  <a href="/dashboard/sell/data/instructions" class="mt-10 inline-block">{{ 'app.bulk_operations.form.import.help' | t }}</a>
+
+  <fieldset class="mt-8 flex items-center justify-end gap-2">
+    <button type="button" x-on:click="action = undefined;" class="button button-secondary">{{ 'app.cancel' | t }}</button>
+    <button
+      type="submit"
+      class="button"
+      disabled
+      x-ref="importSubmit"
+      x-on:upload-complete.document="$refs.importSubmit.disabled = false;"
+      x-on:upload-removed.document="$refs.importSubmit.disabled = true;"
+    >
+        {{ 'app.bulk_operations.form.import.submit' | t }}
+      </button>
+  </fieldset>
+
+</form>
+
+{% render 'theme/simple/photos/uppy_document_form',
+  target: '#drag-drop-area-files'
+  object_uuid: object_uuid,
+  presigned_url: context.presigned_url,
+  type: 'file',
+  note: 'File up to 2MB',
+  max_number_of_files: 1
+%}

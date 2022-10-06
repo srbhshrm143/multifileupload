@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/index/insert/build', item: item, name: name
+  function object = 'lib/commands/index/insert/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'index/insert', object: object
+  endif
+
+  return object
+%}

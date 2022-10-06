@@ -1,0 +1,14 @@
+{%  liquid
+  function object = 'lib/commands/processes/run/build', object: object
+  function object = 'lib/commands/processes/run/check', object: object
+
+  if object.valid
+    if object.run_in_background
+      function result = 'lib/commands/processes/run/execute_in_background', object: object
+    else
+      function object = 'lib/commands/processes/run/execute', object: object
+    endif
+  endif
+
+  return object
+%}

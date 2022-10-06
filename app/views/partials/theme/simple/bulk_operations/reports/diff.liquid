@@ -1,0 +1,33 @@
+<section class="mt-8">
+  <h2 class="title text-confirmation">{{ 'app.bulk_operations.report.success.title' | t }}</h2>
+
+  {% for changeset in diff.changes %}
+    {% for change in changeset[1] %}
+      {% function path = 'lib/commands/items/import/csv/diff_path_to_item', path: change[1] %}
+      {% if path.column == "_row_id" %}{% continue %}{% endif %}
+      <div class="mt-4 card">
+        <div class="border-b ">[{{ changeset[0] }}] SKU: {{ path.sku }}</div>
+        <div class="flex gap-4">
+          {% liquid
+            if changeset[0] == 'create'
+              assign old = change[3]
+              assign new = change[2]
+            else
+              assign old = change[2]
+              assign new = change[3]
+            endif
+          %}
+          <div class="w-1/2 break-all">
+            <strong>{{ 'app.bulk_operations.report.success.old' | t }} {{ path.column }}</strong><br>
+            {% print old | json %}
+          </div>
+          <div class="w-1/2 break-all">
+            <strong>{{ 'app.bulk_operations.report.success.new' | t }}</strong><br>
+            {% print new | json %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endfor %}
+
+</section>

@@ -1,0 +1,165 @@
+<section x-data="{ tab: '{{ section }}', terms: false }">
+  <header class="-mt-10 bg-panel-highlight py-8">
+    <div class="container flex flex-col md:flex-row gap-8 items-start">
+      {% if project.cover.photo.url %}
+        <picture>
+          <source type="image/avif" srcset="{{ project.cover.photo.versions.m_avif }}, {{ photo.photo.versions.lg_avif }} 2x">
+          <img src="{{ project.cover.photo.versions.m }}" srcset="{{ project.cover.photo.versions.lg }} 2x" width="{{ photo.photo_width }}" height="{{ photo.photo_height }}" alt="" class="mx-auto md:max-w-md">
+        </picture>
+      {% endif %}
+
+      <div class="w-full">
+        <div class="w-full flex flex-col md:flex-row items-start justify-between gap-2 md:gap-6">
+          <h1 class="bigtitle !mb-0">
+            {{ project.name }}
+          </h1>
+          {% render 'theme/simple/projects/show/join_button', group: project.group, profile: current_profile, context: context %}
+        </div>
+        {% render 'theme/simple/projects/show/status', project: project, class: "mt-4 md:mt-0" %}
+
+        <hr class="mt-4 border-t border-content-sidenote">
+
+        {% if project.tags[0] %}
+          <ul class="mt-4 flex flex-wrap gap-2 sidenote">
+            {% for tag in project.tags %}
+              <li class="py-1 px-2 rounded bg-panel uppercase">#{{tag}}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <p class="mt-4">
+          {{ project.summary }}
+        </p>
+
+      </div>
+    </div>
+  </header>
+
+  <aside class="bg-interaction text-content-inverted">
+    <div class="container py-6 flex flex-col md:flex-row gap-4 md:gap-8 items-center">
+      <div class="subtitle flex items-center gap-4">
+        {% render 'theme/simple/ui/icon', icon: 'user', class: 'w-6' %}
+        {{ project.c__applications_count | default: 0 }}
+        {{ 'app.projects.applications' | t }}
+      </div>
+      {% if project.award %}
+        <div class="subtitle ps-8 flex items-center gap-4 md:border-s border-interaction-disabled">
+          {% render 'theme/simple/ui/icon', icon: 'medal', class: 'w-6' %}
+          {{ project.award }}
+          {{ 'app.projects.award' | t }}
+        </div>
+      {% endif %}
+
+      {% if project.status.name == 'app.statuses.projects.open' %}
+        <a href="/offers/new?project_id={{project.id}}" class="md:ms-auto button button-secondary">{{ 'app.projects.join' | t }}</a>
+      {% else %}
+        <a href="#" class="md:ms-auto button button-secondary button-disabled" disabled>{{ 'app.projects.join' | t }}</a>
+      {% endif %}
+    </div>
+  </aside>
+
+  <nav class="container mt-8 overflow-x-auto">
+    <ul class="flex gap-8">
+      <li>
+        <button
+          class="md:subtitle !mb-0 py-4 block border-b-2 border-transparent md:font-semibold uppercase transition-colors"
+          x-on:click="tab = 'description'"
+          x-bind:class="{ 'text-content-sidenote hover:text-content hover:text-interaction' : tab != 'description', 'border-interaction' : tab == 'description' }"
+        >
+          {{ 'app.projects.description' | t }}
+        </button>
+      </li>
+      {% if project.steps != blank %}
+        <li>
+          <button
+            class="md:subtitle !mb-0 py-4 block border-b-2 border-transparent md:font-semibold uppercase transition-colors"
+            x-on:click="tab = 'timeline'"
+            x-bind:class="{ 'text-content-sidenote hover:text-content hover:text-interaction' : tab != 'timeline', 'border-interaction' : tab == 'timeline' }"
+          >
+            {{ 'app.projects.timeline' | t }}
+          </button>
+        </li>
+      {% endif %}
+      {% if project.offer_info != blank %}
+        <li>
+          <button
+            class="md:subtitle !mb-0 py-4 block border-b-2 border-transparent md:font-semibold uppercase transition-colors"
+            x-on:click="tab = 'offer_info'"
+            x-bind:class="{ 'text-content-sidenote hover:text-content hover:text-interaction' : tab != 'offer_info', 'border-interaction' : tab == 'offer_info' }"
+          >
+            {{ 'app.project_offers.application' | t }}
+          </button>
+        </li>
+      {% endif %}
+      {% if project.files != blank or project.photos != blank %}
+        <li>
+          <button
+            class="md:subtitle !mb-0 py-4 block border-b-2 border-transparent md:font-semibold uppercase transition-colors"
+            x-on:click="tab = 'resources'"
+            x-bind:class="{ 'text-content-sidenote hover:text-content hover:text-interaction' : tab != 'resources', 'border-interaction' : tab == 'resources' }"
+          >
+            {{ 'app.projects.resources' | t }}
+          </button>
+        </li>
+      {% endif %}
+      <li>
+        <button
+          class="md:subtitle !mb-0 py-4 block border-b-2 border-transparent md:font-semibold uppercase transition-colors"
+          x-on:click="tab = 'comments'"
+          x-bind:class="{ 'text-content-sidenote hover:text-content hover:text-interaction' : tab != 'comments', 'border-interaction' : tab == 'comments' }"
+        >
+          {{ 'app.projects.comments' | t }}
+        </button>
+      </li>
+      {% if project_offers %}
+        <li>
+          <button
+            class="md:subtitle !mb-0 py-4 block border-b-2 border-transparent md:font-semibold uppercase transition-colors"
+            x-on:click="tab = 'applications'"
+            x-bind:class="{ 'text-content-sidenote hover:text-content hover:text-interaction' : tab != 'applications', 'border-interaction' : tab == 'applications' }"
+          >
+            {{ 'app.projects.applications' | t }}
+          </button>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="container">
+    <article x-show="tab == 'description'" class="card !p-0">
+      {% render 'theme/simple/projects/show/description', project: project %}
+    </article>
+
+    {% if project.steps != blank %}
+      <div x-show="tab == 'timeline'" x-cloak class="card !p-0">
+        {% render 'theme/simple/projects/show/timeline', project: project %}
+      </div>
+    {% endif %}
+
+    {% if project.offer_info != blank %}
+      <div x-show="tab == 'offer_info'" x-cloak class="card !p-0">
+        {% render 'theme/simple/projects/show/offer_info', project: project %}
+      </div>
+    {% endif %}
+
+    {% if project.files != blank or project.photos != blank %}
+      <div x-show="tab == 'resources'" x-cloak class="card !p-0">
+        {% render 'theme/simple/projects/show/resources', project: project %}
+      </div>
+    {% endif %}
+
+    <div x-show="tab == 'comments'" x-cloak class="">
+      {% function can_post = "lib/can", actor: current_profile, do: "post", object: project.group %}
+      {% if can_post.valid %}
+        {% render 'theme/simple/activities/feed_new_entry', current_profile: current_profile, placeholder: 'app.models.comments.placeholder', group: project.group, context: context %}
+      {% endif %}
+      {% render 'theme/simple/groups/activity', group: project.group, current_profile: current_profile, list: project.group_activities, page: 1, context: context %}
+    </div>
+
+    {% if project_offers %}
+      <div x-show="tab == 'applications'" x-cloak>
+        {% render 'theme/simple/project_offers/list', project_offers: project_offers, project: project %}
+      </div>
+    {% endif %}
+  </div>
+</section>

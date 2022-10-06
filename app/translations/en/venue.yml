@@ -1,0 +1,32 @@
+en:
+  app:
+    venue:
+      venue_reg:  Register Your Venue
+      venue_new:  Venue Register
+      venue_action_type:
+        create: Venue Register Form
+        createv: Create Venue
+        read: Show Venue List
+      fields:
+        name: Venue Name
+        name_id: venue_name
+        address:  Venue Address
+        address_id: venue_address
+        contact:  Contact Number
+        contact_id: contact_number
+        services_offred:  Services Offred in the Venue
+        services_id:  venue_services
+        menu: Menu
+        menu_id:  venue_menu
+        features: Venue Features
+        features_id:  venue_features
+        desc:  Venue Description
+        desc_id:  venue_desc
+        capacity: Capacity Allowed
+        capacity_id:  venue_capacity
+        rental_hours: Rental Hours
+        hours_id: rental_hours
+        contract: Contract
+        contract_id:  venue_contract
+        media_img:  Venue Images
+        media_id:  venue_images

@@ -1,0 +1,37 @@
+---
+  method: post
+  slug: orders/new
+---
+
+{%liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_anonymous: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_anonymous: true
+
+  function venue = 'lib/queries/venues/find', id: context.params.item_id, lang: context.language
+  assign vendor = venue.venues | map: 'profile_id' | join: '[]'
+
+  function object = 'lib/commands/orders/venues/order_create', venue: venue, vendor: vendor, object: context.params.item current_profile: current_profile
+  
+  graphql venues_main = 'venue/customers/venue_details', id:context.params.item.item_id, limit: 100
+
+  include 'theme/simple/orders/new', orders_id: object.id,items:context.params.item,itemDetails:venues_main.data.results
+
+  comment
+    include 'theme/simple/dashboard/orders/cart/checkout_button', orders: object
+  endcomment
+%}
+{%- comment -%} 
+{{ context.params }}
+<br>
+<br>
+{{ context.params.item }}
+<br>
+<br>
+{{ vendor }}
+<br>
+<br>
+{{ venue }}
+<br>
+<br>
+{{ object }}
+ {%- endcomment -%}

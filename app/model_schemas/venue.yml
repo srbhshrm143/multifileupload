@@ -1,0 +1,26 @@
+name: venuesl
+properties:
+  - name: venue_owner_id
+    type: string
+  - name: venue_name
+    type: string
+  - name: venue_address
+    type: string
+  - name: venue_contact
+    type: integer
+  - name: venue_services
+    type: string
+  - name: venue_menu
+    type: string
+  - name: venue_features
+    type: string
+  - name: venue_description
+    type: string
+  - name: venue_capacity
+    type: integer
+  - name: venue_rental_hours
+    type: integer
+  # - name: venue_contract
+  #   type: upload
+  # - name: venue_image
+  #   type: upload

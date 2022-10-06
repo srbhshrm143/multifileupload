@@ -1,0 +1,21 @@
+mutation create($direct_url: String!, $creator_id: ID!, $object_uuid: String!, $document_type: String!) {
+  record: record_create(
+    record: {
+      table: "document"
+      properties: [
+        { name: "creator_id" value: $creator_id }
+        { name: "document" value: $direct_url }
+        { name: "document_type" value: $document_type }
+        { name: "object_uuid" value: $object_uuid }
+      ]
+    }
+  ) {
+    id
+    document_type: property(name: "document_type")
+    document: property_upload(name: "document") {
+      file_name
+      extension
+      url
+    }
+  }
+}

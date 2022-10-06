@@ -1,0 +1,30 @@
+mutation create(
+  $venue_id: String!
+  $day_starts: String!
+  $day_ends: String!
+  $night_starts: String!
+  $night_ends: String!
+  $all_day_starts: String!
+  $all_day_ends: String!,
+  $menu_id: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_hours"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "menu_id", value: $menu_id }
+        { name: "day_time_starts", value: $day_starts }
+        { name: "day_time_ends", value: $day_ends }
+        { name: "night_time_starts", value: $night_starts }
+        { name: "night_time_ends", value: $night_ends }
+        { name: "all_day_time_starts", value: $all_day_starts }
+        { name: "all_day_time_ends", value: $all_day_ends }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

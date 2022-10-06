@@ -1,0 +1,24 @@
+name: venues
+properties:
+  - name: profile_id
+    type: string
+  - name: venue_name
+    type: string
+  - name: corporate_name
+    type: string
+  - name: company_name
+    type: string
+  - name: business_number
+    type: string
+  - name: venue_address
+    type: string
+  - name: venue_phone_number
+    type: string
+  - name: venue_email
+    type: string
+  - name: venue_contact_person
+    type: string
+  - name: venue_contact_email
+    type: string
+  - name: venue_contact_phone_number
+    type: string

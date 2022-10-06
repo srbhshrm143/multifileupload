@@ -1,0 +1,10 @@
+{% parse_json object %}
+  {
+    "venue_id": {{ venue.venue_id | json }},
+    "menus":    {{ object | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

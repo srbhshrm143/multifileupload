@@ -1,0 +1,22 @@
+---
+slug: dashboard/rooms/room_updated
+method: post
+---
+
+{%liquid
+  assign object_uuid = context.params.object_uuid
+  graphql search_data = 'venue/media_search', object_uuid: object_uuid
+%}
+
+{{ search_data.photos.results | map: 'id' }}
+<br>
+<br>
+{{ context.params }}
+{% assign room_id = context.params.venue_rooms.hidden_room_id %}
+{% assign room_name = context.params.venue_rooms.room_name %}
+{% assign room_capacity = context.params.venue_rooms.maximum_capacity %}
+{% assign photos_ids = search_data.photos.results | map: 'id' %}
+
+{% if context.params.venue_rooms %}
+  {% graphql create = 'venue_rooms/update', RoomID: room_id,  RoomName: room_name,  RoomCapacity: room_capacity,  RoomMedia: photos_ids  %}
+{% endif %}

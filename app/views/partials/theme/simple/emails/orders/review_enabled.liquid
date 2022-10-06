@@ -1,0 +1,11 @@
+{{ 'app.emails.orders.review_enabled.buyer.greeting' | t }}<br/>
+<img alt="" src="{{ data.most_expensive_line_item.item.photos.first.photo.versions.sm }}" /><br/>
+{{ data.most_expensive_line_item.item.item_detail.name }}<br/>
+{{ 'app.emails.orders.review_enabled.buyer.info' | t: name: data.order.seller.name, date: data.purchase_date }}<br/>
+<a href="{{ data.review_url }}">{{ 'app.emails.orders.review_enabled.buyer.review_link' | t }}</a><br/>
+<br/>
+{{ 'app.emails.orders.review_enabled.buyer.ask' | t: merchant_name: data.order.seller.name, marketplace_name: data.order.seller.name }}<br/>
+<br/>
+{{ 'app.emails.orders.review_enabled.buyer.automatic1' | t }}<br/>
+{{ 'app.emails.orders.review_enabled.buyer.automatic2' | t: faq_link: data.faq_url, contact_us_link: data.contact_us_url }}<br/>
+{{ 'app.emails.orders.review_enabled.buyer.automatic3' | t }}

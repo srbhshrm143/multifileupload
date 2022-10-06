@@ -1,0 +1,23 @@
+{% liquid
+  function order = 'lib/commands/orders/create', current_profile: current_profile, item: item, object: object
+  function status = 'lib/commands/statuses/create', profile_id: current_profile.id, object_id: order.id, name: 'app.statuses.orders.placed', scope: 'app.statuses.orders'
+  function _event = 'lib/commands/events/create', type: 'order_created', actor_id: order.buyer.id, target_id: item.id, object_id: order.id
+  assign line_item = '{"quantity": 1}' | parse_json
+  function line_item_object = 'lib/commands/line_items/create_or_increment_existing', item: item, params: line_item, current_profile: current_profile, order: order
+  if line_item_object.valid
+    function order = 'lib/queries/orders/find', id: order.id
+    function order_object = 'lib/commands/orders/confirm', order: order, current_profile: current_profile
+    if order_object.valid
+      hash_assign object['order_ids'] = object.order_ids | add_to_array: order.id
+    else
+      log order_object, type: 'ERROR: orders#create_and_confirm order_object'
+      hash_assign object['valid'] = false
+      break
+    endif
+  else
+    log line_item_object, type: 'ERROR: orders#create_and_confirm line_item_object'
+    hash_assign object['valid'] = false
+    break
+  endif
+  return object
+%}

@@ -1,0 +1,16 @@
+name: venue_event_space
+properties:
+  - name: venue_id
+  - name: media_uuid
+  - name: event_space_name
+    type: string
+  - name: event_type
+    type: string
+  - name: minimum_event_capacity
+    type: integer
+  - name: maximum_event_capacity
+    type: integer
+  - name: write_about_event-space
+    type: string
+  - name: included_amenities
+  

@@ -1,0 +1,18 @@
+mutation update_project(
+  $id: ID!
+  $c__applications_count: Int
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "group"
+      properties: [
+        { name: "c__applications_count", value_int: $c__applications_count }
+      ]
+    }
+  ) {
+    id
+    type: table
+    c__applications_count: property_int(name: "c__applications_count")
+  }
+}

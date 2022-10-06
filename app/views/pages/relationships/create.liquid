@@ -1,0 +1,23 @@
+---
+slug: relationships
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign data = context.params
+  hash_assign data['type'] = 'relationship'
+  include 'lib/can_do_or_unauthorized', object: data, do: "create", actor: current_profile
+
+  function object = 'lib/commands/relationships/find_or_create', object: data, profile: current_profile
+  if object.valid
+    if object.created
+      function _event = 'lib/commands/events/create', type: 'relationship_created', actor_id: data.l_id, target_id: data.r_id, object_id: object.id
+      function _event = 'lib/commands/events/factory/create', relation: object
+    endif
+    include 'redirect_to', notice: context.params.notice_key
+  else
+    include 'redirect_to', error: context.params.error_key
+  endif
+%}

@@ -1,0 +1,38 @@
+name: venue_features_event_space
+properties:
+  - name: venue_id
+    type: string
+  - name: self_parking
+    type: string
+  - name: valet_parking
+    type: string
+  - name: wheelchair
+    type: string
+  - name: separate_pre_reception
+    type: string
+  - name: exclusive_terrance
+    type: string
+  - name: washrooms
+    type: string
+  - name: account
+    type: string
+  - name: bridal_suite
+    type: string
+  - name: on_site_kitchen
+    type: string
+  - name: private_entrance
+    type: string
+  - name: on_site_lodging
+    type: string
+  - name: designated_smoking_area
+    type: string
+  - name: on_site_ceremony_outdoor
+    type: string
+  - name: on_site_ceremony_indoor
+    type: string
+  - name: foyer
+    type: string
+  - name: fountain
+    type: string
+  - name: pool
+    type: string

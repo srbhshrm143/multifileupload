@@ -1,0 +1,9 @@
+{% liquid
+  assign data = '{}' | parse_json
+  hash_assign data['command'] = command
+  hash_assign data['payload'] = object
+  hash_assign data['current_profile'] = current_profile
+  hash_assign data['c__status'] = 'app.statuses.processes.requested'
+
+  return data
+%}

@@ -1,0 +1,64 @@
+query search(
+  $limit: Int = 20
+  $page: Int = 1
+  $status: [String!]
+  $owners: [String!]
+  $owner_id: [ID!]
+  $keyword: String
+  $category: String
+  $sort: [IndexSearchSortInput!] = []
+  $price_min: String
+  $price_max: String
+  $lang: String = "en"
+) {
+  items: documents_rc(
+    search_index: "items"
+    per_page: $limit
+    page: $page
+    query: {
+      keyword: $keyword
+      match_type: FUZZY
+      fields: [
+        { name: "en.name" priority: 10 }
+        { name: "en.description" priority: 5 }
+        { name: "en.inventory_attributes" priority: 1 }
+        { name: "en.category" priority: 2 }
+
+        { name: "de.name" priority: 10 }
+        { name: "de.description" priority: 5 }
+        { name: "de.inventory_attributes" priority: 1 }
+        { name: "de.category" priority: 2 }
+
+        { name: "owner.name" priority: 1 }
+      ]
+    }
+    filter: [
+        { name: "main_variant", value: "true" }
+        { name: "status", value_in: $status }
+        { name: "category", prefix: $category }
+        { name: "owner.slug", value_in: $owners }
+        { name: "owner.id", value_in: $owner_id }
+        { name: "price", range: { gte: $price_min, lte: $price_max } }
+    ]
+    sort: $sort
+  ) {
+    total_entries
+    total_pages
+
+    results {
+      id: property(name: "id")
+      name: property(name: "name_en")
+      status: property(name: "status")
+      price: property_int(name: "price")
+      currency: property(name: "currency")
+      category: property(name: "category")
+      original_price: property_int(name: "original_price")
+
+      item_detail: property_json(name: $lang)
+      photo: property_json(name: "photo")
+      owner: property_json(name: "owner")
+
+      properties
+    }
+  }
+}

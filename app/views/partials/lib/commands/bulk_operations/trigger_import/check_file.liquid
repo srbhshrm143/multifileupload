@@ -1,0 +1,23 @@
+{% liquid
+  assign file_broken_error = null
+  assign skus = data | map: 'sku'
+  assign skus_uniq = skus | uniq
+  if skus.size != skus_uniq.size
+    assign duplicates = '[]' | parse_json
+    assign tmp = '{}' | parse_json
+    for s in skus
+      hash_assign tmp[s] = tmp[s] | default: 0 | plus: 1
+    endfor
+    for t in tmp
+      if t[1] > 1
+        assign duplicates = duplicates | add_to_array: t[0]
+      endif
+    endfor
+
+    assign err = "Duplicated products in import file. All products must have uniq SKU. Duplicated SKU: " | append: duplicates
+    assign file_broken_error = '{}' | parse_json | hash_merge: message: err
+    log err, type: 'ERROR:'
+  endif
+
+  return file_broken_error
+%}

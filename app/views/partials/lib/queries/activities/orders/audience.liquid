@@ -1,0 +1,17 @@
+{% liquid
+  if id == blank
+    log '(orders) (models) ID cannot be blank when searching for audience'
+    return null
+  endif
+
+  graphql r = 'activities/orders/audience', id: id, limit: 10
+
+  assign order = r.orders.results.first
+  assign audience = '{ "profile": [] }' | parse_json
+
+  hash_assign audience['organization'] = order.seller_id
+  hash_assign audience['members'] = order.seller.members | map: 'id'
+  hash_assign audience['buyer'] = order.buyer.id
+
+  return audience
+%}

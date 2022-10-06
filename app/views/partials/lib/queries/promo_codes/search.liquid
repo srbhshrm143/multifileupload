@@ -1,0 +1,11 @@
+{% liquid
+  if active
+    assign date = 'now' | to_time | json
+  endif
+  assign disabled_exists = disabled_exists | default: false
+
+  graphql r = 'promo_codes/search', limit: limit, page: page, withAllLangs: withAllLangs, lang: lang, with_organization: with_organization, date: date, disabled_exists: disabled_exists, min_available_quantity: min_available_quantity, code_types: code_types, creator_ids: creator_ids
+
+  return r.promo_codes
+%}
+

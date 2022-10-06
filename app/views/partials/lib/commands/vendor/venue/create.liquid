@@ -1,0 +1,11 @@
+{% liquid
+  function object = 'lib/commands/vendor/venue/build', object: object, profile: profile
+  function object = 'lib/commands/vendor/venue/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', object: object, mutation_name: 'venue/new', selection: 'model_create'
+    return object 
+  else
+    return object
+  endif
+%}

@@ -1,0 +1,9 @@
+{% liquid
+  if id == blank
+    return null
+  endif
+
+  graphql r  = 'promo_codes/search', id: id, limit: 1, lang: context.language, creator_ids: creator_ids, code_types: code_types, withAllLangs: withAllLangs, with_organization: with_organization
+
+  return r.promo_codes.results.first
+%}

@@ -1,0 +1,56 @@
+name: venue_features_venue_type
+properties:
+  - name: venue_id
+    type: string
+  - name: banquet_hall
+    type: string
+  - name: barn
+    type: string
+  - name: boat
+    type: string
+  - name: concert_venue
+    type: string
+  - name: conference_center
+    type: string
+  - name: brewery
+    type: string
+  - name: estate
+    type: string
+  - name: gallery_museum
+    type: string
+  - name: golf_club
+    type: string
+  - name: hotel
+    type: string
+  - name: lounge
+    type: string
+  - name: meeting_room
+    type: string
+  - name: nightclub
+    type: string
+  - name: party_room
+    type: string
+  - name: resort
+    type: string
+  - name: restaurant
+    type: string
+  - name: warehouse
+    type: string
+  - name: winery
+    type: string
+  - name: industrial
+    type: string
+  - name: lakeview
+    type: string
+  - name: modern
+    type: string
+  - name: nature
+    type: string
+  - name: rustic
+    type: string
+  - name: traditional
+    type: string
+  - name: indoor_venue
+    type: string
+  - name: outdoor_venue
+    type: string

@@ -1,0 +1,10 @@
+<section class="md:h-64 card flex flex-col md:flex-row justify-center items-center text-center md:text-start">
+  <div class="max-w-lg order-2 md:order-1">
+    <p class="subtitle">{{ 'app.promo_codes.list.empty.title' | t }}</p>
+    <p>{{ 'app.promo_codes.list.empty.subtitle' | t }}</p>
+    <a href="/admin/promo_codes/new" class="button mt-6">{{ 'app.promo_codes.list.empty.cta' | t }}</a>
+  </div>
+  <div class="w-16 mb-6 md:mb-0 md:w-32 md:ms-10 md:ps-10 md:mt-1 order-1 md:order-last md:border-s">
+    {% render 'theme/simple/ui/icon', icon: 'discountCoupon', class: 'w-full text-interaction-disabled' %}
+  </div>
+</section>

@@ -1,0 +1,21 @@
+{% liquid
+  if id == blank
+    return null
+  endif
+
+  assign lang = lang | default: context.language
+  graphql r  = 'item_inventories/search', id: id, limit: 1, owner: owner, lang: lang, withAllLangs: withAllLangs, withAllVariants: withAllVariants
+
+  assign item_inventory = r.item_inventories.results.first
+  if withFormattedPrice
+    for el in item_inventory.items
+     assign item = el
+      hash_assign item['price_formatted'] = item.price | fractional_to_amount: item.currency
+      if item.original_price
+        hash_assign item['original_price_formatted'] = item.original_price | fractional_to_amount: item.currency
+      endif
+    endfor
+  endif
+
+  return item_inventory
+%}

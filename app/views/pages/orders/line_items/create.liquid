@@ -1,0 +1,119 @@
+---
+method: post
+slug: orders/line_items
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_anonymous: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_anonymous: true
+
+  function item = 'lib/queries/items/test_items_find', id: context.params.line_item.item_id, lang: context.language
+  function can_purchase = "lib/can", actor: current_profile, do: "purchase", object: item
+
+  function order = 'lib/commands/line_items/find_or_create_order', item: item, current_profile: current_profile, params: context.params.line_item 
+  if order.id and can_purchase.valid
+    unless order.currency
+      hash_assign order['currency'] = item.currency
+    endunless
+    
+    function object = 'lib/commands/line_items/create_or_increment_existing',  item: item, params: context.params.line_item, current_profile: current_profile, order: order
+  endif
+
+
+%}
+
+{{ "Current Profile" }} -- {{ current_profile | json }}
+<br>
+<br>
+{{ "Items" }} -- {{ item }}
+<!-- <br>
+<br>
+{{ "Seller" }} -- {{ item.seller }} -->
+<br>
+<br>
+{{ "Can Purchase" }} -- {{ can_purchase }}
+<br>
+<br>
+{{ "order" }} -- {{ order | json }}
+<br>
+<br>
+{{ "Objects" }} -- {{ object | json }}
+<br>
+<br>
+
+{%- comment -%}
+{{ "Order" }} -- {{ order | json }}
+
+
+
+  function item = 'lib/queries/items/find', id: context.params.line_item.item_id, lang: context.language
+
+  function order = 'lib/commands/line_items/find_or_create_order', item: item, current_profile: current_profile
+  if order.id and can_purchase.valid
+    unless order.currency
+      hash_assign order['currency'] = item.currency
+    endunless
+
+    function object = 'lib/commands/line_items/create_or_increment_existing', item: item, params: context.params.line_item, current_profile: current_profile, order: order
+    if object.valid
+      function _ = 'lib/commands/orders/apply_global_promo_from_cart', current_profile: current_profile, object: order
+
+      include 'redirect_to', url: '/dashboard/buy/cart', notice: 'app.orders.line-items.created'
+    else
+      assign error_message = 'app.orders.line-items.errors.failed-to-create' | t | append: ': '
+      assign messages = '' | split: ','
+      for error in object.errors
+        assign messages = messages | add_to_array: error[1]
+      endfor
+      assign msg = messages | join: ', '
+      assign error_message = error_message | append: msg
+
+      function url = 'link_to', item: item
+      include 'redirect_to', url: url, error: error_message
+    endif
+
+  else
+    assign error_message = 'app.orders.line-items.errors.failed-to-create'
+    assign error_message = error_message
+
+    function url = 'link_to', item: item
+    include 'redirect_to', url: url, error: error_message
+  endif
+
+
+
+
+  
+  function order = 'lib/commands/line_items/find_or_create_order', item: item, current_profile: current_profile
+  if order.id and can_purchase.valid
+    unless order.currency
+      hash_assign order['currency'] = item.currency
+    endunless
+    
+    function object = 'lib/commands/line_items/create_or_increment_existing', item: item, params: context.params.line_item, current_profile: current_profile, order: order
+    if object.valid
+      function _ = 'lib/commands/orders/apply_global_promo_from_cart', current_profile: current_profile, object: order
+
+      include 'redirect_to', url: '/dashboard/buy/cart', notice: 'app.orders.line-items.created'
+    else
+      assign error_message = 'app.orders.line-items.errors.failed-to-create' | t | append: ': '
+      assign messages = '' | split: ','
+      for error in object.errors
+        assign messages = messages | add_to_array: error[1]
+      endfor
+      assign msg = messages | join: ', '
+      assign error_message = error_message | append: msg
+
+      function url = 'link_to', item: item
+      include 'redirect_to', url: url, error: error_message
+    endif
+
+  else
+    assign error_message = 'app.orders.line-items.errors.failed-to-create'
+    assign error_message = error_message
+
+    function url = 'link_to', item: item
+    include 'redirect_to', url: url, error: error_message
+  endif
+
+
+{%- endcomment -%}

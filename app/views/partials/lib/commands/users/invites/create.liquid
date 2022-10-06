@@ -1,0 +1,13 @@
+{% liquid
+  function object = 'lib/commands/users/invites/create/build', email: email
+  function object = 'lib/commands/users/invites/create/check', object: object
+
+  if object.valid
+    function user = 'lib/commands/execute', object: object, mutation_name: 'users/create', selection: 'user_create'
+
+    hash_assign object['id'] = user.id
+    return object
+  else
+    return object
+  endif
+%}

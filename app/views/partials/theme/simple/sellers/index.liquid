@@ -1,0 +1,27 @@
+{% content_for metatags %}
+  {% render 'theme/simple/sellers/metatags', lang: lang %}
+{% endcontent_for %}
+
+<section class="container py-12 px-4 text-center">
+  <h1 class="bigtitle">{{ 'app.orders.sellers.title' | t }}</h1>
+  <h2 class="subtitle">{{ 'app.orders.sellers.subtitle' | t }}</h2>
+</section>
+
+<section class="container">
+  <div class="w-full lg:mt-0 grid grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for org in organizations %}
+      {% function org_url = 'link_to', object: org %}
+      <a href="{{ org_url }}" class="card flex items-center justify-center hover:shadow-cardHover hover:border-warning grayscale hover:grayscale-0 !transition">
+        <picture>
+          <source type="image/avif" srcset="{{ org.logo.photo.versions.sm_avif }}">
+          <img src="{{ org.logo.photo.versions.sm }}" width="{{ org.logo.photo_width }}" height="{{ org.logo.photo_height }}" alt="{{ org.name }}" class="max-h-16">
+        </picture>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+<section class="container py-12 px-4 text-center">
+  <h2 class="bigtitle">{{ 'app.orders.sellers.become.title' | t }}</h2>
+  <h3 class="subtitle">{{ 'app.orders.sellers.become.subtitle' | t }}</h3>
+  <a class="button" href="#">{{ 'app.orders.sellers.become.contact' | t }}<a>
+</section>

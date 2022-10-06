@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/comments/remove/build', object: object, current_profile: current_profile
+  function object = 'lib/commands/comments/remove/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'comments/update' object: object
+  endif
+
+  return object
+%}

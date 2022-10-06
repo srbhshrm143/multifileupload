@@ -1,0 +1,17 @@
+{% liquid
+  if id == blank
+    log '(users) ID cannot be blank when searching for user audience'
+    return null
+  endif
+
+  assign audience = '{ "followers": [] }' | parse_json
+
+  graphql r = 'activities/users/audience', id: id, limit: 1
+  assign relationships = r.users.results.first.relationships | group_by: 'name'
+
+  for r in relationships['followship:profile']
+    hash_assign audience['followers'] = audience['followers'] | add_to_array: r.l_id
+  endfor
+
+  return audience
+%}

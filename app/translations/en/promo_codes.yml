@@ -1,0 +1,93 @@
+en:
+  app:
+    promo_codes:
+      title: Promo codes
+      code: Code
+      off_percent: "off"
+      apply:
+        title: Apply promo code
+        desc: You can apply 1 promo code per purchase
+        type_code: Type a promo code
+        apply_code: Apply code
+        select_suggested: Select one from the suggested promo codes.
+        saves: Saves
+      new:
+        new: New promo code
+      edit:
+        edit: Edit promo code
+      form:
+        description_tip: Describe in short the promotion for the users
+        invalid: Invalid
+      list:
+        add: Add promo code
+        empty:
+          title: You haven't added any promo codes yet.
+          subtitle: You can create the first one right now.
+          cta: Add promo code
+        filters:
+          categories: Filter by categories
+          all: All promo codes
+          sort: Sort by
+          popular: Most popular
+          newest: Newest
+          oldest: Oldest
+          expiring: Expiring soon
+          discount: Discount percentage
+        see_items: View items
+        valid: Valid
+        expired: Expired
+        total_items: Total items
+        status:
+          active: Active
+          not_started: Not Started
+          expired: Expired
+          used: Used
+      attr:
+        description: Description
+        campaign_code: Campaign Code
+        start_date: Start Date
+        end_date: End Date
+        total_discount: Total Discount
+        upper_limit: Upper Limit / Cap
+        merchant_name: Merchant Name
+        max_available: Number of available promo codes
+        max_times_user_can_use: How many times the same user can use it
+        max_discount_amount_per_user: Max discount amount per user across all orders
+        mpo_cost_percent: Marketplace Owner Cost Percentage
+        creator_id: Merchant
+        is_global: Is Global?
+        code_type: Code Type
+      manage:
+        add: Add new promo code
+        used: Used by
+        valid: Valid between
+      show:
+        number_of_promo_codes: Number of promo codes
+        limit: Limit
+        used: Used
+        remaining: Remaining
+        apply_promo_code: Apply promo code
+        one_code_per_purchase: You can apply 1 promo code per purchase
+        type_code: Type a promo code
+        select_suggested: Select one from the suggested promo codes.
+        empty:
+          title: There are no promo codes available currently
+          subtitle: You can still browse through our items to find a good deal!
+          cta: Browse items
+      cards:
+        details: Promo code details
+        valid: Valid
+        discount: Discount
+        obligation: Discount obligation
+        generation: Promotion Code Generation
+        offers: offers
+      error:
+        max_number_of_times: You have reached maximum number of times this promo code can be used.
+        max_amount: You have reached maximum discount amount for this promo code.
+        already_applied: Promo code already applied
+        does_not_exist: Promo code does not exist
+        invalid: Promo code is not valid
+      code_types:
+        merchant: Merchant
+        mpo: MPO
+        global: MPO Global

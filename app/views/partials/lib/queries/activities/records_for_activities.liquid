@@ -1,0 +1,14 @@
+{% liquid
+  assign object_ids = activities.results | map: 'payload' | map: 'object' | map: 'id' | compact
+  assign target_ids = activities.results | map: 'payload' | map: 'target' | map: 'id' | compact
+
+  assign ids = object_ids | concat: target_ids | compact
+
+  if ids.size > 0
+    graphql r = 'activities/records_for_activities', limit: ids.size, page: 1, ids: ids
+    return r.records.results
+  else
+    assign empty_array = '[]' | parse_json
+    return empty_array
+  endif
+%}

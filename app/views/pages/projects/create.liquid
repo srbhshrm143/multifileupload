@@ -1,0 +1,17 @@
+---
+slug: projects
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+
+  function object = 'lib/commands/projects/create', object: context.params.project, profile: current_profile
+  if object.valid
+    function project_url = 'link_to', object: object
+    include 'redirect_to', url: project_url, notice: 'app.projects.new.created'
+  else
+    function _ = 'lib/extend_context', tags: true, photo_presign: true
+    render 'theme/simple/projects/new', object: object, context: context
+  endif
+%}

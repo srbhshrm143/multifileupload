@@ -1,0 +1,28 @@
+mutation create(
+  $venue_id: String!
+  $room_name: String!
+  $room_capacity: String!
+  $room_quantity: Int
+  $photo_ids: [String!],
+  # $venue_id:  String!
+  # $owner_Id:  String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_rooms"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "venue_room_name", value: $room_name }
+        { name: "venue_room_capacity", value: $room_capacity }
+        { name: "room_quantity", value_int: $room_quantity }
+        { name: "media_ids", value_array: $photo_ids }
+        # { name: "venue_id", value: $venue_id }
+        # { name: "owner_id", value: $owner_Id }
+      ]
+    }   
+  ) {
+    id
+    properties
+  }
+  
+}

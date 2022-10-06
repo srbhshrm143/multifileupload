@@ -1,0 +1,13 @@
+---
+slug: notifications.frame
+layout: null
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+
+  assign page = context.params.page | to_positive_integer: 1
+  function list = 'lib/queries/activities/search', feed: 'user-notifications', feed_id: current_profile.id, limit: 5, page: page
+
+  render 'theme/simple/notifications/frame', current_profile: current_profile, list: list
+%}

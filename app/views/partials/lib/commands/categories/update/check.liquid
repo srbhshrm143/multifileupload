@@ -1,0 +1,32 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  function c = 'lib/validations/presence', c: c, object: object, field_name: 'id'
+  function available_languages = 'lib/queries/constants/find', name: "AVAILABLE_LANGUAGES", type: "array"
+
+  assign languages_size = available_languages | size
+  function c = 'lib/validations/length', c: c, object: object, field_name: 'category_details', minimum: languages_size
+
+  for detail_arr in object.category_details
+    assign lang = detail_arr[0]
+    assign detail = detail_arr[1]
+    assign cd = '{ "errors": {}, "valid": true }' | parse_json
+
+    function cd = 'lib/validations/presence', c: cd, object: detail, field_name: 'lang'
+    function cd = 'lib/validations/presence', c: cd, object: detail, field_name: 'name'
+    function cd = 'lib/validations/included', c: cd, object: detail, field_name: 'lang', array: available_languages
+
+    hash_assign detail['valid'] = cd.valid
+    hash_assign detail['errors'] = cd.errors
+
+    if cd.valid != true
+      hash_assign c['valid'] = false
+      hash_assign c['errors'][lang] = cd.errors
+    endif
+  endfor
+
+  hash_assign object['valid'] = c.valid
+  hash_assign object['errors'] = c.errors
+
+  return object
+%}

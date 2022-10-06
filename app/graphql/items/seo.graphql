@@ -1,0 +1,34 @@
+query seo(
+  $limit: Int = 500
+  $page: Int = 1
+) {
+  items: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      table: { value: "item" }
+      deleted_at: { exists: false }
+      properties: [
+        { name: "c__status", value_in: ["app.statuses.items.published", "app.statuses.items.unavailable"] }
+      ]
+    }
+  ) {
+    total_pages
+    total_entries
+    results {
+      id
+      slug: property(name: "slug")
+      created_at
+
+      item_detail: related_record(
+        table: "item_detail"
+        join_on_property: "item_detail_ids"
+        foreign_property: "id"
+        filter: { properties: { name: "lang", value: "en" } }
+      ) {
+        type: table
+        name: property(name: "name")
+      }
+    }
+  }
+}

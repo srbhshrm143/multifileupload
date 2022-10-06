@@ -1,0 +1,25 @@
+---
+  slug: venue/advance_notice/create
+  method: post
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  
+  function object = 'lib/commands/vendor/advance_notice/create', object: context.params.advance_notice, profile: current_profile.user
+  assign venue_id = object.properties.venue_id
+
+  include 'redirect_to', venue_advance_notice: context.params.advance_notice, venue_id: venue_id, notice: 'venue advance notice created'
+
+  comment
+    include 'redirect_to', venue_advance_notice: context.params.advance_notice, venue_id: venue_id, notice: 'venue advance notice created'
+
+    include 'redirect_to', venue_advance_notice: context.params.advance_notice, notice: 'venue advance notice created'
+  endcomment
+%}
+
+{{ context.params }}
+<br><br>
+{{ object }}
+<br><br>
+

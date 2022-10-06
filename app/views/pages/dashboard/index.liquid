@@ -1,0 +1,16 @@
+---
+slug: dashboard(/:section)
+layout: dashboard
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, followships: true, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function list = 'lib/queries/activities/search_with_records', feed: 'user-private', feed_id: current_profile.id, limit: 20
+  function _ = 'lib/extend_context', photo_presign: true
+
+  render 'theme/simple/activities/feed_new_entry', current_profile: current_profile, placeholder: 'app.models.comments.placeholder', group: current_profile, context: context
+  render 'theme/simple/profile/sections/activity', list: list, page: 1, current_profile: current_profile, context: context
+  render 'theme/simple/user_dashboard/rooms'
+%}
+

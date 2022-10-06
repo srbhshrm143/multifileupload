@@ -1,0 +1,177 @@
+{% content_for metatags %}
+  {% render 'theme/simple/items/metatags', item: item %}
+{% endcontent_for %}
+{% content_for language_switch_destination %}
+  {% function alternative_lang = 'theme/simple/layout/alternative_language', context: context %}
+  {% render 'link_to', item: item, lang: alternative_lang %}
+{% endcontent_for %}
+{% liquid
+  if item.item_inventory.item_ids contains item.id
+    assign is_current_variant = true
+  endif
+%}
+
+{% unless is_current_variant %}
+  <section class="container mb-8">
+    <div class="p-4 flex items-center justify-center gap-8 rounded border border-warning bg-warning-disabled">
+      <div class="max-w-sm">
+        <h3 class="subtitle">{{ 'app.items.old_version' | t }}</h3>
+        <p>{{ 'app.items.see_new_version' | t }}</p>
+        {% liquid
+          assign current_item = item.item_inventory.items[0]
+        %}
+        <a href="{% render 'link_to', item: current_item %}" class="mt-4 button button-small button-secondary">
+          {{ 'app.items.go_to_new_version' | t }}
+          {% render 'theme/simple/ui/icon', icon: 'dashRight' %}
+        </a>
+      </div>
+      <div class="ps-8 hidden md:block border-l border-warning">
+        {% render 'theme/simple/ui/icon', icon: 'archive', class: 'w-20 text-warning' %}
+      </div>
+    </div>
+  </section>
+{% endunless %}
+
+<article class="container lg:flex lg:items-start"
+  x-data="{ itemId: {{ item.id }} }"
+>
+  {% if is_current_variant %}
+    {% for item in item.item_inventory.items %}
+      {% render 'theme/simple/items/show/variant', item: item, current_profile: current_profile %}
+    {% endfor %}
+  {% else %}
+    {% render 'theme/simple/items/show/variant', item: item, current_profile: current_profile %}
+  {% endif %}
+
+  <div class="card lg:w-1/2 mt-8 lg:mt-0 lg:rounded-tl-none relative z-10">
+    <h1 class="bigtitle break-words">
+      {{ item.item_detail.name }}
+    </h1>
+
+    <div class="md:flex flex-wrap items-center">
+      {% assign category = 'categories.' | append: item.category | t %}
+      {% function category_url = 'link_to', category: item.category %}
+      {% render 'theme/simple/ui/tags', tags: category, url: category_url, dontAppendToUrl: true %}
+    </div>
+    {% liquid
+      case item.item_inventory.item_type
+      when "affiliate"
+        assign form_element = 'action="/affiliate_items/redirect" method="get"' | html_safe
+      when 'digital'
+        assign form_element = 'action="/dashboard/buy/orders/new" method="get"' | html_safe
+      else
+        assign form_element = 'action="/orders/line_items" method="post"' | html_safe
+      endcase
+    %}
+    <form {{ form_element }}>
+      {% render 'authenticity_token', context: context %}
+      <input type="hidden" name="item_id" value="{{ item.id }}">
+      <input type="hidden" name="line_item[quantity]" value="1">
+      <div class="mt-6 pt-4 border-t flex items-center">
+        {% if item.item_inventory.items.size > 1 and is_current_variant %}
+          {% render 'theme/simple/items/show/variants_selector', item: item, can_purchase: can_purchase %}
+        {% else %}
+          <input type="hidden" name="line_item[item_id]" value="{{ item.id }}">
+          {% render 'theme/simple/items/show/buy_box', item: item, item_inventory: item.item_inventory, can_purchase: can_purchase %}
+        {% endif %}
+      </div>
+    </form>
+
+    {% if item.item_inventory.c__rating_count > 0 %}
+      <div class="mt-6 pt-4 border-t flex items-center">
+        {{item.item_inventory.c__rating_score }}
+        {% render 'theme/simple/ui/rating_stars', rating: item.item_inventory.c__rating_score, stars_class: "ps-1" %}
+        <span class="ps-3">
+          {{ 'app.items.product_rating_count' | t: count: item.item_inventory.c__rating_count }}
+        </span>
+      </div>
+    {% endif %}
+
+    <p class="whitespace-pre-wrap mt-4 pt-4 border-t break-words">{{ item.item_detail.description }}</p>
+
+    <div class="mt-6 pt-4 flex items-start border-t sidenote">
+      <div class="w-1/2 flex items-start">
+        {% render 'theme/simple/ui/avatar', profile: item.item_inventory.owner, size: 7, class: 'w-5 h-5 me-2 text-2xs' %}
+        <span class="mt-0.5 flex items-start">
+          <span class="me-1">
+            {{ 'app.items.by' | t }}
+          </span>
+          <span>
+            <a href="{% render 'link_to', object: item.item_inventory.owner %}" class="mb-1 inline-block" data-tc="{{ item.item_inventory.owner.slug }}-inventory">
+              {{ item.item_inventory.owner.name }}
+              {% if item.item_inventory.owner.c__rating_score %}
+                {{ 'app.items.organization_user_rating' | t: score: item.item_inventory.owner.c__rating_score }}
+              {% endif %}
+            </a><br>
+            {% liquid
+              if current_profile and current_profile.id != item.item_inventory.owner.id and chat_enabled
+                render "modules/chat/theme/simple/message_button", to_id: item.item_inventory.owner.id, label_key: 'app.items.contact_seller'
+              endif
+            %}
+          </span>
+        </span>
+      </div>
+      {% case item.item_inventory.item_type %}
+      {% when "physical" %}
+        {% if item.item_inventory.owner.shipping_types != empty %}
+          <div class="w-1/2 start-end">
+            <span>{{ 'app.items.shipping_types.available' | t }}:</span>
+            <ul>
+              {% if item.item_inventory.owner.shipping_types contains 'delivery' %}
+                {% function lowest_delivery_price = 'lib/queries/organizations/lowest_delivery_price', organization: item.item_inventory.owner %}
+                {% function shipping_price = 'theme/simple/price', amount_cents: lowest_delivery_price, currency: item.currency %}
+                <li>{{ 'app.items.shipping_types.delivery' | t: shipping_cost: shipping_price }}</li>
+              {% endif %}
+              {% if item.item_inventory.owner.shipping_types contains 'personal_pickup' %}
+                <li>{{ 'app.items.shipping_types.personal_pickup' | t }}</li>
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+      {% when "digital" %}
+        <span>
+          {{'app.items.digital_type_info' | t}}
+        </span>
+      {% endcase %}
+    </div>
+
+    {% comment %} TODO: refactor as cancan {% endcomment %}
+    {% assign orgs = current_profile.organizations | map: 'r_id' %}
+    {% if orgs contains item.item_inventory.owner.id %}
+    <footer class="w-full mt-4 flex md:justify-end">
+      <a href="/dashboard/items/edit?id={{ item.item_inventory.id }}" class="button">{{ 'app.items.edit' | t }}</a>
+
+      <form action="/dashboard/items/delete" method="post" class="ms-2" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }">
+        {% render 'authenticity_token', context: context %}
+        <input type="hidden" name="_method" value="delete">
+        <input type="hidden" name="id" value="{{ item.item_inventory.id }}">
+
+        <button class="button button-danger">{{ 'app.delete' | t }}</button>
+      </form>
+    </footer>
+    {% endif %}
+
+  </div>
+
+</article>
+
+{% if related_items.total_entries > 0 %}
+  <div class="mt-10 pt-10 lg:pb-10 bg-panel">
+    <section class="container">
+      <header class="mb-6 flex justify-between items-center">
+        <h2 class="title">
+          <span class="text-3xl md:text-5xl text-interaction">{{ 'app.items.other_from' | t: merchant_name: item.item_inventory.owner.name }}</span>
+        </h2>
+
+        {% liquid
+          assign search_url = '{}' | parse_json
+          hash_assign search_url['organization'] = item.item_inventory.owner
+        %}
+
+        <a href="{% render 'link_to', search: search_url %}" class="button uppercase">{{ 'static-pages.home.show_all' | t }}</a>
+      </header>
+
+      {% render 'theme/simple/items/featured', items: related_items %}
+    </section>
+  </div>
+{% endif %}

@@ -1,0 +1,20 @@
+---
+slug: admin/promo_codes/:id
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_uncompleted: true
+  include 'lib/profile_must_be', profile: current_profile, action: 'be_admin'
+
+  assign code_types = '["mpo","global"]' | parse_json
+  function object = 'lib/queries/promo_codes/find', id: context.params.id, withAllLangs: true, code_types: code_types
+  function object = 'lib/commands/promo_codes/disable', object: object
+
+  if object.valid
+    include 'redirect_to', url: '/admin/promo_codes', notice: 'app.models.shared.deleted'
+  else
+    log object, type: 'ERROR: promo_codes/delete'
+    include 'redirect_to', url: '/admin/promo_codes', error: 'app.models.shared.delete_failed'
+  endif
+%}

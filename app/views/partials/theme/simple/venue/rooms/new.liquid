@@ -1,0 +1,85 @@
+{%liquid
+
+  assign uuid = '' | uuid
+  assign object_uuid = '' | uuid
+%}
+
+<div class="pagetitle"> Adding New Room </div>
+<div class="w-full mx-auto card-lg md:w-96" id="regForm">
+  <form action="/dashboard/rooms/room_submited" method="post">
+    <input type="hidden" name="venue_rooms[uuid]" value="{{ object_uuid }}">
+    <input type="hidden" name="venue_rooms[venue_id]" value="{{ context.params.id }}">
+    <fieldset class="mt-16">
+      <h1 class="text-3xl font-bold"> {{ "Introduce Your Room" }} </h1>
+    </fieldset>
+  
+    <fieldset class="mt-3">
+      <p> Do you have separate rooms for rent within the same venue? Please upload each room individually. You will have an opportunity at the end of the application to add additional rooms. </p>
+    </fieldset>
+  
+    <fieldset class="mt-8">
+      <p> Tip: If your venue is “Venue X” and room name is “Grand Ballroom” your room will show up as “Venue X – Grand Ballroom” to customers. </p>
+    </fieldset>
+  
+    <fieldset class="mt-3">
+      <p> If you just have the one space for rent, do not fill in Venue Room Name. </p>
+    </fieldset>
+  
+    <fieldset class="mt-8">
+      <p class="font-semibold"> Venue Room Name (Mandatory Field for Venues with Multiple Rooms) </p>
+      <input type="text" name="venue_rooms[room_name]" id="room_name" class="w-full">
+    </fieldset>
+  
+    <fieldset class="mt-8">
+      <p> Please state your maximum capacity (assuming it is a seated event with a dancefloor - but get confirmation with your client about floorplan prior to event). </p>
+    </fieldset>
+  
+    <fieldset class="mt-3">
+      <label for="maximum_capacity" class="font-semibold"> {{ "Maximum capacity" }} </label>
+      <input type="number" name="venue_rooms[maximum_capacity]" id="maximum_capacity" class="w-full">
+    </fieldset>
+    
+    <div class="mt-3 media_upload">
+      {% include 'theme/simple/media_form/form' %}
+    </div>
+
+    <fieldset class="mt-3">
+      <button class="button form-input-small">
+        Submit
+      </button>
+    </fieldset>
+  </form>
+
+
+  {% graphql data %}
+    mutation presign {
+      property_upload_presigned_url(
+        table: "form_media_testing",
+        property_name: "testing_media"
+      ) {
+        upload_url
+        upload_url_payload
+      }
+    }
+  {% endgraphql %}
+  {% assign data = data.property_upload_presigned_url %}
+  <!-- {{ data }} -->
+  <!-- {{ context }} -->
+
+  <!-- File Upload Uppy Form -->
+  <form action="{{ data.upload_url }}"
+    data-s3-uppy="form"
+    data-s3-uppy-user-id="{{ context.current_user.id }}"
+    data-s3-uppy-object-uuid="{{ object_uuid }}"
+    data-s3-uppy-photo-type="{{ "Testing Media Upload" }}"
+    data-s3-uppy-max-number-of-files="{{ 3 }}"
+    hidden
+    id="uppy_custom_media_upload">
+    {% for field in data.upload_url_payload %}
+      <input type="hidden" name="{{ field[0] }}" value='{{ field[1] }}'>
+    {% endfor %}
+  </form>
+</div>
+
+
+<!-- {{ context.params.id }} -->

@@ -1,0 +1,14 @@
+{% liquid
+  function relations = 'lib/queries/relationships/search_by_right', name: "membership", r_id: group.id, approved: false
+  
+  for relation in relations.results
+    if relation.r_accepted_at == null
+      assign relation_object = relation | parse_json
+      hash_assign relation_object["r_accepted_at"] = 'now' | to_time | json
+
+      function _ = 'lib/commands/relationships/update', object: relation_object
+    endif
+  endfor
+
+  return
+%}

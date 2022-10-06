@@ -1,0 +1,251 @@
+{%- comment -%}
+  <footer class="border-t mt-10 {% if context.params.slug == 'sessions' and context.params.slug2 == 'new' %}hide_header_footer{% endif %} 
+  {% if context.params.slug == 'passwords' and context.params.slug2 == 'reset' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'passwords' and context.params.slug2 == 'new' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'passwords' %}hide_header_footer{% endif %}
+  {% if context.params.slug == 'sign-up' %}hide_header_footer{% endif %}">
+  
+
+    <div class="card py-14 rounded-none">
+      <div class="container lg:grid lg:grid-cols-3 lg:gap-5">
+
+        <div class="w-full lg:w-1/5 sm:min-w-80 mb-12 lg:mb-0 flex-shrink-0 text-center lg:text-start">
+          <a href="/" class="flex items-center justify-center lg:justify-start font-medium text-content">
+            {% render 'theme/simple/ui/logo', context: context %}
+          </a>
+          <p class="mt-4 text-sm">{{ 'app.footer.description' | t }}</p>
+        </div>
+
+        <div class="col-span-2 sm:flex sm:justify-between lg:justify-start text-center sm:text-start">
+
+          <div class="lg:w-1/4 lg:ms-4">
+            <h2 class="mb-2">{{ 'app.footer.header.title.general' | t }}</h2>
+            <ul class="mb-10 md:mb-0 leading-loose">
+              <li>
+                <a href="/" class="hover:text-content hover:underline">{{ 'app.footer.header.list.home' | t }}</a>
+              </li>
+              <li>
+                <a href="/about-us" class="hover:text-content hover:underline">{{ 'app.footer.header.list.about_us' | t }}</a>
+              </li>
+              <li>
+                <a href="/terms-of-service" class="hover:text-content hover:underline">{{ 'app.footer.header.list.terms_of_service' | t }}</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="lg:w-1/4 lg:ms-1">
+            <h2 class="mb-2">{{ 'app.footer.header.title.join' | t }}</h2>
+            <ul class="mb-10 md:mb-0 leading-loose">
+              <li>
+                <a href="/sign-up" class="hover:text-content hover:underline">{{ 'app.footer.header.list.sign_up' | t }}</a>
+              </li>
+              <li>
+                <a href="/sessions/new" class="hover:text-content hover:underline">{{ 'app.footer.header.list.log_in' | t }}</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="lg:w-1/4 lg:ms-1">
+            <h2 class="mb-2">{{ 'app.footer.header.title.support' | t }}</h2>
+            <ul class="mb-10 md:mb-0 leading-loose">
+              <li>
+                <a href="/contact-us" class="hover:text-content hover:underline">{{ 'app.footer.header.list.contact_us' | t }}</a>
+              </li>
+              <li>
+                <a href="/faq" class="hover:text-content hover:underline">{{ 'app.footer.header.list.faq' | t }}</a>
+              </li>
+            </ul>
+          </div>
+
+      </div>
+
+      </div>
+    </div>
+
+    <div class="container pt-6 pb-5 md:flex md:justify-between md:items-center text-center md:text-start">
+      <p class="text-sm">
+        {{ 'app.footer.copyrights.year' | t }}{{ 'app.footer.copyrights.title' | t }}
+        <a href="https://www.platformos.com" target="_blank" rel="noopener external noreferrer" target="_blank" class="hover:underline">{{ 'app.footer.copyrights.product_owner' | t }}</a>
+      </p>
+      <div class="mt-4 md:mt-0 inline-flex justify-center gap-6">
+        {% render 'theme/simple/ui/icon', icon: 'facebook' %}
+        <a target="_blank" rel="noopener external noreferrer" href="https://twitter.com/platformos" class="hover:text-interaction-hover transition-colors">
+          <span class="sr-only">platformOS Twitter</span>
+          {% render 'theme/simple/ui/icon', icon: 'twitter' %}
+        </a>
+      </div>
+    </div>
+
+  </footer>
+{%- endcomment -%}
+
+
+
+  <!-- Footer Start -->
+  <footer class="footer-1 bg-footerBg {% if context.params.slug == 'sessions' and context.params.slug2 == 'new' %}hide_header_footer{% endif %} 
+    {% if context.params.slug == 'sessions' and context.params.slug2 == 'create' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'vendor' and context.params.slug2 == 'get_start' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'vendor' and context.params.slug2 == 'vendor_sign-in' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'vendor' and context.params.slug2 == 'sign_up' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'vendor' and context.params.slug2 == 'forget-password' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'users' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'passwords' and context.params.slug2 == 'reset' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'passwords' and context.params.slug2 == 'new' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'passwords' %}hide_header_footer{% endif %}
+    {% if context.params.slug == 'sign-up' %}hide_header_footer{% endif %}">
+    <div class="wrapper max-w-7xl mx-auto">
+      <div class="container mx-auto px-4 max-xl:max-w-full max-xl:px-10 max-sm:px-5">
+        <div class="sm:flex sm:flex-wrap sm:pt-8 md:pt-16 pb-6">
+          <div class="px-4 sm:mb-4 md:mb-4 max-sm:w-full max-lg:w-1/2 max-xxl:w-1/4 w-1/4 max-sm:px-0">
+            <h5 class="text-sm font-Railway text-white uppercase font-medium mb-4">
+              {{ "About us" }}
+            </h5>
+            <ul class="list-none footer-links">
+              <li class="mb-2">
+                <a href="/about_us" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                  {{ "About Us" }}
+                </a>
+              </li>
+              <li class="mb-5">
+                <p class="text-footerGrey font-medium font-Railway text-sm leading-loose">
+                  {{ "Founded in Toronto. Canada's only site where you can search and book venues online." }}
+                </p>
+              </li>
+              <li class="mb-2">
+                <button
+                  class="flex items-center font-Work max-sm:text-xs md:text-base text-white sm:py-2 sm:px-3 max-sm:py-2 max-sm:px-3 md:py-3 md:px-6 rounded-full bg-themeBlue hover:bg-themeBlue-500">
+                  <img
+                    class="mr-2" src="{{ 'images/event-hound/contact-icon.png' | asset_url }}" />
+                    {{ "CONTACT US" }}
+                  </button>
+              </li>
+            </ul>
+          </div>
+          <div class="px-4 max-sm:w-1/2 max-lg:w-1/4 max-xxl:w-1/6 w-1/6 mt-8 sm:mt-0 max-sm:px-0">
+            <h5 class="text-sm font-Railway text-white uppercase font-medium mb-4">
+              {{ "Cms pages" }}
+            </h5>
+            <ul class="list-none footer-links">
+              <li class="mb-2">
+                <a href="/frequently_asked_questions" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                  {{ "FAQ's" }}
+                </a>
+              </li>
+              <li class="mb-2">
+                <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                  {{ "Help" }}
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="px-4 max-sm:w-1/2 max-lg:w-1/4 max-xxl:w-1/6 w-1/6 mt-8 sm:mt-0 md:mt-0 max-sm:px-0">
+            <h5 class="text-sm font-Railway text-white uppercase font-medium mb-4">
+              {{ "Social media" }}
+            </h5>
+            <ul class="list-none footer-links flex items-end">
+              <li class="mr-3">
+                <a href="https://www.facebook.com/login/" class="text-footerGrey"><img src="{{ 'images/event-hound/facebook.svg' | asset_url }}"></a>
+              </li>
+              <li class="mr-3">
+                <a href="https://twitter.com/login/" class="text-footerGrey"><img src="{{ 'images/event-hound/twitter-white.svg' | asset_url }}"></a>
+              </li>
+              <li class="mr-3">
+                <a href="https://www.instagram.com/accounts/login/" class="text-footerGrey"><img src="{{ 'images/event-hound/instagram.svg' | asset_url }}"></a>
+              </li>
+              <li class="mr-3">
+                <a href="https://www.linkedin.com/login/" class="text-footerGrey"><img src="{{ 'images/event-hound/linkedin.svg' | asset_url }}"></a>
+              </li>
+            </ul>
+          </div>
+          <div class="px-4 max-sm:w-full max-lg:w-1/2 max-xxl:w-1/4 w-1/3 mt-8 md:mt-0 flex-1 max-sm:px-0">
+            <h5 class="text-sm font-Railway text-white uppercase font-medium mb-4">
+              {{ "Terms & Conditions"}}
+            </h5>
+            <div class="flex">
+              <ul class="list-none footer-links mr-10">
+                <li class="mb-2">
+                  <a href="/guest_terms" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Guest Terms" }}
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Photo Submission Guidelines" }}
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Privacy Policy" }}
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Vendor Selling Policy" }}
+                  </a>
+                </li>
+              </ul>
+              <ul class="list-none footer-links">
+                <li class="mb-2">
+                  <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Vendor Agreement" }}
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Vendor Tax Agreement" }}
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a href="#" class="text-footerGrey font-medium text-sm font-Railway hover:text-white">
+                    {{ "Website Terms of use" }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-footerborderGrey"></div>
+    <!-- <div class="border-y border-t-footerborderGrey py-8">
+      <div class="wrapper max-w-7xl mx-auto">
+
+        <div class="container mx-auto px-4 max-xl:max-w-full max-xl:px-10 max-sm:px-5">
+
+          <div class="sm:flex sm:flex-wrap max-sm:block">
+            <div class="sm:w-full px-4 md:w-1/6 text-center flex-1 max-sm:px-0 max-sm:text-left">
+              <h5 class="text-sm font-Railway text-white font-medium mb-1">Telephone:</h5>
+              <p class="text-footerGrey text-sm font-Railway font-medium">(+1) 9876543210</p>
+            </div>
+            <div
+              class="px-4 sm:w-1/2 md:w-1/4 text-center flex-1 max-sm:px-0 max-sm:text-left max-sm:w-full max-sm:mt-8">
+              <h5 class="text-sm font-Railway text-white font-medium mb-1">Address:</h5>
+
+              <address class="not-italic text-footerGrey text-sm font-Railway font-medium">
+                8901 Marmora Road, Glasgow D04 89 GR, New York
+              </address>
+            </div>
+            <div
+              class="px-4 sm:w-1/2 md:w-1/4 text-center flex-1 max-sm:px-0 max-sm:text-left max-sm:w-full max-sm:mt-8">
+              <h5 class="text-sm font-Railway text-white font-medium mb-1">Email:</h5>
+              <p class="text-footerGrey text-sm font-Railway font-medium">info@eventhounds.ca</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="p-5 text-center border-footerborderGrey">
+      <p class="text-footerGrey text-sm font-Railway font-medium">
+        {{ "Copyright 2022" }}
+        <span
+          class="text-white font-semibold">
+          {{ "Event Hounds." }}
+        </span>
+        {{ "All Rights Reserved" }}
+      </p>
+    </div>
+  </footer>
+  <!-- Footer End -->

@@ -1,0 +1,17 @@
+mutation record_create (
+  $media_ids: [String!],
+  $object_uuid: String!
+)
+{
+  record_create(
+    record: {
+      table: "testing_media_ids"
+      properties: [
+        { name: "media_ids" value_array: $media_ids }
+        { name: "media_uuid" value: $object_uuid }
+      ]
+    }
+  ) {
+    id
+  }
+}

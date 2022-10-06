@@ -1,0 +1,27 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="authenticity_token" name="csrf-param">
+<meta content="{{ context.authenticity_token }}" name="csrf-token">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<link rel="stylesheet" href="{{ 'css/app.css' | asset_url }}">
+
+<link rel="shortcut icon" href="{{ 'images/logo.png' | asset_url }}" type="image/x-icon">
+
+{% if meta == blank %}
+  <title>{{ 'Events Hound' }}</title>
+  <!-- <title>{{ 'app.title' | t }}</title> -->
+  <meta name="description" content="MVP Marketplace - buy & sell">
+{% else %}
+  {% print meta %}
+{% endif %}
+
+<!-- Custom Dev Css -->
+<link rel="stylesheet" href="{{ 'css/custom-dev.css' | asset_url }}">
+
+<!-- Custom Dev Js -->
+<script src="{{ 'js/custom-dev.js' | asset_url }}"></script>
+
+<link href="{{ 'css/uppy.css' | asset_url }}" rel="stylesheet">
+<script src="{{ 'js/uppy.js' | asset_url }}" defer></script>
+<script src="{{ 'js/uppy-file-form-js.js' | asset_url }}" defer></script>

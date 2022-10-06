@@ -1,0 +1,216 @@
+{% assign current_user = context.current_user %}
+ 
+<h1 class="pagetitle"> Venue Rooms </h1>
+{% if current_user.user_type == "customer" %}
+{% endif %}
+{%liquid
+  graphql venue_rooms = 'venue_rooms/show' | fetch: "records"
+%}
+
+{% assign ven_room = venue_rooms.results | first %}
+<!-- {{ ven_room.room_media }}<br><br> -->
+{% for media in ven_room.room_media %}
+  <!-- {{ media }}<br><br> -->
+{% endfor %}
+{%- comment -%}
+  {{ current_user }}<br>
+  {{ venue_rooms.results }}
+{%- endcomment -%}
+
+<div class="row px-4">
+  {% for item in venue_rooms.results %}
+  <!-- {{ item.room_media }}<br><br> -->
+    {% if item.properties.venue_id == context.params.id %}
+      <div class="row border_1 flex">
+        <!-- Room Details -->
+        <ul class="w-1/4 flex flex-col">
+          {% if item.id %}
+            <li>
+              <h2 class="text-2xl"> {{ item.id }} </h2>
+            </li>
+          {% endif %}
+          {% if item.properties.venue_room_name %}
+            <li>
+              {{ "Room Name" }} : {{ item.properties.venue_room_name }}
+            </li>
+          {% endif %}
+          {% if item.properties.venue_room_capacity %}
+            <li>
+              {{ "Room Capacity" }} : {{ item.properties.venue_room_capacity }}
+            </li>
+          {% endif %}
+          {% if item.properties.quantity %}
+            <li>
+              {{ "Quantity" }} : {{ item.properties.quantity }}
+            </li>
+          {% endif %}
+          {% if item.properties.price_cents %}
+            <li>
+              {{ "Price" }} : <span class="font-medium">{{ item.properties.price_cents }}</span>
+            </li>
+          {% endif %}
+          {% if item.properties.media_ids %}
+            <li>
+              {{ item.properties.media_ids }}
+            </li>
+          {% endif %}
+
+
+          <li class="mt-8">
+            <form action="/orders/line_items" method="post">
+              {% render 'authenticity_token', authenticity_token: authenticity_token %}
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="item[quantity]" value="1">
+              <input type="hidden" name="item[item_id]" value="{{ item.id }}">
+              <input type="hidden" name="item[item_price]" value="{{ item.properties.price_cents }}">
+
+              <input type="hidden" name="line_item[quantity]" value="1">
+              <input type="hidden" name="line_item[item_id]" value="{{ item.id }}">
+              <input type="hidden" name="line_item[item_price]" value="{{ item.properties.price_cents }}">
+              <button
+                class="button">
+                  {%- comment -%}
+                    {{ 'app.items.add_to_cart' | t }}
+                  {%- endcomment -%}
+                  {{ "Add to Cart" }}
+                  {% render 'theme/simple/ui/icon', icon: 'cartPlus', class: 'w-4 h-4' %}
+              </button>
+            </form>
+            
+            
+            {%- comment -%}
+              <div class="form-group">
+                <form action="/cart/add" method="POST">
+                  <input name="quantity" type="hidden" value="1" />
+                  <input name="product_id" type="hidden" value="{{ item.id }}" />
+                  <input name="product_name" type="hidden" value="{{ item.properties.venue_name }}" />
+                  <button class="add-button btn" type="submit">
+                    Add to Cart!
+                  </button>
+                </form>
+              </div>
+            {%- endcomment -%}
+
+          </li>
+          
+          <li class="mt-3">
+            <form action="/dashboard/buy/check_multiple" method="post">
+              {%- comment -%}
+                {% assign pp = 120 %}
+                {% assign variable = forloop.index | times: 100 %}
+                {% assign item_price = pp | plus: variable %}
+              {%- endcomment -%}
+
+              {% include 'authenticity_token' %}
+
+
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="item[quantity]" value="1">
+              <input type="hidden" name="item[item_id]" value="{{ item.id }}">
+              <input type="hidden" name="item[item_price]" value="{{ item.properties.price_cents }}">
+
+              <input type="hidden" name="line_item[quantity]" value="1">
+              <input type="hidden" name="line_item[item_id]" value="{{ item.id }}">
+              <input type="hidden" name="line_item[item_price]" value="{{ item.properties.price_cents }}">
+
+              {%- comment -%}
+                <h4 class="mt-3 text-xm"> {{ item.properties.price_cents }} </h4>
+                <div class="quantity flex flex-row gap-2" style="width: 50%;">
+                  <input class="form-input-small quantity_minuss" type="button" value="-">
+                  <input class="form-input-small quantity_input" type="number" step="1" min="0" max="{{ item.properties.quantity }}" size="4" value="1" />
+                  <input class="form-input-small quantity_pluss" type="button" value="+" onclick="pluss();">
+                </div>
+              {%- endcomment -%}  
+
+              {%- comment -%}
+                {% for order in orders %}
+                  <input type="hidden" name="ids[]" value="{{ order.id }}" />
+                {% endfor %}
+                <button type="submit" class="button">
+                  {{ 'app.orders.show.checkout' | t }}
+                  {% render 'theme/simple/ui/icon', icon: 'shoppingCart' %}
+                </button>
+              {%- endcomment -%}
+              <button
+                class="button">
+                {{ 'app.orders.show.checkout' | t }}
+                {% render 'theme/simple/ui/icon', icon: 'shoppingCart' %}
+            </button>
+            </form>
+          </li>
+          
+        </ul>
+
+        <!-- Room Media -->
+        <div class="w-3/4 relative">
+          <div class="flex mx-auto">
+            {% for room__media in item.room_media %}
+              <!-- {{ room__media.testing_media }}<br><br> -->
+
+              <div class="w-1/4 m--auto">
+                {% if room__media.testing_media.extension == "mp4" %}
+                  <a href="{{ room__media.testing_media.url }}">
+                    <video controls class="listing_imgs">
+                      <source src="{{ room__media.testing_media.url }}" type="video/mp4">
+                    </video>
+                  </a>
+                {% endif %}
+                {% if room__media.testing_media.extension == "jpeg" or room__media.testing_media.extension == "jpg" or room__media.testing_media.extension == "png" or item_pic.testing_media.extension == "webp" %}
+                  <a href="{{ room__media.testing_media.url }}">
+                    <img src="{{ room__media.testing_media.url }}" alt="{{ room__media.testing_media.url }}" class="listing_imgs">
+                  </a>
+                {% endif %}
+              </div>
+
+
+            {% endfor %}
+            <!-- Finding Room Media -->
+            {%- comment -%}
+            {% for item_medias in item.properties.media_ids %}
+              {{ item_medias }}
+              <!-- Fetching Room Media Data -->
+              {% graphql item_media = 'venue/media_search', id: item_medias %}
+              {% if item_media %}
+                <!-- {{ item_media.photos.results }} -->
+                {% for item_pic in item_media.photos.results %}
+                  <div class="w-1/4 m--auto">
+                    {% if item_pic.testing_media.extension == "mp4" %}
+                      <a href="{{ item_pic.testing_media.url }}">
+                        <video controls class="listing_imgs">
+                          <source src="{{ item_pic.testing_media.url }}" type="video/mp4">
+                        </video>
+                      </a>
+                    {% endif %}
+                    {% if item_pic.testing_media.extension == "jpeg" or item_pic.testing_media.extension == "jpg" or item_pic.testing_media.extension == "png" or item_pic.testing_media.extension == "webp" %}
+                      <a href="{{ item_pic.testing_media.url }}">
+                        <img src="{{ item_pic.testing_media.url }}" alt="{{ item_pic.testing_media.url }}" class="listing_imgs">
+                      </a>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+            {%- endcomment -%}
+            {% if current_user.id %}
+              {% render 'theme/simple/wishlists/button', profile_id: current_profile.id, item_id: item.id  %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!-- {{ item }}<br><br> -->
+  
+    {% endif %}
+  {% endfor %}
+</div>
+
+<script>
+  // function pluss() {
+  //   let input = document.querySelector('.quantity_input');
+  //   let input_value = input.value;
+  //   let input_min = input.getAttribute('min');
+  //   let input_max = input.getAttribute('max');
+  //   let input_step = input.getAttribute('step');
+    
+  //   console.log(input_max);
+  // }
+</script>

@@ -1,0 +1,35 @@
+<header class="mb-6 -mx-8 px-8 pb-7 flex justify-between gap-8 border-b">
+
+  <h1 class="title flex items-center gap-4">
+    {% render 'theme/simple/ui/icon', icon: 'pencil', class: 'w-6 relative top-0.5 text-content-sidenote' %}
+    {{ 'admin.themes.edit_title' | t: theme: theme_settings.title }}
+  </h1>
+
+</header>
+
+<h2 class="bigtitle">{{ 'admin.themes.current_theme' | t }}</h2>
+<div class="card flex items-end gap-6">
+  <div class="px-6 -mb-4">
+    <img src="{{ 'images/theme_preview_' | asset_url | append: theme_settings.name | append: '.png'}}" class="shadow"/>
+  </div>
+
+  <div>
+    <form action="/admin/themes" method="post">
+      {% render 'authenticity_token', context: context %}
+      <input type="hidden" name="_method" value="delete" />
+      <input type="hidden" name="settings[name]" value="{{ theme_settings.name }}" />
+      <div class="mt-4 text-right">
+        <button type="submit"class="text-sm button button-danger">{{ 'admin.themes.reset_theme' | t }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<h2 class="bigtitle">{{ 'admin.themes.customize_theme' | t }}</h2>
+<div class="card">
+  <div class="flex min-h-screen">
+
+    {% render 'theme/simple/admin/themes/theme_settings', context: context, current_profile: current_profile, theme_settings: theme_settings %}
+
+  </div>
+</div>

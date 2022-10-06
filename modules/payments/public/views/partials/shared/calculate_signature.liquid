@@ -1,0 +1,13 @@
+{%- assign key = '' -%}
+{%- assign key = key | split: ',' -%}
+{%- for property in data -%}
+  {%- if signature_properties == blank or signature_properties contains property.first -%}
+    {%- assign key = key | add_to_array: property.last -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- for property in config -%}
+  {%- assign key = key | add_to_array: property.last -%}
+{%- endfor -%}
+{%- assign key = key | join: '|' -%}
+{%- assign hmac = key | compute_hmac: context.constants.payment_secret -%}
+{{- hmac | strip -}}

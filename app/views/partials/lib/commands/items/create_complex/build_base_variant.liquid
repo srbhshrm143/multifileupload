@@ -1,0 +1,24 @@
+{% liquid
+  assign base_variant =  '{}' | parse_json
+  hash_assign base_variant['uuid'] = object.uuid
+  hash_assign base_variant['currency'] = object.currency
+
+  hash_assign base_variant['price'] = object.price | plus: 0 | amount_to_fractional: object.currency
+  if object.original_price != blank
+    hash_assign base_variant['original_price'] = object.original_price | plus: 0 | amount_to_fractional: object.currency
+  endif
+  hash_assign base_variant['return_days'] = object.return_days | plus: 0
+  hash_assign base_variant['tax_rate'] = object.tax_rate
+  hash_assign base_variant['category'] = object.category | default: ''
+  hash_assign base_variant['sku'] = object.sku
+  hash_assign base_variant['tax_rate'] = object.tax_rate
+  hash_assign base_variant['photo_ids'] = object.photo_ids | split: ','
+  hash_assign base_variant['quantity'] = object.quantity | to_positive_integer: 0
+  hash_assign base_variant['main_variant'] = true
+  hash_assign base_variant['owner'] = owner
+  hash_assign base_variant['affiliate_redirect_url'] = object.affiliate_redirect_url
+  hash_assign base_variant['affiliate_redirect_url_terms_and_service'] = object.affiliate_redirect_url_terms_and_service
+  hash_assign base_variant['attributes_json'] = '[]' | parse_json
+
+  return base_variant
+%}

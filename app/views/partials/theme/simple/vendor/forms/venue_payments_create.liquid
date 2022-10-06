@@ -1,0 +1,157 @@
+<div class="overflow-x-auto relative">
+  <div class="border border-borderColor sm:px-3 sm:py-4 md:px-7 md:py-8 rounded-md">
+    <div class="sm:text-lg md:text-xl xl:text-2xl font-semibold font-Work md:pb-2 xl:pb-3">
+      {{ "Deposits and Payment Structure" }}
+    </div>
+    <p class="sm:text-xs md:text-base font-normal font-Work text-black">We take an 11% service
+      charge from the guest, which appears rolled into the price. </p>
+    <p class="sm:text-xs md:text-base font-normal font-Work text-black">Select the initial
+      deposit % to be charged through the site. (See Example)</p>
+    <form class="" action="/venue/venue_payments/{{action}}" method="POST">   
+      <input type="hidden" name="venue_payments[venue_id]" id="venue__id" value="{{ context.params.venue_id }}">               
+      <div
+        class="md:flex sm:flex-wrap md:flex-wrap lg:whitespace-nowrap sm:block justify-between items-center my-2">
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input checked id="deposit_15" type="radio" value="15% Deposit" name="venue_payments[deposit_percentage]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.deposit_percentage == "15% Deposit" %} checked{% endif %}>
+          <label for="deposit_15" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">
+            15% Deposit
+          </label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="deposit_30" type="radio" value="30% Deposit" name="venue_payments[deposit_percentage]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.deposit_percentage == "30% Deposit" %} checked{% endif %}>
+          <label for="deposit_30" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">30%
+            Deposit</label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="deposit_50" type="radio" value="50% Deposit" name="venue_payments[deposit_percentage]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.deposit_percentage == "50% Deposit" %} checked{% endif %}>
+          <label for="deposit_50" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">50%
+            Deposit</label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="deposit_75" type="radio" value="75% Deposit" name="venue_payments[deposit_percentage]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.deposit_percentage == "75% Deposit" %} checked{% endif %}>
+          <label for="deposit_75" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">75%
+            Deposit</label>
+        </div>
+        <div class="flex items-center sm:mb-2 md:mb-2">
+          <input id="deposit_100" type="radio" value="100% Deposit" name="venue_payments[deposit_percentage]"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            {% if object.deposit_percentage == "100% Deposit" %} checked{% endif %}>
+          <label for="deposit_100" class="ml-2 sm:text-sm md:text-base font-medium text-gray-900 dark:text-gray-300">100%
+            Deposit</label>
+        </div>
+      </div>
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black">Input the rest of
+        your
+        Payment Structure here. You will be responsible for collecting remaining deposits from your guests.
+      </p>
+      <input id="text" name="venue_payments[remaining_payments]" type="text" autocomplete="text"
+        class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+        placeholder=""
+        value="{{ object.remaining_payments | raw_escape_string }}">
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black">Do you require
+        guests to leave a security deposit? If so, clearly state below.</p>
+      <div class="md:flex sm:block gap-x-8 rounded-3xl">
+        <div
+          class="sm:w-full md:w-1/2 appearance-none relative block placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg">
+            <select
+            id="select-role3"
+            name="venue_payments[security_deposits]"
+            multiple
+            placeholder="Select Percentage..."
+            autocomplete="off"
+            class="block w-full rounded-sm cursor-pointer focus:outline-none itemss"
+            multiple
+          >
+          <option value="10%" {% if object.security_deposits == "10%" %} selected {% endif %}>10%</option>
+            <option value="20%" {% if object.security_deposits == "20%" %} selected {% endif %}>20%</option>
+            <option value="30%" {% if object.security_deposits == "30%" %} selected {% endif %}>30%</option>
+            <option value="40%" {% if object.security_deposits == "40%" %} selected {% endif %}>40%</option>
+            <option value="50%" {% if object.security_deposits == "50%" %} selected {% endif %}>50%</option>
+            <option value="60%" {% if object.security_deposits == "60%" %} selected {% endif %}>60%</option>
+            <option value="70%" {% if object.security_deposits == "70%" %} selected {% endif %}>70%</option>
+            <option value="80%" {% if object.security_deposits == "80%" %} selected {% endif %}>80%</option>
+          </select>
+
+        </div>
+        <div class="sm:w-full md:w-1/2 rounded md:mb-3 xl:mb-6 sm:mb-3 relative">
+          <input id="Wedding" name="venue_payments[security_deposits1]" type="corprate" autocomplete="corprate" 
+            class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg relative"
+            placeholder="10%" required>
+        </div>
+      </div>
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black">Do you have any
+        special instructions for the guests? if so, clearly state below.</p>
+      <input id="text" name="venue_payments[special_instructions]" type="text" autocomplete="text"
+        class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+        placeholder=""
+        value="{{ object.special_instructions | raw_escape_string }}">
+      <p class="my-2 sm:text-xs md:text-base font-normal font-Work text-black">Payment of deposit
+        will be issued by EventHounds to the vendor by cheque/ EFT to Account (Once Bookings are Finalised)
+      </p>
+      <div class="sm;block md:flex gap-x-8 sm:mb-3 md:mb-7">
+        <div class="sm:w-full md:w-1/3 sm:mb-2">
+          <input id="upload-input" name="venue_payments[by_cheque_to_account1]" type="text" autocomplete="upload" 
+            class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+            placeholder=""
+            value="{{ object.by_cheque_to_account1 | raw_escape_string }}">
+        </div>
+        <div class="sm:w-full md:w-1/3 sm:mb-2">
+          <input id="upload-input" name="venue_payments[by_cheque_to_account2]" type="text" autocomplete="upload" 
+            class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+            placeholder=""
+            value="{{ object.by_cheque_to_account2 | raw_escape_string }}">
+        </div>
+        <div class="sm:w-full md:w-1/3 sm:mb-2">
+          <input id="upload-input" name="venue_payments[by_cheque_to_account3]" type="text" autocomplete="upload" 
+            class="rounded-3xl appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-themeBlue-500 focus:border-themeBlue-500 focus:z-10 text-lg font-Work sm:text-sm lg:sm xl:text-lg"
+            placeholder=""
+            value="{{ object.by_cheque_to_account3 | raw_escape_string }}">
+        </div>
+      </div>
+      {%- comment -%}
+        <div class="sm:w-full md:w-1/3">
+          <div class="font-Work sm:text-sm lg:text-base font-medium">
+            {{ "Upload void cheque(optional)" }}
+          </div>
+          <label for="dropzone-file" class="flex flex-col justify-center items-center mt-2 py-4 bg-white rounded-lg border border-gray-300 border-dashed cursor-pointer mr-2">
+            <div class="flex flex-col justify-center items-center">
+              <img src="{{ 'images/event-hound/upload-img.png' | asset_url }}">
+              <p class="text-xs text-gray-500 dark:text-gray-400 pt-2">
+                {{ "Drop your files here" }}
+              </p>
+            </div>
+            <input id="dropzone-file" type="file" class="hidden">
+          </label>
+        </div>
+      {%- endcomment -%}
+      <div class="sm:w-full md:w-1/3 mt-6 mb-3">
+        <div class="flex items-center sm:items-start ">
+          <input id="paymentCheck" name="venue_payments[payment_by_cheque]" type="checkbox"
+            class="sm:mt-1 h-4 w-4 text-themeBlue focus:ring-themeBlue border-themeBlue rounded"
+            {% if object.payment_by_cheque == "on" %} checked{% endif %}>
+          <label for="paymentCheck"
+            class="ml-2 block text-sm text-gray-900 text-base font-Work sm:text-sm lg:sm xl:text-lg">
+            {{ "Payment Through Cheque" }}
+          </label>
+        </div>
+      </div>
+
+      <div class="w-full md:text-right mt-2">
+        <button type="button"
+          class="text-themeBlue rounded-3xl bg-white border border-themeBlue uppercase hover:themeBlue-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mt-2 focus:outline-none">previous</button>
+        <button type="submit"
+          class="text-white rounded-3xl bg-themeBlue uppercase hover:themeBlue-500 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mt-2 focus:outline-none">
+          {{ "save and continue" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

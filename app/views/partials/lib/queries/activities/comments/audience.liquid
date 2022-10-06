@@ -1,0 +1,16 @@
+{% liquid
+  if id == blank
+    log '(comments) ID cannot be blank when searching for user audience'
+    return null
+  endif
+
+  assign audience = '{ "author": [], "commentable": [] }' | parse_json
+
+  graphql r = 'activities/comments/audience', id: id, limit: 1
+  assign comment = r.comments.results.first
+
+  hash_assign audience['commentable'] = audience['commentable'] | add_to_array: comment.commentable.id
+  hash_assign audience['author'] = audience['author'] | add_to_array: comment.creator_id
+
+  return audience
+%}

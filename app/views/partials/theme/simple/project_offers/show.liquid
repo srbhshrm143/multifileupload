@@ -1,0 +1,28 @@
+<div class="container">
+  <h1 class="text-4xl font-medium text-center">
+    project_offer - {{ project_offer.id }}
+  </h1>
+
+    <span class="font-medium">
+    {{ 'app.project_offers.attr.name' | t }}
+  </span>
+  <p class="mb-10">
+    {{ project_offer.name }}
+  </p>
+
+    <span class="font-medium">
+    {{ 'app.project_offers.attr.project_id' | t }}
+  </span>
+  <p class="mb-10">
+    {{ project_offer.project_id }}
+  </p>
+
+    <span class="font-medium">
+    {{ 'app.project_offers.attr.creator_id' | t }}
+  </span>
+  <p class="mb-10">
+    {{ project_offer.creator_id }}
+  </p>
+
+  {{project_offer}}
+  </div>

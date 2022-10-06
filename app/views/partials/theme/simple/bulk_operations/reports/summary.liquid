@@ -1,0 +1,34 @@
+  <div class="flex items-start gap-8">
+
+    <section class="card w-1/2 min-h-[100px]">
+      <h2 class="subtitle">{{ 'app.bulk_operations.report.import_summary.title' | t }}</h2>
+      <ul class="mt-4 flex flex-wrap gap-12">
+        <li class="sidenote uppercase">{{ 'app.bulk_operations.report.import_summary.total_rows' | t }}: <strong>{{ import.data.size }}</strong></li>
+        <li class="sidenote uppercase">{{ 'app.bulk_operations.report.import_summary.total_products' | t }}: <strong>{{ import.items.size }}</strong></li>
+      </ul>
+    </section>
+
+    <section class="card w-1/2 min-h-[100px]">
+      <header class="flex items-center justify-between">
+        <h2 class="subtitle">{{ 'app.bulk_operations.report.changes' | t }}</h2>
+        <span class="sidenote p-2 rounded bg-panel-highlight uppercase">{{ 'app.bulk_operations.report.import_summary.total' | t }}: {{ diff.changes.all.size | plus: 0 }}</span>
+      </header>
+      <ul class="mt-4 flex flex-wrap gap-12">
+        <li class="sidenote flex items-center gap-2 uppercase">
+          {% render 'theme/simple/ui/icon', icon: 'refreshArrows' %}
+          {{ 'app.bulk_operations.report.import_summary.updates' | t }}: <strong>{{ diff.changes.update.size | plus: 0 }}</strong>
+        </li>
+        <li class="sidenote flex items-center gap-2 uppercase">
+          {% render 'theme/simple/ui/icon', icon: 'plus' %}
+          {{ 'app.bulk_operations.report.import_summary.additions' | t }}: <strong>{{ diff.changes.create.size | plus: 0 }}</strong>
+        </li>
+        {% comment %}
+        <li class="sidenote flex items-center gap-2 uppercase">
+          {% render 'theme/simple/ui/icon', icon: 'x' %}
+          {{ 'app.bulk_operations.report.import_summary.deletions' | t }}: <strong>{{ diff.changes.delete.size | plus: 0 }}</strong>
+        </li>
+        {% endcomment %}
+      </ul>
+    </section>
+
+  </div>

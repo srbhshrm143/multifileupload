@@ -1,0 +1,18 @@
+mutation update(
+  $id: ID!
+  $c__status: String
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "process"
+      properties: [
+        { name: "c__status", value: $c__status }
+      ]
+    }
+  ) {
+    id
+    created_at
+    updated_at
+  }
+}

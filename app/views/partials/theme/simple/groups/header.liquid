@@ -1,0 +1,104 @@
+{% liquid
+  function can_edit = "lib/can", actor: current_profile, do: "edit", object: group
+
+  function can = "lib/can", actor: current_profile, do: "join", object: group
+
+  function can_invite = "lib/can", actor: current_profile, do: "invite", object: group
+
+  if group.member == blank and group.rel_owner == blank
+    assign show_join_button = true
+  endif
+
+  if group.member.valid
+    assign show_leave_button = true
+  endif
+
+  if can_invite.valid
+    assign show_invite_button = true
+  endif
+
+  if show_invite_button or show_leave_button or can_edit.valid
+    assign show_dropdown = true
+  endif
+
+  if group.main_photo.photo.versions.uncropped
+    assign cover = true
+  endif
+%}
+
+{% if show_dropdown %}
+  {% capture 'dropdown_content' %}
+    <ul class="whitespace-nowrap">
+
+      {% if show_invite_button %}
+        <li>
+          {% render 'theme/simple/groups/invite_button', group: group, current_profile: current_profile, label: 'app.groups.invite_new_member', class: 'block py-3 px-7 md:rounded-t-md hover:bg-interaction text-content hover:text-content-inverted transition-colors text-start' %}
+        </li>
+      {% endif %}
+
+      {% if can_edit.valid %}
+        <li>
+          <a href="/groups/{{ group.id }}/relationships" class="block py-3 px-7 hover:bg-interaction text-content hover:text-content-inverted transition-colors text-start">Manage group</a>
+        </li>
+      {% endif %}
+
+      {% if show_leave_button %}
+        <li class="border-t">
+          {% render 'theme/simple/groups/buttons/leave', group: group, current_profile: current_profile, context: context, button_class: 'w-full block py-3 px-7 md:rounded-b-md hover:bg-interaction hover:text-content-inverted transition-colors text-start' %}
+        </li>
+      {% endif %}
+
+    </ul>
+  {% endcapture %}
+
+  {% capture dropdown_label %}
+    {% render 'theme/simple/ui/icon', icon: 'menuHorizontal' %}
+  {% endcapture %}
+{% endif %}
+
+<header class="-mt-10 mb-16 {% if cover %} pt-36 {% endif %} relative bg-cover bg-center" {% if cover %} style="background-image: url('{{ group.main_photo.photo.versions.uncropped }}')" {% endif %}>
+  {% if show_dropdown %}
+    <div class="md:hidden px-4 absolute left-0 top-4 right-0 text-end">
+      {% render 'theme/simple/ui/dropdown', toggle_class: 'button button-secondary button-compact' label: dropdown_label, content: dropdown_content %}
+    </div>
+  {% endif %}
+
+  <div class="container">
+    <div class="relative card md:!px-24 -bottom-10 bg-panel text-center">
+      <h1 class="bigtitle md:!text-4xl">{{ group.name }}</h1>
+      <h2 class="md:subtitle">{{ group.summary }}</h2>
+
+      {% if group.tags[0] %}
+        <ul class="mt-8 flex flex-wrap justify-center gap-2 uppercase text-xs">
+          {% for tag in group.tags %}
+            <li class="px-2 py-1 bg-panel-highlight rounded">#{{ tag }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if show_join_button %}
+        <div class="hidden md:block absolute top-4 right-4">
+          {% render 'theme/simple/groups/buttons/join', group: group, class: 'button-small', context: context, current_profile: current_profile %}
+        </div>
+      {% endif %}
+
+      {% if group.member.pending_acceptance %}
+        <div class="hidden md:block absolute top-4 right-4">
+          {% render 'theme/simple/groups/buttons/accept_invite', group: group, class: 'button-small', context: context, current_profile: current_profile %}
+        </div>
+      {% endif %}
+
+      {% if group.member.pending_approval %}
+        <div class="hidden md:block absolute top-4 right-4">
+          {{ 'app.groups.relationships.pending' | t }}
+        </div>
+      {% endif %}
+
+      {% if show_dropdown %}
+        <div class="hidden md:block absolute right-4 bottom-4">
+          {% render 'theme/simple/ui/dropdown', toggle_class: 'button button-secondary button-compact' toggle_title: 'Toggle dropdown', label: dropdown_label, content: dropdown_content %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

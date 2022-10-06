@@ -1,0 +1,20 @@
+{%  liquid
+  function object = 'lib/commands/item_attributes/create_many/build', object: object
+  function object = 'lib/commands/item_attributes/create_many/check', object: object
+
+  if object.valid
+    for attribute_object in object.attributes
+      function attribute = 'lib/commands/item_attributes/create', object: attribute_object
+
+      if attribute.valid != true
+        log attribute, type: 'ERROR: item_attributes/create'
+      endif
+    endfor
+
+    for translation in object.translations
+      function translation = 'lib/commands/execute', mutation_name: 'translations/create' object: translation
+    endfor
+  endif
+
+  return object
+%}

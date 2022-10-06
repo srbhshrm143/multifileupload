@@ -1,0 +1,65 @@
+query search(
+  $limit: Int = 10
+  $keyword: String
+  $sort: RecordsSortInput = { created_at: { order: DESC } }
+  # $lang: String
+) {
+  venues: records(
+    per_page: $limit
+    filter: {
+      table: { value: "venues" }
+      deleted_at: { exists: false }
+      properties: { name: "venue_address", contains: $keyword }
+      # properties: { name: "c__status", value_in: ["app.statuses.projects.open", "app.statuses.projects.under_evaluation", "app.statuses.projects.closed"] }
+      # or: [
+      #   # { properties: { name: "venue_name", contains: $keyword } }
+      #   { properties: { name: "venue_address", contains: $keyword } }
+      #   # { properties: { name: "venue_capacity", contains: $keyword } }
+      # ]
+    }
+    sort: [$sort]
+  ) {
+    total_entries
+    results {
+      id
+      created_at
+      type: table
+
+      name: property(name: "venue_name")
+      venue_address: property(name: "venue_address")
+      venue_space: related_records(
+        join_on_property: "id"
+        foreign_property: "venue_id"
+        table: "venue_event_space"
+      ) {
+        id
+        properties
+        space_name: property(name: "event_space_name")
+        event_type: property(name: "event_type")
+        media_uuid: property(name: "media_uuid")
+        # address: property(name: "venue_address")
+        media: related_records(
+          join_on_property: "media_uuid"
+          foreign_property: "media_uuid"
+          table: "form_media_testing"
+        ) {
+          id
+          # properties
+          photo: property_upload(name: "testing_media") {
+            url
+            extension
+          }
+        }
+      }
+      pricing: related_records(
+        join_on_property: "id"
+        foreign_property: "venue_id"
+        table: "venue_pricing"
+      ) {
+        id
+        weekdays_day: property(name: "weekdays_day")
+        # properties
+      }
+    }
+  }
+}

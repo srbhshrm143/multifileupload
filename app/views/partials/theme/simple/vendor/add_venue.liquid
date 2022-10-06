@@ -1,0 +1,248 @@
+{%liquid
+  assign currentATab   = context.params.currentTab
+  assign currentAction   = context.params.actions
+  assign action ='create'
+  if currentATab == blank
+    assign currentATab  = 'tab1'
+  endif
+  if currentAction == 'update'
+    assign action  = context.params.actions
+  endif
+  assign profile_id = context.exports.current_profile.user_id
+  assign menuid   = context.params.menuId
+
+  if menuid != blank
+    graphql event_space = 'venue/form_data_list/event_data_list', id: context.params.menuId
+    graphql venue_hours = 'venue/form_data_list/hours_data_list', menu_id: context.params.menuId
+    graphql venue_pricing = 'venue/form_data_list/pricing_data_list', menu_id: context.params.menuId
+    graphql space_features = 'venue/form_data_list/space_features_data_list', menu_id: context.params.menuId
+  endif
+
+  if context.params.venue_id != blank
+    graphql venue_data = 'venue/form_data_list/venue_date_list', id: context.params.venue_id, profile_id: profile_id
+
+    graphql venue_menus = 'venue/form_data_list/menus_data_list', venue_id: context.params.venue_id
+    graphql venue_payments = 'venue/form_data_list/payments_data_list', venue_id: context.params.venue_id
+    graphql venue_adv_notice = 'venue/form_data_list/advance_notice_data_list', venue_id: context.params.venue_id
+    graphql venue_contract = 'venue/form_data_list/contract_data_list', venue_id: context.params.venue_id
+  endif 
+%}
+<style>
+  .itemss .item {
+      height: auto;
+  }
+</style>
+<link
+      href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css"
+      rel="stylesheet"
+    />
+{%- comment -%}
+  {{ context.params }}<br><br>
+  {{ profile_id }}<br><br>
+  <!-- {{ venue_hours }}<br><br> -->
+  {% for data_data in venue_payments.data.results %}
+    {{ data_data }}<br>
+  {% endfor %}
+{%- endcomment -%}
+<!-- Banner start -->
+  <section class="bg-add-venue1 bg-no-repeat bg-cover
+   bg-blend-multiply bg-PrimaryOverlay py-36 max-xxl:py-20 max-md:py-14 max-sm:py-8
+  ">
+    <div class="container mx-auto max-md:px-10 max-lg:max-w-full max-lg:px-5">
+      <div class="text-center">
+        <h2 class="text-white text-4xl max-xxl:text-text-head font-Railway font-semibold pb-2">
+          {{ "Add Venue" }}
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- Banner end -->
+  <!--profile-->
+  <div class="px-6 md:my-16 sm:my-5 container mx-auto max-xl:max-w-full max-xl:px-5">
+    <div x-data="{ currentTab: '{{currentATab}}' }" class="">
+      <div class="flex max-sm:block">
+        <div
+          class="w-1/3 max-xs:max-w-xs max-xxl:max-w-xs xl:max-w-xs max-xxl:w-1/3 max-sm:w-full max-lg:w-2/4 xl:w-2/4">
+          <ul class="flex flex-col border rounded-md mr-5 max-sm:mr-0">
+            <li class="border-b">
+              <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                'tab1' }" x-on:click="currentTab= 'tab1'" class="w-full font-semibold text-base pl-5 py-3 text-left flex items-center max-xl:text-md font-Railway active:text-themeBlue border-b-1 text-base rounded-t-md active max-xl:text-sm {% if context.location.href == "/vendor/add_venue" %} active text-themeBlue border-themeBlue border-l-4 {% endif %} ">
+              <img class="fill-themeBlue mr-3" src="{{ 'images/vendor/interduce-venue-icon.svg' | asset_url }}" />
+                {{ "Introduce Your Venue" }}
+              </button>
+            </li>
+            <li class="border-b">
+              <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                'tab2' }" x-on:click="currentTab= 'tab2'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left max-xl:text-md font-Railway text-base max-md:pr-7 max-xl:text-sm {% if context.location.href == "/vendor/add_venue?add_space" %} active text-themeBlue border-themeBlue border-l-4 {% endif %}">
+                <img class="mr-3" src="{{ 'images/vendor/user-icon.svg' | asset_url }}" />
+                {{ "Add Event Space" }}
+              </button>
+            </li>
+            <li class="border-b"> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                        'tab3' }" x-on:click="currentTab= 'tab3'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left  max-xl:text-md font-Railway   max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/space-icon.svg' | asset_url }}" /> Space
+                Features</button>
+            </li>
+            <li class="border-b"> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                        'tab4' }" x-on:click="currentTab= 'tab4'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left max-xl:text-md font-Railway max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/time-icon.svg' | asset_url }}" /> Hours</button>
+            </li>
+            <li class="border-b"> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+              'tab5' }" x-on:click="currentTab= 'tab5'"
+class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left  max-xl:text-md font-Railway max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/pricingand-facl-icon.svg' | asset_url }}" /> Pricing
+and Availability</button>
+</li>
+            <li class="border-b"> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                        'tab6' }" x-on:click="currentTab= 'tab6'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left max-xl:text-md font-Railway max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/menus-icon.svg' | asset_url }}" /> Menus</button>
+            </li>
+            
+            <li class="border-b"> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                                        'tab7' }" x-on:click="currentTab= 'tab7'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left  max-xl:text-md font-Railway max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/deposite-icon.svg' | asset_url }}" /> Deposits
+                and Payment</button>
+            <li class="border-b"> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+                    'tab8' }" x-on:click="currentTab= 'tab8'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left max-xl:text-md font-Railway max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/advance-notice-icon.svg' | asset_url }}" /> Advance
+                Notice</button>
+            </li>
+            <li> <button x-bind:class="{ 'active text-themeBlue border-themeBlue border-l-4 ': currentTab ===
+              'tab9' }" x-on:click="currentTab= 'tab9'"
+                class="w-full flex items-center font-semibold text-base pl-6 py-3 text-left  max-xl:text-md font-Railway max-md:pr-7 max-xl:text-sm"><img class="mr-3" src="{{ 'images/vendor/contact-info-icon.svg' | asset_url }}" /> Contract
+                Information</button></li>
+          </ul>
+        </div>
+        <div class="tab-content w-3/5 max-lg:w-full max-xxl:w-2/3 max-md:p-3 max-sm:w-full max-sm:mt-4 xl:w-full">
+          <div x-bind:class="{ 'hidden': currentTab !== 'tab1' }">
+            {% if venue_data.data.total_entries > 0 %}
+              {% for venues in venue_data.data.results %}
+                {% if venues.id %}
+                  {% render 'theme/simple/vendor/forms/venue_create', object: venues.properties, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/venue_create', action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab2' }">
+            {%- comment -%} Event Space Create Form {%- endcomment -%}
+            {% if event_space.data.total_entries > 0 and menuid != blank %}
+              {% for space_data in event_space.data.results %}
+                {% if space_data.id %}
+                  {% render 'theme/simple/vendor/forms/event_space_create', object: space_data.properties, category_gql: category_gql, space_image: space_data.space_media, action:action, id:space_data.id %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/event_space_create', category_gql: category_gql, action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab3' }">
+            {%- comment -%} Space Features Create Form {%- endcomment -%}
+            {% if space_features.data.total_entries > 0 and menuid != blank %}
+              {% for features in space_features.data.results %}
+                {% if features.id %}
+                  {% render 'theme/simple/vendor/forms/space_features_create', object: features.properties, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/space_features_create', action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab4' }">
+            {%- comment -%} Space Hours Create Form {%- endcomment -%}
+            {% if venue_hours.data.total_entries > 0 and menuid != blank %}
+              {% for hours_data in venue_hours.data.results %}
+                {% if hours_data.id %}
+                  {% render 'theme/simple/vendor/forms/space_hours_create', object: hours_data.properties, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/space_hours_create', action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab6' }">
+            {%- comment -%} Space Menus Create Form {%- endcomment -%}
+            {% if venue_menus.data.total_entries > 0 %}
+              {% for  menus_data in venue_menus.data.results %}
+                {% if menus_data.id %}
+                  {% render 'theme/simple/vendor/forms/space_menus_create', object: menus_data.properties, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/space_menus_create', action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab5' }">
+           
+            {%- comment -%} Space Pricing Create Form {%- endcomment -%}
+            {% if venue_pricing.data.total_entries > 0 and menuid != blank %}
+              {% for pricing_data in venue_pricing.data.results %}
+                {% if pricing_data.id %}
+                  {% render 'theme/simple/vendor/forms/space_pricing_create', object: pricing_data.properties, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/space_pricing_create', action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab7' }">
+            {%- comment -%} Space Payments Create Form {%- endcomment -%}          
+          {% if venue_payments.data.total_entries > 0 %}
+            {% for payments_data in venue_payments.data.results %}
+              {% if payments_data.id %}
+                {% render 'theme/simple/vendor/forms/venue_payments_create', object: payments_data.properties, action:action %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% render 'theme/simple/vendor/forms/venue_payments_create', action:action %}
+          {% endif %}
+
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+              currentTab !== 'tab8' }">
+            {% if venue_adv_notice.data.total_entries > 0 %}
+              {% for advance_notice in venue_adv_notice.data.results %}
+                {% if advance_notice.id %}
+                  {% render 'theme/simple/vendor/forms/space_advance_notice_create', object: advance_notice.properties, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/space_advance_notice_create', action:action %}
+            {% endif %}
+          </div>
+          <div class="hidden" x-bind:class="{ 'hidden':
+            currentTab !== 'tab9' }">
+            {%- comment -%} Space Contract Create Form {%- endcomment -%}
+            {% if venue_contract.data.total_entries > 0 %}
+              {% for contract_data in venue_contract.data.results %}
+                {% if contract_data.id %}
+                  {% render 'theme/simple/vendor/forms/space_contract_create', object: contract_data.properties, contract_image: contract_data.contract_image, action:action %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% render 'theme/simple/vendor/forms/space_contract_create', action:action %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+  <script>
+    new TomSelect('#select-role', {
+      maxItems: 1,
+    });
+    new TomSelect('#select-roles', {
+      maxItems: 1,
+    });
+    new TomSelect('#select-role3', {
+      maxItems: 1,
+    });
+  </script>

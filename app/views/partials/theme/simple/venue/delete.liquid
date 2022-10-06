@@ -1,0 +1,12 @@
+<h1 class="pagetitle"> Venue Deleted - {{ context.params.id }} </h1>
+
+
+{% graphql upd_gql = 'venue/delete', Id: context.params.id %}
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue/show";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 2000);
+</script>

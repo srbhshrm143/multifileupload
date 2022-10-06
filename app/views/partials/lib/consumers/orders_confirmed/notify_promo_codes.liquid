@@ -1,0 +1,9 @@
+{% liquid
+    assign transaction = object.object.transaction
+    function orders = 'lib/queries/orders/search', ids: transaction.order_ids, limit: 100
+  
+    for order in orders.results
+      function object = 'lib/commands/promo_codes/decrement_availability', object: order
+    endfor
+  %}
+  

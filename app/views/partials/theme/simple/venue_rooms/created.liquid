@@ -1,0 +1,28 @@
+<h1 class="pagetitle"> Rooms Created </h1>
+
+
+<!-- {{ context.params }} -->
+
+{% assign room__name = context.params.room_name %}
+{% assign venue_id = context.params.venue_id %}
+{% assign owner_id = context.params.owner_id %}
+
+{%- comment -%}
+{%- endcomment -%}
+{%liquid
+  graphql new_room = 'venue_rooms/create', room_name: room__name, owner_Id: owner_id, venue_id: venue_id
+  assign data = new_room | fetch: "model_create"
+%}
+
+<!-- {{ data.id }} -->
+
+<!-- {{ venue_id }} -->
+
+<!-- <div class="tenor-gif-embed" data-postid="23870428" data-share-method="host" data-aspect-ratio="1" data-width="100%"><a href="https://tenor.com/view/what-processing-umm-huh-wtf-gif-23870428">What Processing GIF</a>from <a href="https://tenor.com/search/what-gifs">What GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script> -->
+<img src="https://tenor.com/view/what-processing-umm-huh-wtf-gif-23870428" alt="">
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue_rooms/manage_rooms?id={{ venue_id }}";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

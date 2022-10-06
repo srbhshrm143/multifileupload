@@ -1,0 +1,11 @@
+{% liquid
+  function object = 'lib/commands/vendor/advance_notice/update/build', object: object, profile: profile
+  function object = 'lib/commands/vendor/advance_notice/update/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', object: object, mutation_name: 'venue/upadte/update_venue_advacne_notice', selection: 'record_update'
+    return object 
+  else
+    return object
+  endif
+%}

@@ -1,0 +1,30 @@
+name: project
+properties:
+  - name: uuid
+  - name: name
+  - name: deadline
+    type: date
+  - name: promoted
+    type: boolean
+  - name: summary
+    type: string
+  - name: award
+  - name: tags
+    type: array
+  - name: description
+    type: text
+  - name: terms_and_conditions
+    type: text
+  - name: offer_info
+    type: text
+  - name: commentable
+    type: boolean
+  - name: development_partners
+  - name: sent_by
+  - name: group_id
+  - name: video_urls
+    type: array
+  - name: steps
+
+  - name: c__status
+  - name: c__applications_count

@@ -1,0 +1,27 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  for line in object
+    assign input = '{}' | parse_json
+    hash_assign input['id'] = line.item_id
+    hash_assign input['step'] = line.step
+
+    function result = 'lib/commands/call', command: 'items/increment_quantity', object: input
+    if result['valid']
+      if result.quantity > 0 and result.status.name == 'app.statuses.items.unavailable'
+        function status = 'lib/commands/statuses/create', object_id: result.id, name: 'app.statuses.items.published', profile_id: result.owner.id
+        if status['valid']
+          function _event = 'lib/commands/events/create', type: 'status_created', actor_id: result.owner.id, object_id: status.id, target_id: status.object_id
+        else
+          log status, type: 'ERROR: take_out_of_inventory status failed'
+        endif
+      endif
+    else
+      hash_assign c['valid']  = false
+      hash_assign c['errors'][line.item_id] = result.errors
+    endif
+  endfor
+
+  return c
+%}
+

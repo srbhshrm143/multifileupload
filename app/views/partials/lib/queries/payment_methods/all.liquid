@@ -1,0 +1,8 @@
+{% liquid
+  assign payment_methods = 'example' | split: ','
+  if context.constants.stripe_pk_key
+    assign payment_methods = payment_methods | add_to_array: 'stripe'
+  endif
+
+  return payment_methods
+%}

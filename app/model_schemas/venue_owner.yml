@@ -1,0 +1,17 @@
+name: venue_owner
+properties:
+  - name: venue_id
+  # - name: owner_pic
+  #   type: photo
+  - name: owner_fname
+    type: string
+  - name: owner_lname
+    type: string
+  - name: owner_gender
+    type: string
+  - name: owner_mobile
+    type: string
+  - name: owner_email
+    type: string
+  - name: owner_password
+    type: string

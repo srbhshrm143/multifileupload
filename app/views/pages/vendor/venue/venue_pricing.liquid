@@ -1,0 +1,25 @@
+---
+  slug: venue/venue_pricing/create
+  method: post
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  
+  function object = 'lib/commands/vendor/venue_pricing/create', object: context.params.event_pricing, profile: current_profile.user
+  assign venue_id = object.properties.venue_id
+  
+  include 'redirect_to', event_pricing: context.params.event_pricing, venue_id: venue_id, notice: 'venue pricing created'
+  
+  comment
+    include 'redirect_to', event_pricing: context.params.event_pricing, venue_id: venue_id, notice: 'venue pricing created'
+
+    include 'redirect_to', event_pricing: context.params.venue_pricing, notice: 'venue pricing created'
+  endcomment
+%}
+
+{{ context.params }}
+<br><br>
+{{ object }}
+<br><br>
+

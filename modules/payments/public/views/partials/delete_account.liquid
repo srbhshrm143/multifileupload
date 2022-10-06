@@ -1,0 +1,24 @@
+{% graphql aa = 'modules/payments/get_accounts',  id: id %}
+{% assign account = aa.customizations.results.first %}
+
+{%- parse_json 'data' -%}
+  {
+    "id": "{{ account.id }}",
+    "gateway_id": "{{ account.properties.gateway_id }}"
+  }
+{%- endparse_json -%}
+
+{%- parse_json 'config' -%}
+  {
+    "request_type": "delete_account",
+    "button": "Delete",
+    "redirect_to": "{{ redirect_to | default: context.location.href }}"
+  }
+{%- endparse_json -%}
+
+{%-
+  include_form 'modules/payments/gateway_request_form',
+  config: config,
+  data: data
+%}
+

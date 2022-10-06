@@ -1,0 +1,60 @@
+name: venue_features_foods
+properties:
+  - name: venue_id
+    type: string
+  - name: passed_hors
+    type: string
+  - name: antipasto
+    type: string
+  - name: dinner_menu_course3
+    type: string
+  - name: dinner_menu_course4
+    type: string
+  - name: late_night_sweets
+    type: string
+  - name: late_night_savoury
+    type: string
+  - name: late_night_seafood
+    type: string
+  - name: buffet_style_brunch
+    type: string
+  - name: buffet_style_lunch
+    type: string
+  - name: buffet_style_dinner
+    type: string
+  - name: plated_brunch
+    type: string
+  - name: plated_lunch
+    type: string
+  - name: bread_for_table
+    type: string
+  - name: halal
+    type: string
+  - name: kosher
+    type: string
+  - name: vegetarian
+    type: string
+  - name: vegan
+    type: string
+  - name: wedding_cake_cutting_fee
+    type: string
+  - name: coffee_tea_service
+    type: string
+  - name: bridal_shower
+    type: string
+  - name: baby_shower
+    type: string
+  - name: deluxe_bar
+    type: string
+  - name: plated_dinner_course3
+    type: string
+  - name: plated_dinner_course4
+    type: string
+  - name: lunch_course3
+    type: string
+  - name: lunch_course4
+    type: string
+  - name: late_night_stations
+    type: string
+  - name: seafood_antipasto
+    type: string

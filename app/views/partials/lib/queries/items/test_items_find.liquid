@@ -1,0 +1,10 @@
+{% liquid
+  unless id
+    return null
+  endunless
+
+  assign lang = lang | default: context.language
+  graphql r  = 'line_items/test_line_items', id: id, limit: 1, lang: lang
+  assign item = r.items.results.first
+  return item
+%}

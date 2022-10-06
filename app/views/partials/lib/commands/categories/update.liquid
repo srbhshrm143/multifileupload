@@ -1,0 +1,17 @@
+{%  liquid
+
+  function object = 'lib/commands/categories/update/build', object: object, category: category
+  function object = 'lib/commands/categories/update/check', object: object
+
+  if object.valid
+    for detail_arr in object.category_details
+      function d = 'lib/commands/category_details/update', object: detail_arr[1], category: category, lang: detail_arr[0]
+
+      unless d.valid
+        log d, type: 'ERROR: category_details/update'
+      endunless
+    endfor
+  endif
+
+  return object
+%}

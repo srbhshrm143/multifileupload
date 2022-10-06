@@ -1,0 +1,36 @@
+{% liquid
+  assign per_page = 200
+
+  assign params = '{}' | parse_json
+  hash_assign params['page'] = 1
+  hash_assign params['ids'] = ids
+  function items = 'lib/queries/items/search', withAllLangs: true, limit: per_page, params: params, with_results: false
+%}
+
+{% for _page in (1..items.total_pages) %}
+
+  {% background 'update-items', _page: _page, per_page: per_page, params: params %}
+  {% liquid
+    assign params = params
+    hash_assign params['page'] = _page
+    function items = 'lib/queries/items/search', withAllLangs: true, limit: per_page, params: params
+
+    for item in items.results
+      function keywords = 'lib/commands/items/keywords', item: item
+      assign i = '{}' | parse_json
+      hash_assign i['id'] = item.id
+      hash_assign i['c__keywords'] = keywords
+
+      function update = 'lib/commands/items/update', object: i
+      unless update.valid
+        log update, type: 'update: :19'
+      endunless
+    endfor
+
+    assign progress = items.results.size | prepend: "items: " | append: ", page: " | append: _page
+  %}
+  {% endbackground %}
+
+{% endfor %}
+
+{% return items.total_entries %}

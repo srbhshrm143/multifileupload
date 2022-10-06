@@ -1,0 +1,77 @@
+<h1 class="pagetitle"> {{ "Venue Owners" }} </h1>
+
+{%liquid
+  graphql read_gql = "venue_owner/show" | fetch:  "models"
+  assign data_gql = read_gql | fetch: "results"
+%}
+<!-- {{ data_gql }} -->
+<div class="container py-6">
+  <div class="flex flex-wrap text-content">
+    {% for data in data_gql %}
+      <!-- {{ data }}<br> -->
+      <div class="card m-2 relative w18">
+        <table>
+          {% if data.id != blank or data.id != "null" %}
+            <!-- {{ "Id" }} - {{ data.id }} -->
+            <tr>
+              <td class="p-0">{{ "Id : " }}</td>
+              <td class="p-0">{{ data.id }}</td>
+            </tr>
+          {% endif %}
+          {% if data.Email != blank or data.Email != "null" %}
+            <!-- {{ "Email" }} - {{ data.Email }} -->
+            <tr>
+              <td class="p-0">{{ "Email : " }}</td>
+              <td class="p-0">{{ data.Email }}</td>
+            </tr>
+          {% endif %}
+          {% if data.FirstName != blank or data.FirstName != "null" %}
+          <!-- {{ "First Name" }} - {{ data.FirstName }} -->
+            <tr>
+              <td class="p-0">{{ "First Name : " }}</td>
+              <td class="p-0">{{ data.FirstName }}</td>
+            </tr>
+          {% endif %}
+          {% if data.LastName != blank or data.LastName != "null" %}
+          <!-- {{ "Last Name" }} - {{ data.LastName }} -->
+            <tr>
+              <td class="p-0">{{ "Last Name : " }}</td>
+              <td class="p-0">{{ data.LastName }}</td>
+            </tr>
+          {% endif %}
+          {% if data.Gender != blank or data.Gender != "null" %}
+          <!-- {{ "Gender" }} - {{ data.Gender }} -->
+            <tr>
+              <td class="p-0">{{ "Gender : " }}</td>
+              <td class="p-0">{{ data.Gender }}</td>
+            </tr>
+          {% endif %}
+          {% if data.Mobile != blank or data.Mobile != "null" %}
+          <!-- {{ "Mobile" }} - {{ data.Mobile }} -->
+            <tr>
+              <td class="p-0">{{ "Mobile : " }}</td>
+              <td class="p-0">{{ data.Mobile }}</td>
+            </tr>
+          {% endif %}
+          <tr>
+            <td class="p-0">
+              <a href="/venue_owner/update?id={{ data.id }}" class="button button-small m-2">Update</a>
+            </td>
+            <td class="p-0">
+              <a href="/venue_owner/delete?id={{ data.id }}" class="button button-small m-2">Delete</a>
+              <a href="/venue_owner/password_change?id={{ data.id }}" class="button button-small m-2">Reset Password</a>
+            </td>
+              <!-- <div class="absolute right-2 bottom-2 w-half">
+              </div> -->
+          </tr>
+        </table>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+<style>
+  .w18 {
+    width: 32%;
+    /* height: 210px; */
+  }
+</style>

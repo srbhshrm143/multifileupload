@@ -1,0 +1,8 @@
+{% comment %} regenate-profiles-cache GraphQL queries go below {% endcomment %}
+{% liquid
+  function profiles = 'lib/queries/profiles/search', limit: 5000
+
+  for profile in profiles.results
+    function profile = 'lib/commands/profiles/update', object: profile, profile: profile
+  endfor
+%}

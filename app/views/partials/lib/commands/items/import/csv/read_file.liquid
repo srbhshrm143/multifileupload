@@ -1,0 +1,35 @@
+{% liquid
+  if url
+    assign rows = url | download_file | parse_csv: convert_to_hash: true
+  elsif rows
+    assign rows = rows | to_csv | parse_csv: convert_to_hash: true
+  else
+    log 'missing input', type: 'ERROR: /lib/commands/items/import/csv/read_file'
+    break
+  endif
+
+  for _row in rows
+    assign row = _row
+    hash_assign row['_row_id'] = forloop.index | plus: 1
+    hash_assign row['price'] = row['price'] | times: 1.0 | append: ""
+    hash_assign row['published'] = row['published'] | downcase
+
+    if row['original_price'] != blank
+      hash_assign row['original_price'] = row['original_price'] | times: 1.0 | append: ""
+    endif
+
+    hash_assign row['photo_ids'] = row['photo_ids'] | append: ""
+
+    hash_assign row['_photo_urls'] = '[]' | parse_json
+    for i in (1..10)
+      assign key = 'photo_url_' | append: i
+      assign photo_url = row[key] | replace: ' ', '%20'
+
+      hash_assign row[key] = photo_url
+      hash_assign row['_photo_urls'] = row['_photo_urls'] | add_to_array: photo_url
+    endfor
+    hash_assign row['_photo_urls'] = row['_photo_urls'] | uniq | compact
+  endfor
+
+  return rows
+%}

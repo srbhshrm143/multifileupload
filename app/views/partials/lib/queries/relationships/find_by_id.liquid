@@ -1,0 +1,10 @@
+{% liquid
+  if id == blank
+    log 'Something went wrong. ID cannot be blank.', type: 'ERROR'
+    return null
+  endif
+
+  graphql r = 'relationships/search', limit: 1, id: id, include_related: include_related
+
+  return r.records.results.first
+%}

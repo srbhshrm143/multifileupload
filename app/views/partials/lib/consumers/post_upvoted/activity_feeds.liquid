@@ -1,0 +1,19 @@
+{% comment %}
+  actor:public
+  actor:audience
+  target:private
+  system:audit
+{% endcomment %}
+{% include 'lib/commands/activities/publish', uuid: event.uuid, type: "system", ids: "1" %}
+
+{% liquid
+  function audience = 'lib/commands/audience/build'
+
+  function actor = 'lib/queries/activities/users/audience', id: event.actor.id
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | concat: actor['followers']
+
+  function post = 'lib/queries/activities/posts/audience', id: event.object.id
+  hash_assign audience['notifications']['profile'] = audience['notifications']['profile'] | concat: post['author']
+
+  function publish = 'lib/commands/activities/publish_to_many', uuid: event.uuid, audience: audience
+%}

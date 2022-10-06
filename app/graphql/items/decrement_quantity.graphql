@@ -1,0 +1,31 @@
+mutation decrement_quantity($id: ID!, $step: Int!){
+  record: record_update(
+    id: $id
+    record: {
+      properties: {
+        name: "quantity",
+        decrement: $step
+      }
+    }
+  ){
+    id
+    quantity: property_int(name: "quantity")
+
+    item_inventory: related_record(
+      table: "item_inventory"
+      join_on_property: "item_inventory_id"
+      foreign_property: "id"
+    ) {
+      id
+      type: table
+
+      owner: related_record(
+        table: "organization"
+        join_on_property: "owner"
+        foreign_property: "id"
+      ) {
+        id
+      }
+    }
+  }
+}

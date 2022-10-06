@@ -1,0 +1,19 @@
+{% parse_json i18n %}
+{
+  "model_hatchback": "hatchback",
+  "model_combi": "combi",
+  "color_blue": "blue"
+}
+
+{% endparse_json %}
+{% liquid
+  function item = 'test/fixtures/item_with_variants'
+
+  assign locales = item['item_details'] | map: "lang"
+
+  for locale in locales
+    function list = 'lib/commands/index/insert/inventory_attributes', item: item, i18n: i18n
+    assign key = locale | append: '-' | append: 'inventory_attributes'
+    include 'test/assertions/equal', contract: contract, given: list, field_name: key, expected: 'combi blue hatchback'
+  endfor
+%}

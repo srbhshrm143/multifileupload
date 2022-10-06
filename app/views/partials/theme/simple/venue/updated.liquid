@@ -1,0 +1,43 @@
+<!-- {{ context.params }}<br> -->
+
+{% assign venue_up_id = context.params.venue_id %}
+{% assign venue_up_name = context.params.venue_name %}
+{% assign venue_upd_address = context.params.venue_address %}
+{% assign venue_upd_contact = context.params.contact_number %}
+{% assign venue_upd_services = context.params.venue_services %}
+{% assign venue_upd_menu = context.params.venue_menu %}
+{% assign venue_upd_features = context.params.venue_features %}
+{% assign venue_upd_desc = context.params.venue_desc %}
+{% assign venue_upd_capacity = context.params.venue_capacity %}
+{% assign venue_upd_rental_hours = context.params.rental_hours %}
+
+
+<!-- {{ venue_up_id }}<br>
+{{ venue_up_name }}<br>
+{{ venue_upd_address }}<br>
+{{ venue_upd_contact }}<br>
+{{ venue_upd_services }}<br>
+{{ venue_upd_menu }}<br>
+{{ venue_upd_features }}<br>
+{{ venue_upd_desc }}<br>
+{{ venue_upd_capacity }}<br>
+{{ venue_upd_rental_hours }}<br> -->
+
+<h1 class="pagetitle"> {{ "Venue Updated" }} </h1>
+
+{%liquid
+  graphql upd_gql = "venue/update",Id: venue_up_id ,Vname: venue_up_name ,Vaddress: venue_upd_address ,Vcontact: venue_upd_contact ,Vservices: venue_upd_services ,Vmenu: venue_upd_menu ,Vfeatures: venue_upd_features ,Vdesc: venue_upd_desc ,Vcapacity: venue_upd_capacity ,Vrental_hours: venue_upd_rental_hours 
+%}
+{%- comment -%}
+  {%liquid
+    graphql upd_gql = "venue/update"
+  %}
+{%- endcomment -%}
+
+
+<script>
+  setTimeout(function() {
+  window.location.href = "/venue/show";
+  // window.location.href = "venue_owner?id={{ upd_id }}";
+  }, 3000);
+</script>

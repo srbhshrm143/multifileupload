@@ -1,0 +1,5 @@
+name: bulk_operation
+properties:
+  - name: operation_type
+  - name: uuid
+  - name: profile_id

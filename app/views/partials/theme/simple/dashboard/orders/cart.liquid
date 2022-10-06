@@ -1,0 +1,152 @@
+<script>
+  api.strings = {
+    cantAddToWishlist: "{{ 'app.errors.cant_add' | t }}",
+    quantityExceeded: "{{ 'app.orders.line-items.errors.quantity-too-big' | t }}",
+    saving: "{{ 'app.wishlists.saving' | t }}",
+    addedToWishlist: "{{ 'app.success.added' | t }}"
+  };
+</script>
+
+{% assign total_price_cents = orders.results | map: 'total_price_cents' | json %}
+
+<!-- {{ orders.results | map: 'line_items' | json }} -->
+<div class="flex items-center justify-center fixed inset-0 bg-content bg-opacity-80 z-50 hidden" data-promo-modal>
+  <div data-promo-modal-content class="card my-16 overflow-y-auto" style="max-height: calc(100vh - 4rem);">
+    {% render 'theme/simple/ui/spinner' %}
+  </div>
+</div>
+
+<div class="text-center mb-7 sm:mb-0 sm:text-right">
+  <a href="/search" class="button button-secondary">
+    {{ 'app.orders.show.continue-shopping' | t }}
+  </a>
+</div>
+
+<h2 class="mt-0 bigtitle">
+  {{ 'app.orders.cart.title' | t }} (<span data-cart-counter>{{ orders.total_quantity }}</span>)
+</h2>
+
+{% if orders.total_entries != 0 %}<div class="hidden" data-cart-empty>{% endif %}
+  {% render 'theme/simple/dashboard/orders/empty' %}
+{% if orders.total_entries != 0 %}</div>{% endif %}
+
+{% if orders.total_entries != 0 %}
+  <section class="w-full lg:table" data-tc="cart-product" data-cart>
+
+    <header class="hidden uppercase lg:table-row sidenote">
+      <div class="lg:pb-2 lg:table-cell">{{ 'app.orders.show.item' | t }}</div>
+      <div class="lg:ps-3 lg:pb-2 lg:table-cell lg:text-right">{{ 'app.orders.show.unit_price' | t }}</div>
+      <div class="lg:ps-3 lg:pb-2 lg:table-cell lg:text-right">{{ 'app.orders.show.quantity' | t }}</div>
+      <div class="lg:ps-3 lg:pb-2 lg:table-cell lg:text-end">{{ 'app.orders.show.total_price' | t }}</div>
+      <div class="lg:ps-3 lg:pb-2 lg:table-cell"></div>
+    </header>
+
+    <div class="card lg:table-row-group">
+
+      {% liquid
+        for order in orders.results
+          include 'theme/simple/dashboard/orders/cart/order_edit', order: order, role: 'buyer'
+        endfor
+      %}
+
+    </div>
+
+  </section>
+
+  <div class="relative mt-8 card lg:w-1/2 lg:ml-auto" data-cart-summary>
+    <div class="card-overlay hidden" data-cart-loading>
+      {% render 'theme/simple/ui/spinner', size: 10 %}
+    </div>
+
+    {% liquid
+      if orders.total_promo_code_discount or orders.total_shipping_cost_cents > 0
+        assign hidden = ""
+      else
+        assign hidden = "hidden"
+      endif
+
+      if orders.total_promo_code_discount
+        assign hiddenPromo = ""
+        assign hiddenBtn = "hidden"
+      else
+        assign hiddenBtn = ""
+        assign hiddenPromo = "hidden"
+      endif
+    %}
+
+    <ul class="text-lg lg:text-xl">
+      <li data-subtotal-parent class="flex justify-between pb-3 gap-4 {{ hidden }}">
+        <div>
+          {{ 'app.orders.show.subtotal' | t }}
+        </div>
+        <div data-subtotal>
+          {% render 'theme/simple/price', amount_cents: total_price_cents, currency: orders.currency %}
+        </div>
+      </li>
+
+
+      <li class="flex justify-between py-3 gap-4 {% unless orders.total_shipping_cost_cents > 0 %} hidden {% endunless %}"
+        data-shipping-parent>
+        <div>
+          {{ 'app.orders.show.delivery' | t }}
+        </div>
+        <div data-shipping>
+          {% render 'theme/simple/price', amount_cents: orders.total_shipping_cost_cents currency: orders.currency %}
+        </div>
+      </li>
+
+      <li data-promo class="py-3 inline-block text-base {{ hiddenBtn }}">
+        <button class="button button-secondary">
+          {{ 'app.promo_codes.apply.title' | t }}
+          {% render 'theme/simple/ui/icon', icon: 'discountCoupon' %}
+        </button>
+      </li>
+
+      <li data-promo-parent class="flex justify-between py-3 gap-4 {{ hiddenPromo }}">
+        <div>
+          {{ 'app.orders.history.applied_promo' | t }}
+          <span data-promo-code-name>
+            {{orders.results | map: 'promo_code' | compact | uniq | map: 'detail' | map: 'description' | join: ', ' }}
+          </span>
+        </div>
+        <div data-promo-value class="text-danger whitespace-nowrap">
+          {% liquid
+           if orders.total_promo_code_discount
+             assign discountedValue = orders.total_promo_code_discount | times: -1
+             render 'theme/simple/price', amount_cents: discountedValue, currency: orders.currency
+           endif
+          %}
+        </div>
+      </li>
+
+      <li class="flex justify-between gap-4 py-3 text-xl lg:text-2xl font-bold">
+        <div>
+          {{ 'app.orders.show.total' | t }}
+        </div>
+        <div id="data-order-totalprice" data-total>
+          {% render 'theme/simple/price', amount_cents: total_price_cents, currency: orders.currency %}
+          {%- comment -%}
+            {{ total_price_cents }} 
+            {% for order in orders.results %}
+              {{ order.line_items | map: 'total_price_cents' | json }}
+            {% endfor %}
+          {%- endcomment -%}
+        </div>
+      </li>
+    </ul>
+    {% include 'theme/simple/dashboard/orders/cart/checkout_button', orders: orders.results %}
+  </div>
+{% endif %}
+
+
+{%- comment -%}
+  <br>
+  <br>
+  {% for order in orders.results %}
+    {{ order | json }}<br>
+  {% endfor %}
+  <br>
+  <br>
+{%- endcomment -%}
+<!-- {{ orders | json }} -->
+

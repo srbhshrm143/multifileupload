@@ -1,0 +1,17 @@
+name: venue_hours
+properties:
+  - name: venue_id
+  - name: day_time_starts
+    type: string
+  - name: day_time_ends
+    type: string
+  - name: night_time_starts
+    type: string
+  - name: night_time_ends
+    type: string
+  - name: all_day_time_starts
+    type: string
+  - name: all_day_time_ends
+    type: string
+  - name: menu_id
+    type: string

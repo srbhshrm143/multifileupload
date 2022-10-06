@@ -1,0 +1,31 @@
+<div class="mt-5 md:mt-0 ms-auto flex items-center justify-between md:justify-start gap-3">
+
+  {% if item_inventory.item_type != "affiliate" %}
+    <div class="flex flex-col items-end">
+      {% if item.original_price %}
+        <small class="sidenote line-through text-danger">
+          {% render 'theme/simple/price', amount_cents: item.original_price, currency: item.currency %}
+        </small>
+      {% endif %}
+      <strong data="item-price" class="subtitle !mb-0 font-bold">
+        {% render 'theme/simple/price', amount_cents: item.price, currency: item.currency %}
+      </strong>
+    </div>
+  {% endif %}
+
+  {% liquid
+    assign status = item_inventory.status.name
+    if item_inventory.item_ids contains item.id
+      assign active_item = true
+    endif
+  %}
+  <button class="button"
+    {% if status != 'app.statuses.items.published' or active_item != true or can_purchase.valid != true or item.quantity < 1 %} disabled {% endif %}
+  >
+    {% if status == 'app.statuses.items.unavailable' %}
+      {{ 'app.items.sold-out' | t }}
+    {% else %}
+      {{ 'app.items.' | append: item_inventory.item_type | append: '_action_button' | t: owner: item_inventory.owner.name }}
+    {% endif %}
+  </button>
+</div>

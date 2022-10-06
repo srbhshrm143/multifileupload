@@ -1,0 +1,70 @@
+<h1 class="pagetitle">User Data to Update</h1>
+
+{%liquid
+  graphql read_gql = "venue_owner/show" | fetch:  "models"
+  assign data_gql = read_gql | fetch: "results"
+  assign res_id = context.params.id
+%}
+
+<!-- {{ data_gql }} -->
+<!-- {{ context.params.id }} -->
+
+{% for data in read_gql.results %}
+{% if data.id == res_id %}
+<!-- {{ data }} -->
+  <section class="container">
+    <div class="card-lg w-full md:w-96 mx-auto">
+      <div class="mt-3">
+        <h1 class="text-xl">User Id : {{ data.id }}</h1>
+      </div>
+      <form action="/venue_owner/updated" method="POST">
+        <input type="hidden" name="owner_id" id="owner_id" class="w-full" value="{{ data.id }}">
+        <div class="mt-3">
+          <label for="owner_fname"> First Name : </label>
+          <input type="text" name="owner_fname" id="owner_fname" class="w-full" placeholder="First Name" value="{{ data.FirstName }}">
+        </div>
+        <div class="mt-3">
+          <label for="owner_lname"> Last Name : </label>
+          <input type="text" name="owner_lname" id="owner_lname" class="w-full" placeholder="Last Name" value="{{ data.LastName }}">
+        </div>
+        <div class="mt-3">
+          <label for="owner_gender"> Last Name : </label>
+          <div class="gender_boxes">
+            <label for=""> Male : </label>
+            <input type="radio" name="owner_gender" id="owner_gender" value="Male" value="Male" {% if data.Gender == "Male" %} checked {% endif %}>
+          </div>
+          <div class="gender_boxes">
+            <label for=""> Female : </label>
+            <input type="radio" name="owner_gender" id="owner_gender" value="Female" value="Female" {% if data.Gender == "Female" %} checked {% endif %}>
+          </div>
+        </div>
+        <div class="mt-3">
+          <label for="owner_mobile_no"> Mobile Number : </label>
+          <input type="tel" name="owner_mobile_no" id="owner_mobile_no" class="w-full" placeholder="Mobile Number" value="{{ data.Mobile }}">
+        </div>
+        <div class="mt-3">
+          <label for="owner_email_id"> Email Id : </label>
+          <input type="email" name="owner_email_id" id="owner_email_id" class="w-full" placeholder="Email Id" value="{{ data.Email }}">
+        </div>
+        <button class="button mt-3">Update</button>
+        <a href="/venue_owner/show" class="button mt-3">Show</a>
+      </form>
+    </div>
+  </section>
+    <!-- {{ data.id }} -->
+  {% endif %}
+{% endfor %}
+
+
+<style>
+  .gender_boxes {
+    position: relative;
+  }
+  input#owner_gender {
+    position: absolute;
+    left: 80px;
+    top: 0px;
+    transform: translate(50%, 25%);
+  }
+
+</style>

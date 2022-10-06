@@ -1,0 +1,29 @@
+mutation update_project_offer(
+  $id: ID!
+  $name: String
+  $video_urls: [String!]
+  $collaborator_emails: [String!]
+) {
+  record: record_update(
+    id: $id
+    record: {
+      table: "project_offer"
+      properties: [
+        { name: "name" value: $name }
+        { name: "video_urls" value_array: $video_urls }
+        { name: "collaborator_emails" value_array: $collaborator_emails }
+      ]
+    }
+  ){
+    id
+    created_at
+    updated_at
+    type: table
+
+    name: property(name: "name")
+    project_id: property(name: "project_id")
+    creator_id: property(name: "creator_id")
+    video_urls: property_array(name: "video_urls")
+    collaborator_emails: property_array(name: "collaborator_emails")
+  }
+}

@@ -1,0 +1,28 @@
+name: promo_code
+properties:
+  - name: creator_id
+  - name: start_date
+    type: date
+  - name: campaign_code
+    type: string
+  - name: end_date
+    type: date
+  - name: total_discount
+    type: integer
+  - name: upper_limit
+    type: integer
+  - name: code
+    type: string
+  - name: max_available
+    type: integer
+  - name: available_quantity
+    type: integer
+  - name: max_times_user_can_use
+    type: integer
+  - name: max_discount_amount_per_user
+    type: integer
+  - name: disabled_at
+    type: datetime
+  - name: mpo_cost_percent
+    type: integer
+  - name: code_type # merchant, mpo, global

@@ -1,0 +1,16 @@
+{% parse_json object %}
+  {
+    "user_type":          {{ profile.user__type | json }},
+    "email":              {{ object.email | json }},
+    "password":           {{ object.password | json }},
+    "uuid":               {{ profile.uuid | json }},
+    "agreed":             {{ object.agreed | json }},
+    "remember_me": true,
+    "first_name":         {{ profile.first_name | json }},
+    "last_name":          {{ profile.last_name | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

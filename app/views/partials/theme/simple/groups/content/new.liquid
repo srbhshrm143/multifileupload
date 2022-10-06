@@ -1,0 +1,9 @@
+{% render 'theme/simple/groups/header', group: group, current_profile: current_profile, context: context %}
+
+<div class="container flex flex-col md:flex-row gap-6">
+  {% render 'theme/simple/groups/nav', tab: tab, group: group, current_profile: current_profile %}
+
+  <section class="flex-1">
+    {% render 'theme/simple/groups/content/form', current_profile: current_profile, group: group, object: object, context: context, presigned_url: presigned_url %}
+  </section>
+</div>

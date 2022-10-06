@@ -1,0 +1,15 @@
+{% parse_json group_data %}
+  {
+    "name":        "test group-{{ 4 | random_string }}",
+    "summary":     "sumamry",
+    "description": "test description, and long description very long",
+    "content_types": ["post"],
+    "uuid":       {{ '' | uuid | json }}
+  }
+{% endparse_json %}
+{% liquid
+  function group = 'lib/commands/groups/create', object: group_data, owner_id: owner_id
+  include 'test/assertions/valid_object', contract: contract, object: group, field_name: 'group'
+
+  return group
+%}

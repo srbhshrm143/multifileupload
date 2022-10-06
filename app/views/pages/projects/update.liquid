@@ -1,0 +1,20 @@
+---
+slug: projects/:id
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function project = 'lib/queries/projects/find', id: context.params.project.id
+  include 'lib/can_do_or_unauthorized', object: project, do: "edit", actor: current_profile
+
+  function object = 'lib/commands/projects/update', object: context.params.project, project: project, profile: current_profile
+  if object.valid
+    function _ = 'lib/commands/events/create', type: 'project_updated', actor_id: current_profile.id, object_id: project.id
+    include 'redirect_to', url: '/projects/manage', notice: 'app.models.shared.updated'
+  else
+    function _ = 'lib/extend_context', tags: true, photo_presign: true
+    render 'theme/simple/projects/edit', object: object, current_profile: current_profile, context: context
+  endif
+%}

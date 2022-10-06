@@ -1,0 +1,47 @@
+{% liquid
+  assign MINIMAL_PRICE = 10 | amount_to_fractional: object.currency
+  assign MAXIMAL_PRICE = 100000 | amount_to_fractional: object.currency
+
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  function c = 'lib/validations/length', c: c, object: object, field_name: 'variants', minimum: 1
+
+  function c = 'lib/commands/items/create_complex/check_variants', object: object, c: c, MINIMAL_PRICE: MINIMAL_PRICE, MAXIMAL_PRICE: MAXIMAL_PRICE: MAXIMAL_PRICE
+
+  function c = 'lib/validations/length', c: c, object: object, field_name: 'details', minimum: 1
+  for lang in object.details
+    assign detail = lang[1]
+    assign cd = '{ "errors": {}, "valid": true }' | parse_json
+    function cd = 'lib/validations/presence', c: cd, object: detail, field_name: 'name'
+    function cd = 'lib/validations/length', c: cd, object: detail, field_name: 'name', maximum: 100
+    function cd = 'lib/validations/presence', c: cd, object: detail, field_name: 'description'
+    function cd = 'lib/validations/length', c: cd, object: detail, field_name: 'description', maximum: 1000
+    function cd = 'lib/validations/presence', c: cd, object: detail, field_name: 'lang'
+    function cd = 'lib/validations/length', c: cd, object: detail, field_name: 'lang', maximum: 2
+    hash_assign detail['errors'] = cd.errors
+    hash_assign detail['valid'] = cd.valid
+    if cd.valid != true
+      hash_assign c['valid'] = false
+    endif
+  endfor
+
+  function c = 'lib/validations/price', c: c, object: object, field_name: 'price', minimal_price: MINIMAL_PRICE, maximal_price: MAXIMAL_PRICE, currency: object.currency
+  if object.original_price != blank
+    function c = 'lib/validations/price', c: c, object: object, field_name: 'original_price', minimal_price: object.price, currency: object.currency
+  endif
+  function c = 'lib/validations/presence', c: c, object: object, field_name: 'uuid'
+  function c = 'lib/validations/presence', c: c, object: object, field_name: 'owner'
+  function c = 'lib/validations/number',   c: c, object: object, field_name: 'quantity', gte: 0
+  function c = 'lib/validations/number',   c: c, object: object, field_name: 'max_in_one_order', gt: 0
+  function c = 'lib/validations/presence', c: c, object: object, field_name: 'item_type'
+
+  if object.item_type == 'affiliate'
+    function c = 'lib/validations/presence', c: c, object: object, field_name: 'affiliate_redirect_url'
+    function c = 'lib/validations/presence', c: c, object: object, field_name: 'affiliate_redirect_url_terms_and_service'
+  endif
+
+  hash_assign object['valid'] = c.valid
+  hash_assign object['errors'] = c.errors
+
+  return object
+%}

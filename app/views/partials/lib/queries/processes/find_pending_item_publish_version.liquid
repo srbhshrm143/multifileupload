@@ -1,0 +1,18 @@
+{% liquid
+  if profile_id == blank
+    log 'Something went wrong. Profile cannot be blank.', type: 'ERROR'
+    return null
+  endif
+  if item_inventory_id == blank
+    log 'Something went wrong. Item inventory cannot be blank.', type: 'ERROR'
+    return null
+  endif
+
+  assign payload = 'id":"' | append: item_inventory_id | append: '"'
+  assign command_contains = 'items/publish'
+  assign status = 'app.statuses.processes.requested' | split: ','
+
+  graphql r  = 'processes/search', limit: 1, profile_id: profile_id, payload: payload, status: status, command_contains: command_contains
+
+  return r.processes.results.first
+%}

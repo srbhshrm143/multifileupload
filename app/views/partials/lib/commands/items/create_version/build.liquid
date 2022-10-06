@@ -1,0 +1,39 @@
+{% liquid
+  assign data =  '{}' | parse_json
+  hash_assign data['max_in_one_order'] = object.max_in_one_order | plus: 0
+
+  function base_variant = 'lib/commands/items/create_complex/build_base_variant', object: object, owner: owner
+  hash_assign base_variant['item_inventory_id'] = object.item_inventory_id
+  assign data = data | hash_merge: base_variant
+
+  function variants = 'lib/commands/items/create_complex/build_variants', object: object, base_variant: base_variant
+  hash_assign data['variants'] = variants
+
+  hash_assign data['variants_input'] = '[]' | parse_json
+  for variant in data.variants
+    assign variant_input = '{"type_name": "item"}' | parse_json
+    assign properties = '{}' | parse_json
+    hash_assign variant_input['properties'] = properties | hash_merge: variant
+    hash_assign variant_input['properties']['attributes_json'] = variant_input['properties'] | remove_hash_key: 'attributes_json_raw'
+    assign _ = variant_input['properties'] | remove_hash_key: '_row_id'
+    assign _ = variant_input['properties'] | remove_hash_key: '_photo_urls'
+    hash_assign data['variants_input'] = data.variants_input | add_to_array: variant_input
+  endfor
+  hash_assign data['quantity'] = data.variants | map: 'quantity' | sum_array
+
+  hash_assign data['details'] = object.details
+  hash_assign data['details_input'] = '[]' | parse_json
+  for detail_lang in data.details
+    assign detail = '{}' | parse_json
+    hash_assign detail['item_inventory_id'] = object.item_inventory_id
+    hash_assign detail['lang'] = detail_lang[1].lang
+    hash_assign detail['name'] = detail_lang[1].name
+    hash_assign detail['description'] = detail_lang[1].description
+
+    assign detail_object = '{"type_name": "item_detail", "properties": {}}' | parse_json
+    hash_assign detail_object['properties'] = detail
+    hash_assign data['details_input'] = data.details_input | add_to_array: detail_object
+  endfor
+
+  return data
+%}

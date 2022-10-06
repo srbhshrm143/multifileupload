@@ -1,0 +1,21 @@
+mutation update (
+  $RoomID: ID!,
+  $RoomName: String!,
+  $RoomCapacity: String!,
+  $RoomMedia: [String!],
+  ) {
+  record: model_update(
+    id: $RoomID
+    model: {
+      model_schema_name: "venue_rooms"
+      properties: [
+        {name: "venue_room_name", value: $RoomName}, 
+        {name: "venue_room_capacity", value: $RoomCapacity}, 
+        {name: "media_ids", value_array: $RoomMedia}, 
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+}

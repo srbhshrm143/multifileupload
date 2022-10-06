@@ -1,0 +1,4 @@
+name: venue_menus
+properties:
+  - name: venue_id
+  - name: venue_menu

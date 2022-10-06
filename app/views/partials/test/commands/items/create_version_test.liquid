@@ -1,0 +1,43 @@
+{% liquid
+  function item = 'test/fixtures/item', quantity: 2, contract: contract, withAllLangs: true
+%}
+{% parse_json item_data %}
+  {
+    "item_inventory_id": {{ item.item_inventory.id | json }},
+    "details": {
+      "en": {
+        "name":        "item-name",
+        "description": "item-description",
+        "lang":        "en"
+      }
+    },
+
+    "price":       121,
+    "tax_rate":    23.0,
+    "currency":    "USD",
+    "category":    "jewellery",
+
+    "quantity":    3,
+    "max_in_one_order":    2,
+    "sku":         "SKU-001",
+    "uuid":        "item.uuid",
+    "variants":    [
+      { "price": 1000, "currency": "USD", "attributes_json": "{ \"id\": \"1\", \"name\": \"color\", \"value\": \"black\" }" },
+      { "price": 2000, "currency": "USD", "attributes_json": "{ \"id\": \"2\", \"name\": \"color\", \"value\": \"red\" }" },
+      { "price": 3000, "currency": "USD", "attributes_json": "{ \"id\": \"3\", \"name\": \"color\", \"value\": \"white\" }" }
+    ]
+  }
+{% endparse_json %}
+{% liquid
+  function seller = 'test/fixtures/profile', user_id: "6999"
+  function object = 'lib/commands/items/create_version', object: item_data, owner: item.item_inventory.owner.id, item: item
+
+  include 'test/assertions/valid_object', object, field_name: 'object'
+
+  function item = 'lib/queries/items/find', id: object.items.ids[0]
+
+  function contract = 'test/assertions/presence', contract: contract, object: item.item_detail, field_name: 'name'
+  function contract = 'test/assertions/presence', contract: contract, object: item, field_name: 'sku'
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'variants', given: object.items.ids.size, expected: 3
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'max_in_one_order', given: item.item_inventory.max_in_one_order, expected: 2
+%}

@@ -1,0 +1,68 @@
+mutation create(
+  $venue_id: String!
+  $banquet_hall: String!
+  $barn: String!
+  $boat: String!
+  $concert_venue: String!
+  $conference_center: String!
+  $brewery: String!
+  $estate: String!
+  $gallery_museum: String!
+  $golf_club: String!
+  $hotel: String!
+  $lounge: String!
+  $meeting_room: String!
+  $nightclub: String!
+  $party_room: String!
+  $resort: String!
+  $restaurant: String!
+  $warehouse: String!
+  $winery: String!
+  $industrial: String!
+  $lakeview: String!
+  $modern: String!
+  $nature: String!
+  $rustic: String!
+  $traditional: String!
+  $indoor_venue: String!
+  $outdoor_venue: String!
+) {
+  model_create(
+ 		model: {
+      model_schema_name : "venue_features_venue_type"
+      properties : [
+        { name: "venue_id", value: $venue_id }
+        { name: "banquet_hall", value: $banquet_hall }
+        { name: "barn", value: $barn }
+        { name: "boat", value: $boat }
+        { name: "concert_venue", value: $concert_venue }
+        { name: "conference_center", value: $conference_center }
+        { name: "brewery", value: $brewery }
+        { name: "estate", value: $estate }
+        { name: "gallery_museum", value: $gallery_museum }
+        { name: "golf_club", value: $golf_club }
+        { name: "hotel", value: $hotel }
+        { name: "lounge", value: $lounge }
+        { name: "meeting_room", value: $meeting_room }
+        { name: "nightclub", value: $nightclub }
+        { name: "party_room", value: $party_room }
+        { name: "resort", value: $resort }
+        { name: "restaurant", value: $restaurant }
+        { name: "warehouse", value: $warehouse }
+        { name: "winery", value: $winery }
+        { name: "industrial", value: $industrial }
+        { name: "lakeview", value: $lakeview }
+        { name: "modern", value: $modern }
+        { name: "nature", value: $nature }
+        { name: "rustic", value: $rustic }
+        { name: "traditional", value: $traditional }
+        { name: "indoor_venue", value: $indoor_venue }
+        { name: "outdoor_venue", value: $outdoor_venue }
+      ]
+    }
+  ) {
+    id
+    properties
+  }
+  
+}

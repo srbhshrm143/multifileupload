@@ -1,0 +1,40 @@
+<div class="py-6 px-6 overflow-x-auto bg-panel-highlight relative">
+  <i class="w-full hidden sm:block -mt-px absolute top-1/2 left-0 right-0 z-10 border border-dashed"></i>
+
+  <ol class="flex justify-between">
+    {% for step in project.steps %}
+      {% liquid
+        assign today ='now' | date: '%Y-%m-%d' | date: '%s' | minus: 0
+        assign from = step.from | date: '%s' | minus: 0
+        assign to = step.to | date: '%s' | minus: 0
+
+        if to == 0
+          assign to = from
+        endif
+
+        if today >= from and today <= to
+          assign now = true
+        else
+          assign now = false
+        endif
+      %}
+      <li class="px-10 py-20 flex items-center gap-4 relative {% if now %} bg-panel rounded {% endif %}">
+        {% if now %}
+          <i class="p-3 relative z-20 rounded-full bg-interaction text-content-inverted">
+            {% render 'theme/simple/ui/icon', icon: 'focusEye', class: 'w-6' %}
+          </i>
+        {% else %}
+          <i class="w-4 h-4 relative z-10 flex flex-shrink-0 items-center justify-center rounded-full bg-content-sidenote"><span class="w-2 h-2 rounded-full bg-content-inverted"></span></i>
+        {% endif %}
+        <div class="whitespace-nowrap">
+          <div class="mb-1 font-bold">{{ forloop.index }}. {{ step.name }}</div>
+          <time datetime="{{ step.from }}" class="sidenote text-content-sidenote uppercase">{{ step.from | l: 'date_compact' }}</time>
+          {% if step.to != blank %} – <time datetime="{{ step.to }}" class="sidenote text-content-sidenote uppercase">{{ step.to | l: 'date_compact' }}</time>{% endif %}
+        </div>
+        <i class="w-full block sm:hidden -mt-px absolute top-1/2 left-0 right-0 border border-dashed"></i>
+
+      </li>
+    {% endfor %}
+  </ol>
+
+</div>

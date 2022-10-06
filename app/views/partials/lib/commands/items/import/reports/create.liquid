@@ -1,0 +1,38 @@
+{% capture content %}
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <link rel="stylesheet" href="{{ 'css/app.css' | asset_url }}">
+    </head>
+    <body>
+      {% if import %}
+        {% render 'theme/simple/bulk_operations/reports/import', import: import %}
+        {% render 'theme/simple/bulk_operations/reports/diff', import: import, diff: diff %}
+      {% endif %}
+
+      {% if message %}
+        <section class="mt-8">
+          <h2 class="title text-danger">{{ 'app.bulk_operations.report.erros.title' | t }} ></h2>
+          <pre> {{ message | split: "url:" | first }} </pre>
+        </section>
+      {% endif %}
+    </body>
+  </html>
+{% endcapture %}
+
+{% liquid
+  assign attachment = '{}' | parse_json
+  hash_assign attachment['object_uuid'] = object_uuid
+  hash_assign attachment['document_type'] = 'report'
+  hash_assign attachment['content'] = content
+  hash_assign attachment['content_type']  = "text/html; charset=UTF-8"
+  hash_assign attachment['content_disposition'] = "inline"
+
+  function document = 'lib/commands/documents/create_with_content', object: attachment, current_profile: current_profile
+
+  unless document.valid
+    log document, type: 'document: /lib/commands/items/import/reports/create'
+  endunless
+
+  return document
+%}

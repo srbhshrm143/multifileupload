@@ -1,0 +1,15 @@
+mutation decrement_usage($id: ID!, $step: Int!){
+  record: record_update(
+    id: $id
+    record: {
+      properties: {
+        name: "available_quantity",
+        decrement: $step
+      }
+    }
+  ){
+    id
+    available_quantity: property_int(name: "available_quantity")
+  }
+}
+

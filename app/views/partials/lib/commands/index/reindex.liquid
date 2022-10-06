@@ -1,0 +1,32 @@
+{% liquid
+  assign per_page = 200
+
+  assign params = '{}' | parse_json
+  hash_assign params['page'] = 1
+  hash_assign params['ids'] = ids
+  function items = 'lib/queries/items/search', withAllLangs: true, limit: 200, params: params, with_results: false, item_inventory_id: item_inventory_id
+%}
+
+{% for _page in (1..items.total_pages) %}
+
+  {% background 'update-items', _page: _page, per_page: per_page, params: params, item_inventory_id: item_inventory_id %}
+  {% liquid
+    assign params = params
+    hash_assign params['page'] = _page
+    function items = 'lib/queries/items/search', withAllLangs: true, limit: per_page, params: params, withStatuses: true, item_inventory_id: item_inventory_id, withAllVariants: true
+
+    for item in items.results
+      function insert = 'lib/commands/index/insert', item: item, name: 'items'
+      unless insert.valid
+        log insert, type: 'insert: :19'
+      endunless
+    endfor
+
+    assign ids = items.results | map: 'id'
+    assign progress = items.results.size | prepend: "items: " | append: ", page: " | append: _page | append: " " | append: items.total_entries | append: ids
+  %}
+  {% endbackground %}
+
+{% endfor %}
+
+{% return items.total_entries %}

@@ -1,0 +1,29 @@
+{% if context.exports.theme_settings.logo.id %}
+  <span class="inline-flex items-center">
+    <img src="{{ context.exports.theme_settings.logo.photo.versions.sm }}" class="h-10" alt="{{ 'app.title' | t }}" />
+    <span class="text-xl ms-3">{{ 'app.title' | t }}</span>
+  </span>
+
+{% elsif type == 'white' %}
+
+  <span class="inline-flex items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 p-2 rounded-full text-content bg-content-inverted" viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+    </svg>
+    <span class="text-xl ms-3">{{ 'app.title' | t }}</span>
+  </span>
+
+{% else %}
+
+  <span class="inline-flex items-center">
+    {%- comment -%}
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 p-2 rounded-full text-content-inverted bg-logo" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+      </svg>
+      <span class="text-xl ms-3 hover:text-interaction-hover">{{ 'Events Hound' }}</span>
+      <span class="text-xl ms-3 hover:text-interaction-hover">{{ 'app.title' | t }}</span>
+    {%- endcomment -%}
+    <span class="text-xl ms-3 hover:text-interaction-hover"><img src="{{ 'images/event-hound/logo.png' | asset_url }}" alt="logo_img"></span>
+  </span>
+
+{% endif %}

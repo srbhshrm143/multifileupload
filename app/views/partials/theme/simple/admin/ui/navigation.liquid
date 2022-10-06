@@ -1,0 +1,106 @@
+<aside class="h-screen px-4 py-8 fixed top-0 start-0 overflow-y-auto z-30 flex flex-col justify-between items-center border-e border-frame bg-page">
+  <div>
+    {% render 'theme/simple/ui/avatar', profile: current_profile, size: 48, class: 'w-14 h-14' %}
+  </div>
+
+  <nav class="mt-16">
+    <ul>
+      <li>
+        <a href="/admin" title="{{ 'admin.navigation.dashboard' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'dashboard', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.dashboard' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/orders" title="{{ 'admin.navigation.sales' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/orders' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'coins', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.sales' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/items" title="{{ 'admin.navigation.stock' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/items' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'shoppingCart', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.stock' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/promo_codes" title="{{ 'admin.navigation.promo_codes' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/promo_codes' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'discountCoupon', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.promo_codes' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/organizations" title="{{ 'admin.navigation.organizations' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/organizations' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'usersMoney', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.organizations' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/users" title="{{ 'admin.navigation.users' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/users' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'user', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.users' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/activities" title="{{ 'admin.navigation.activities' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/activities' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'bell', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.activities' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/conversations" title="{{ 'admin.navigation.conversations' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/conversations' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'commentText', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.conversations' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/processes" title="{{ 'admin.navigation.processes' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/processes' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'check', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.processes' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/categories" title="{{ 'admin.navigation.categories' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/categories' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'categories', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.categories' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/reviews" title="{{ 'admin.navigation.reviews' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/reviews' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'star', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.reviews' | t }}</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/admin/setup" title="{{ 'admin.navigation.settings' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/setup' %} bg-panel text-interaction {% endif %}">
+          {% render 'theme/simple/ui/icon', icon: 'settings', class: 'w-8' %}
+          <span class="sr-only">{{ 'admin.navigation.settings' | t }}</span>
+        </a>
+      </li>
+      {% if context.constants.THEME_EDITOR_ENABLED %}
+        <li>
+          <a href="/admin/themes" title="{{ 'admin.navigation.themes' | t }}" class="my-4 p-4 block rounded text-content-sidenote transition-colors {% if page == 'admin/themes' %} bg-panel text-interaction {% endif %}">
+            {% render 'theme/simple/ui/icon', icon: 'pencil', class: 'w-8' %}
+            <span class="sr-only">{{ 'admin.navigation.themes' | t }}</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <a href="/" title="{{ 'admin.navigation.close_admin' | t }}" class="mt-4 p-4 block rounded text-content-sidenote transition-colors">
+    {% render 'theme/simple/ui/icon', icon: 'home', class: 'w-8' %}
+    <span class="sr-only">{{ 'admin.navigation.close_admin' | t }}</span>
+  </a>
+</aside>

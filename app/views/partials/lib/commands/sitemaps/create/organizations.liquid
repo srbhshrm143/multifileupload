@@ -1,0 +1,12 @@
+{%- graphql r = 'organizations/search', limit: 999 -%}
+{%- for o in r.records.results -%}
+  {%- function seller_path = 'link_to', object: o -%}
+  <url>
+    <loc>https://{{ context.location.host }}{{ seller_path }}</loc>
+    {% for lang in available_languages %}
+      <xhtml:link rel="alternate" hreflang="{{ lang }}" href="https://{{ context.location.host }}{{ seller_path }}?language={{ lang }}"/>
+    {%- endfor -%}
+    <lastmod>{{ o.created_at }}</lastmod>
+    <priority>0.80</priority>
+  </url>
+{%- endfor -%}

@@ -1,0 +1,14 @@
+{% liquid
+  assign org_name = 5 | random_string | prepend: 'organization-'
+  function organization = 'test/fixtures/organization', name: org_name
+  function item = 'test/fixtures/item', quantity: 1, seller: organization, contract: contract
+
+  function item_inventories = 'lib/queries/item_inventories/search_by_owner', owner: organization.id, withAllVariants: true, withAllLangs: true, limit: 1000
+
+  function export = 'lib/commands/items/export/csv/v1/build', item_inventories: item_inventories.results
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: export, field_name: 'export'
+  function contract = 'test/assertions/equal', contract: contract, given: export.data.size, expected: 2, field_name: 'data'
+  assign item_row = export.data[1]
+  function contract = 'test/assertions/equal', contract: contract, given: item_row[15], expected: 'false', field_name: 'published'
+%}

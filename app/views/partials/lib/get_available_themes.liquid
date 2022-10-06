@@ -1,0 +1,17 @@
+{% try_rc %}
+  {% parse_json themes %}
+      {% render 'theme/available_themes.json' %}
+  {% endparse_json %}
+{% catch err %}
+  {% assign themes = '[]' | parse_json %}
+  {% log err, type: 'error when rendering the list of available themes' %}
+{% endtry_rc %}
+
+{% liquid
+  assign default_theme = '{}' | parse_json
+  hash_assign default_theme['name'] = 'simple'
+  hash_assign default_theme['title'] = 'Simple (default)'
+
+  assign themes = themes | add_to_array: default_theme
+  return themes
+%}

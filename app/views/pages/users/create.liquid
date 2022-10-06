@@ -1,0 +1,122 @@
+---
+slug: users
+method: post
+---
+
+{%- comment -%}
+
+{{ context.params }}
+
+
+{%- endcomment -%}
+{% liquid
+  include 'lib/anonymous_or_redirect', user: context.current_user
+  function object = 'lib/commands/users/create', object: context.params.user, profile: context.params.profile, hcaptcha_params: context.params
+  
+  if object.valid
+    function profile_object = 'lib/commands/profiles/create_or_convert_anonymous/build', object: context.params.profile, user: object, session: context.session
+    function profile = 'lib/commands/profiles/create_or_convert_anonymous', object: profile_object
+
+    if profile.valid == false
+      log profile, type: 'ERROR: users/create profile'
+      break
+    endif
+
+
+    assign url = context.session.return_to | default: '/'
+    function _event = 'lib/commands/events/create', type: 'account_created', actor_id: profile.id, object_id: profile.id
+
+    sign_in_rc user_id: object.id
+    include 'redirect_to', url: url, notice: 'app.account.created'
+  else
+    if context.params.profile.user__type == "customer"
+      include 'theme/simple/users/new', object: object
+    elsif context.params.profile.user__type == "venue_owner"
+      include 'theme/simple/vendor/vendor_sign-up', object: object
+    endif
+  endif
+
+%}
+{%- comment -%}
+{%- endcomment -%}
+
+
+{%- comment -%}
+{%liquid
+  if context.params.venue
+    graphql new_venue = 'venue/new', venue_name: venue_name, corp_name: corp_name, business_number: business_number, venue_address: venue_address, venue_phone_number: venue_phone, venue_email: venue_email, contact_person: contact_person
+  endif
+%}
+
+  {{ context.params.venue }}
+{%- endcomment -%}
+
+{%- comment -%}
+  {%liquid
+    graphql read_profile = 'profiles/profile_read' | fetch: 'models'
+    assign read_res = read_profile | fetch: 'results'
+  %}
+  {% for res in read_res %}
+    {{ res.uuid }}
+  {% endfor %}
+
+
+{%- endcomment -%}
+
+{%- comment -%}
+{% assign object_uuid = context.params.object_uuid %}
+
+
+{% graphql search_data = 'venue/media_search', object_uuid: object_uuid %}
+  query search(
+    $id: ID
+    $limit: Int = 20
+    $object_uuid: String
+    # $origin_urls: [String!]
+    $photo_type: String
+  ) {
+    photos: records(
+      per_page: $limit
+      filter: {
+        id: { value: $id }
+        table: { value: "form_media_testing" }
+        properties: [
+          { name: "media_uuid", value: $object_uuid }
+          # { name: "origin_url", value_in: $origin_urls }
+          { name: "media_type", value: $photo_type }
+        ]
+      }
+    ) {
+      results {
+        id
+        # properties
+      }
+    }
+  }
+{% endgraphql %}
+
+<!-- {{ search_data.photos.results }} -->
+  <br>
+{% assign photos_ids = search_data.photos.results | map: 'id' %}
+{% assign photo_ids = photos_ids %}
+{{ photos_ids }}<br><br>
+  {% graphql record = 'venue/media_upload', media_ids :photos_ids, object_uuid: object_uuid  %}
+    mutation record_create (
+      $media_ids: [String!],
+      $object_uuid: String!
+    )
+    {
+      record_create(
+        record: {
+          table: "testing_media_ids"
+          properties: [
+            { name: "media_ids" value_array: $media_ids }
+            { name: "media_uuid" value: $object_uuid }
+          ]
+        }
+      ) {
+        id
+      }
+    }
+  {% endgraphql %}  
+{%- endcomment -%}

@@ -1,0 +1,29 @@
+---
+slug: o/:slug
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+
+  assign query = '{}' | parse_json
+  function filters = 'lib/queries/search/filters', query: query
+  hash_assign query['organization_slugs'] = context.params.slug
+  assign statuses = 'published,unavailable' | split: ','
+  function chat_enabled = 'lib/queries/constants/find' name: "USE_WEBSOCKET_CHAT", type: "boolean", context: context
+  function organization = 'lib/queries/organizations/search', limit: 1, slugs: context.params.slug
+  function use_search_index = 'lib/queries/constants/find' name: "USE_SEARCH_INDEX", type: "boolean"
+  function items = 'lib/queries/items/search', params: query, statuses: statuses, limit: 6, lang: context.language, use_search_index: use_search_index
+  function reviews = 'lib/queries/organization_reviews/search_by_organization', organization_id: organization.results[0].id, score_gte: "1", limit: 5
+
+  include 'theme/simple/search_canonical_url', query: items.query
+
+  render 'theme/simple/organizations/header', organization: organization.results[0]
+  render 'theme/simple/organizations/items', items: items, organization: organization.results[0], current_profile: current_profile
+  if organization.results[0].c__recommended_count or organization.results[0].c__disadvised_count
+    render 'theme/simple/organizations/stats', organization: organization.results[0]
+  endif
+
+  if reviews.total_entries > 0
+    render 'theme/simple/organizations/reviews/index', reviews: reviews, organization: organization.results[0]
+  endif
+%}

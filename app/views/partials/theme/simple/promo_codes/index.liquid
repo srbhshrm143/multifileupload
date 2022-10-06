@@ -1,0 +1,17 @@
+<section>
+
+  <form action="/" name="promoCodes_form"></form>
+
+  <header class="lg:flex items-center gap-2">
+    <h2 class="bigtitle">{{ 'app.promo_codes.title' | t }}</h2>
+    <a href="/dashboard/sell/promo_codes/new" class="ms-auto button button-small">{{ 'app.promo_codes.manage.add' | t }}</a>
+  </header>
+
+  {% if promo_codes.results.size > 0 %}
+    {% render 'theme/simple/promo_codes/list', promo_codes: promo_codes, context: context, namespace: namespace %}
+    {% render 'theme/simple/ui/pagination', collection: list, current_page: 1, form: 'promoCodes_form' %}
+  {% else %}
+    {% render 'theme/simple/promo_codes/empty_state', context: context %}
+{% endif %}
+
+</section>

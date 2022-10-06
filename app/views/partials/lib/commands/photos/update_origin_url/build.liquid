@@ -1,0 +1,10 @@
+{% parse_json object %}
+  {
+    "id":  {{ object.id }},
+    "origin_url":  {{ object.origin_url | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

@@ -1,0 +1,5 @@
+{% liquid
+  function price = 'theme/simple/price', amount_cents: transaction.amount, currency: transaction.currency
+  assign url = '/example_payment_gateway?transaction_id=' | append: transaction.id | append: '&price=' | append: price
+  return url
+%}

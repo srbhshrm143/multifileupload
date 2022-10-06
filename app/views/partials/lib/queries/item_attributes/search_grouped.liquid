@@ -1,0 +1,6 @@
+{% liquid
+  function attributes = 'lib/queries/item_attributes/search', limit: 100, disabled_exists: disabled_exists
+  assign data = attributes.results | group_by: 'name'
+
+  return data
+%}

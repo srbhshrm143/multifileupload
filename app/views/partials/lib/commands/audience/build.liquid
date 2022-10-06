@@ -1,0 +1,13 @@
+{% parse_json audience %}
+  {
+    "profile": [],
+    "user": [],
+    "tag": [],
+
+    "notifications": { "profile": [], "group": [], "tag": [], "project": [] },
+    "private":       { "profile": [], "group": [], "tag": [], "project": [] },
+    "public":        { "profile": [], "group": [], "tag": [], "project": [] }
+  }
+{% endparse_json %}
+
+{% return audience %}

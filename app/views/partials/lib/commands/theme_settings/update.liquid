@@ -1,0 +1,10 @@
+{%  liquid
+  function object = 'lib/commands/theme_settings/update/build', object: object, default_settings: default_settings
+  function object = 'lib/commands/theme_settings/update/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', mutation_name: 'theme_settings/update' object: object
+  endif
+
+  return object
+%}

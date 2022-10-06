@@ -1,0 +1,14 @@
+{% liquid
+  assign c = '{ "errors": {}, "valid": true }' | parse_json
+
+  function c = 'lib/validations/number', c: c, object: object, field_name: 'attributes', gt: 0, number: object.attributes.size
+  for attribute in object.attributes
+    function c = 'lib/validations/presence', c: c, object: attribute, field_name: 'name'
+    function c = 'lib/validations/presence', c: c, object: attribute, field_name: 'value'
+  endfor
+
+  hash_assign object['valid'] = c.valid
+  hash_assign object['errors'] = c.errors
+
+  return object
+%}

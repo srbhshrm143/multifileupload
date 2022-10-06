@@ -1,0 +1,49 @@
+mutation create(
+  $uuid: String!
+  $user_id: String!
+  $first_name: String
+  $last_name: String
+  $language: String
+  $c__names: String
+  $user_type: String
+  # $gender: String!
+  $user__mobile: String
+  $referral_code: String
+  $company_name: String
+  $company_phoneNumber: String
+  $above18: String
+) {
+  record: model_create(
+    model: {
+      model_schema_name: "profile"
+      properties: [
+        { name: "uuid" value: $uuid }
+        { name: "user_id" value: $user_id }
+        { name: "first_name" value: $first_name }
+        { name: "last_name" value: $last_name }
+        { name: "language" value: $language }
+        { name: "c__names", value: $c__names }
+        { name: "user_type", value: $user_type }
+        # { name: "gender", value: $gender }
+        { name: "user__mobile", value: $user__mobile }
+        { name: "referral_code", value: $referral_code }
+        { name: "company_name", value: $company_name }
+        { name: "company_phoneNumber", value: $company_phoneNumber }
+        { name: "above18", value: $above18 }
+      ]
+    }
+  ){
+    id
+    created_at
+
+    uuid: property(name: "uuid")
+    user_id: property(name: "user_id")
+    first_name: property(name: "first_name")
+    last_name: property(name: "last_name")
+
+    user: related_user(join_on_property: "user_id" foreign_property: "id") {
+      id
+      email
+    }
+  }
+}

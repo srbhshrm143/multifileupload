@@ -1,0 +1,14 @@
+{% parse_json object %}
+  {
+    "email":       {{ email | json }},
+    "password":    {{ '' | uuid | json }},
+    "uuid":        {{ '' | uuid | json }},
+    "first_name":  {{ email | split: '@' | first | json }},
+    "last_name":   {{ email | split: '@' | first | json }},
+    "language":    {{ language | default: 'en' | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  return object
+%}

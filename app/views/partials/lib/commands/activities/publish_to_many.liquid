@@ -1,0 +1,27 @@
+{% liquid
+  if audience == blank
+    log 'Audience cannot be empty', type: 'WARN'
+    return null
+  endif
+
+  for target in audience
+    assign feeds = target[1]
+    assign type = target[0]
+
+    for feed in feeds
+      assign ids = feed[1]
+      if feed[0] == 'profile'
+        assign feed_name = 'user' | append: '-' | append: type
+      else
+        assign feed_name = feed[0] | append: '-' | append: type
+      endif
+
+      if ids != empty
+        function publish = 'lib/commands/activities/publish', uuid: uuid, type: feed_name, ids: ids
+      endif
+    endfor
+
+  endfor
+
+  return true
+%}

@@ -1,0 +1,70 @@
+<div class="heading" x-data="{ action: false }">
+  <div class="container">
+    <h2 class="bigtitle">
+      {{ 'app.bulk_operations.instructions.title' | t }}
+    </h2>
+
+    <a class="button button-secondary" href="/dashboard/sell/data">
+      {% render 'theme/simple/ui/icon', icon: 'dashLeft' %}
+      {{ 'app.p-dashboard.sell-data' | t }}
+    </a>
+  </div>
+</div>
+
+<div class="container">
+  <h2 class="bigtitle">{{ 'app.bulk_operations.instructions.csv_format.title' | t}}</h2>
+  <div>{{ 'app.bulk_operations.instructions.csv_format.description' | t | markdown }}</div>
+
+  <div class="table mt-8">
+    <header>
+      <div>{{ 'app.bulk_operations.instructions.csv_format.attr.header' | t }}</div>
+      <div>{{ 'app.bulk_operations.instructions.csv_format.attr.description' | t }}</div>
+    </header>
+    <div class="table-content">
+      {% assign headers = 'product_uuid,sku,category,detail_name_en,detail_description_en,detail_name_ar,detail_description_ar,price,currency,original_price,quantity,max_in_one_order,return_days,item_type,attribute_1_name,attribute_1_value,attribute_2_name,attribute_2_value,attribute_3_name,attribute_3_value,photo_url_1,photo_url_2' | split: ',' %}
+      {% for header in headers %}
+          <ul>
+            <li>{{ header }} </li>
+            <li>{{ header | t: scope: 'app.bulk_operations.instructions.csv_format.headers' }}</li>
+          </ul>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h2 class="bigtitle mt-8">{{ 'app.bulk_operations.instructions.variants.title' | t}}</h2>
+
+  <div>{{ 'app.bulk_operations.instructions.variants.description' | t | markdown }}</div>
+
+  <div class="table mt-8" id="variants">
+    <header>
+      <div>{{ 'app.bulk_operations.instructions.variants.attr.name' | t }}</div>
+      <div>{{ 'app.bulk_operations.instructions.variants.attr.values' | t }}</div>
+    </header>
+    <div class="table-content">
+      {% for attr in attributes %}
+          <ul>
+            <li>{{ attr[0] }} </li>
+            <li>{{ attr[1] | join: ', ' }}</li>
+          </ul>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h2 class="bigtitle mt-8">{{ 'app.bulk_operations.instructions.categories.title' | t}}</h2>
+
+  <div>{{ 'app.bulk_operations.instructions.categories.description' | t | markdown }}</div>
+
+  <div class="table mt-8" id="variants">
+    <header>
+      <div>{{ 'app.bulk_operations.instructions.categories.attr.name' | t }}</div>
+    </header>
+    <div class="table-content">
+      {% assign categories = 'categories' | t | hash_sort %}
+      {% for c in categories %}
+          <ul>
+            <li>{{ c[0] }}</li>
+          </ul>
+      {% endfor %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+mutation update_category_detail(
+  $id: ID!,
+  $category_id: String!
+  $name: String!
+  $lang: String!
+  $translation_key: String!
+) {
+  record_update(
+    id: $id,
+    record: {
+      table: "category_detail"
+      properties: [
+        { name: "category_id", value: $category_id }
+        { name: "name", value: $name }
+        { name: "lang", value: $lang }
+      ]
+    }
+  ) {
+    id
+  }
+
+  admin_translation_update(
+    locale: $lang,
+    key: $translation_key,
+    translation: {
+      locale: $lang,
+      value: $name,
+      key: $translation_key
+  }) {
+    id
+  }
+}

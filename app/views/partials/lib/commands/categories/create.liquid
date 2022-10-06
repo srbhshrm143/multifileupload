@@ -1,0 +1,19 @@
+{% liquid
+  function object = 'lib/commands/categories/create/build', object: object
+  function object = 'lib/commands/categories/create/check', object: object
+
+  if object.valid
+    assign category_details = object.category_details
+    function object = 'lib/commands/execute', mutation_name: 'categories/create' object: object
+
+    for detail_arr in category_details
+      function d = 'lib/commands/category_details/create', object: detail_arr[1], category: object, lang: detail_arr[0]
+
+      unless d.valid
+        log d, type: 'ERROR: category_details/create'
+      endunless
+    endfor
+  endif
+
+  return object
+%}

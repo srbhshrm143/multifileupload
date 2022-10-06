@@ -1,0 +1,21 @@
+{% parse_json data %}
+  {
+    "id": {{ object.id | json }},
+    "uuid": {{ object.uuid | json }},
+    "name": {{ object.name | json }},
+    "project_id": {{ object.project_id | json }},
+    "creator_id": {{ profile.id | json }},
+    "video_urls": {{ object.video_urls | json }},
+    "collaborator_emails": {{ object.collaborator_emails | split: ',' | json  }}
+  }
+{% endparse_json %}
+
+{% liquid
+  if object.status == 'submitted'
+    hash_assign data['status'] = 'app.statuses.project_offers.submitted'
+  else
+    hash_assign data['status'] = 'app.statuses.project_offers.draft'
+  endif
+
+  return data
+%}

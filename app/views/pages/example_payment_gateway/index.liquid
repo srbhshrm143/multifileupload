@@ -1,0 +1,37 @@
+---
+layout: null
+---
+<html dir="{{direction}}" lang="{{context.language}}">
+  <head>
+    <link rel="stylesheet" href="{{ 'css/app.css' | asset_url }}">
+  </head>
+  <body class="font-sans antialiased leading-normal text-content bg-page">
+    <div class="flex items-center justify-center min-h-screen px-5 pt-16 pb-10 bg-gray-200 min-w-screen">
+      <div class="w-full p-5 mx-auto text-gray-700 bg-white rounded-lg shadow-lg" style="max-width: 600px">
+        <div class="w-full pt-1 pb-5">
+          <div class="flex items-center justify-center w-20 h-20 p-5 mx-auto -mt-16 overflow-hidden bg-indigo-500 rounded-full shadow-lg text-content-inverted">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+          </div>
+        </div>
+        <div class="mb-10">
+          <h1 class="text-xl font-bold text-center uppercase">Example Payments</h1>
+        </div>
+        <form action="/example_payment_gateway/webhook" method="POST">
+          <input name="transaction_id" value="{{context.params.transaction_id}}" type="hidden">
+          <div class="mb-10">
+            <button class="block w-full max-w-xs px-3 py-3 mx-auto font-semibold bg-indigo-500 rounded-lg hover:bg-indigo-700 focus:bg-indigo-700 text-content-inverted" name="payment_status" value="success">
+              PAY NOW
+              {{ context.params.price }}
+            </button>
+          </div>
+          <div>
+            <button class="block w-full max-w-xs px-3 py-3 mx-auto font-semibold bg-gray-500 rounded-lg hover:bg-gray-700 focus:bg-indigo-700 text-content-inverted" name="payment_status" value="failed">
+              PAYMENT FAILED
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+

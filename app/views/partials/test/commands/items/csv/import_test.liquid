@@ -1,0 +1,46 @@
+{% parse_json data %}
+[
+  {"product_uuid":"SKU-001uuid","sku":"KU-001","category":"jewellery","detail_name_en":"item-descriptiontem-name","detail_description_en":"item-description","detail_name_de":"namede","detail_description_de":"descde","price":10,"currency":"USD","original_price":null,"quantity":1,"max_in_one_order":2,"return_days":0,"photo_ids":"","item_type":"physical","published":"true","attribute_1_name":null,"attribute_1_value":null,"attribute_2_name":null,"attribute_2_value":null,"attribute_3_name":null,"attribute_3_value":null,"photo_url_1":null,"photo_url_2":null,"photo_url_3":null,"photo_url_4":null,"photo_url_5":null,"photo_url_6":null,"photo_url_7":null,"photo_url_8":null,"photo_url_9":null,"photo_url_10":null},
+  {"product_uuid":"SKU-002uuid","sku":"KU-002","category":"jewellery","detail_name_en":"item-descriptiontem-name","detail_description_en":"item-description","detail_name_de":"namede","detail_description_de":"descde","price":10,"currency":"USD","original_price":null,"quantity":1,"max_in_one_order":2,"return_days":0,"photo_ids":"","item_type":"physical","published":"false","attribute_1_name":null,"attribute_1_value":null,"attribute_2_name":null,"attribute_2_value":null,"attribute_3_name":null,"attribute_3_value":null,"photo_url_1":null,"photo_url_2":null,"photo_url_3":null,"photo_url_4":null,"photo_url_5":null,"photo_url_6":null,"photo_url_7":null,"photo_url_8":null,"photo_url_9":null,"photo_url_10":null}
+]
+{% endparse_json %}
+{% liquid
+  assign org_name = 5 | random_string | prepend: 'organization-'
+  function organization = 'test/fixtures/organization', name: org_name
+  function item_attributes = 'lib/queries/item_attributes/search'
+  function headers = 'lib/queries/bulk_operations/v1/headers'
+  function incoming = 'lib/commands/items/export/group_by_primary_key', list: data
+  function current_state = 'lib/commands/items/export/current_state', profile_id: organization.id
+  function diff = 'lib/commands/items/import/csv/calculate_diff', current: current_state.data, incoming: incoming
+
+  function import = 'lib/commands/items/import/csv/v1', data: data, item_attributes: item_attributes.results, owner_uuid: organization.id, diff: diff, owner: organization, current_state: current_state, operation: operation, sync: true
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: import, field_name: 'import'
+  function contract = 'test/assertions/equal', contract: contract, given: import.data.size, expected: 2, field_name: 'data'
+  function item_inventories = 'lib/queries/item_inventories/search_by_owner', owner: organization.id, withAllVariants: true, withAllLangs: true, limit: 1000
+
+  assign inventory1 = item_inventories.results[1]
+  assign inventory2 = item_inventories.results[0]
+  function contract = 'test/assertions/equal', contract: contract, given: inventory1.status.name, expected: 'app.statuses.items.published', field_name: 'status'
+  function contract = 'test/assertions/equal', contract: contract, given: inventory2.status.name, expected: 'app.statuses.items.unpublished', field_name: 'status'
+%}
+
+
+{% comment %}import existing items{% endcomment %}
+{% liquid
+  hash_assign data[0]['detail_name_en'] = 'newname'
+  hash_assign data[1]['detail_name_en'] = 'newname'
+  function incoming = 'lib/commands/items/export/group_by_primary_key', list: data
+  function current_state = 'lib/commands/items/export/current_state', profile_id: organization.id
+  function diff = 'lib/commands/items/import/csv/calculate_diff', current: current_state.data, incoming: incoming
+
+  function import = 'lib/commands/items/import/csv/v1', data: data, item_attributes: item_attributes.results, owner_uuid: organization.id, diff: diff, owner: organization, current_state: current_state, operation: operation, sync: true
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: import, field_name: 'import'
+
+  function item_inventories = 'lib/queries/item_inventories/search_by_owner', owner: organization.id, withAllVariants: true, withAllLangs: true, limit: 1000
+  assign inventory1 = item_inventories.results[1]
+  assign inventory2 = item_inventories.results[0]
+  function contract = 'test/assertions/equal', contract: contract, given: inventory1.status.name, expected: 'app.statuses.items.published', field_name: 'status'
+  function contract = 'test/assertions/equal', contract: contract, given: inventory2.status.name, expected: 'app.statuses.items.unpublished', field_name: 'status'
+%}

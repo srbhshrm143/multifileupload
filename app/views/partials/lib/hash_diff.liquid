@@ -1,0 +1,56 @@
+{% liquid
+  if a == blank
+    log a, type: 'a is incorrect hash-diff input'
+  endif
+
+  if b == blank
+    log b, type: 'b is incorrect hash-diff input'
+  endif
+
+  if a.type == 'project'
+    assign keys = keys | default: "name,deadline,promoted,summary,award,tags,description,terms_and_conditions,offer_info,commentable,development_partners,sent_by,status,steps" | split: ','
+
+    hash_assign a['status'] = a.status.name
+    hash_assign b['status'] = b.status.name
+  endif
+
+  if keys
+    assign _a = '{}' | parse_json
+    assign _b = '{}' | parse_json
+
+    assign c = b | dig: keys
+
+    for key in keys
+      hash_assign _a[key] = a[key]
+      hash_assign _b[key] = b[key]
+    endfor
+
+    assign diff = _a | hash_diff: _b
+
+  elsif skip_keys
+    assign _a = '{}' | parse_json
+    assign _b = '{}' | parse_json
+
+    assign skip_keys = skip_keys | split: ','
+    assign keys = '[]' | parse_json
+
+    for _k in a
+      if skip_keys contains _k[0]
+        continue
+      endif
+
+      assign keys = keys | add_to_array: _k[0]
+    endfor
+
+    for key in keys
+      hash_assign _a[key] = a[key]
+      hash_assign _b[key] = b[key]
+    endfor
+
+    assign diff = _a | hash_diff: _b
+  else
+    assign diff = a | hash_diff: b
+  endif
+
+  return diff
+%}

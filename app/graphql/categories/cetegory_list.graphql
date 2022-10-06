@@ -1,0 +1,30 @@
+query search(
+  $id: ID,
+  $limit: Int = 20,
+  $page: Int = 1,
+  # $key: String,
+  # $uuid: String,
+  # $withAllLangs: Boolean = false
+  ) {
+
+  categories: records(
+    per_page: $limit
+    page: $page
+    filter: {
+      id: { value: $id }
+      table: { value: "category_detail" }
+      # properties: [{ name: "key", value: $key }, { name: "uuid", value: $uuid }]
+    }
+    sort: [{ properties: { name: "key", order: ASC } }]
+  ) {
+    total_entries
+    total_pages
+    results {
+      id
+      # properties
+      category_name: property(name: "name")
+      category_id: property(name: "category_id")
+      
+    }
+  }
+}

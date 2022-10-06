@@ -1,0 +1,31 @@
+{% liquid
+  assign can = false
+  if comment == blank
+    return false
+  endif
+
+  if comment.creator.id == actor.id
+    assign owner = true
+  else
+    assign owner = false
+  endif
+
+  if comment.removed_at == blank
+    assign is_deleted = false
+  else
+    assign is_deleted = true
+  endif
+
+  case do
+  when 'edit'
+    unless is_deleted
+      return owner
+    endunless
+  when 'remove'
+    unless is_deleted
+      return owner
+    endunless
+  endcase
+
+  return can
+%}

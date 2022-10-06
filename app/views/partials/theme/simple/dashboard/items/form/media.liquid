@@ -1,0 +1,22 @@
+<h2 class="title mt-8">{{ 'app.items.media' | t }}</h2>
+<div class="card">
+  <fieldset>
+    <label class="block">{{ 'app.items.form.photos' | t }}:</label>
+    <div id="drag-drop-area"></div>
+    {% liquid
+      assign photo_ids = photos | map: 'id' | join: ','
+
+      if item == blank
+        assign item = '{"photos": [], "photo_ids": [] }' | parse_json
+      endif
+    %}
+
+    <script>
+      document.addEventListener('alpine:init', () => {
+        Alpine.store('main_variant', {{ item }});
+      });
+    </script>
+    <input name="item[photo_ids]" type="hidden"
+      x-bind:value="(($store.main_variant && $store.main_variant.photo_ids) || []).join(',')">
+  </fieldset>
+</div>

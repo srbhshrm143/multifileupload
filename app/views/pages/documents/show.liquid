@@ -1,0 +1,12 @@
+---
+slug: documents/:id
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile
+
+  function file = 'lib/queries/documents/find', id: context.params.id
+  include 'lib/can_do_or_unauthorized', object: file, do: "show", actor: current_profile
+
+  redirect_to file.document.url
+%}

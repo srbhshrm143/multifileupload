@@ -1,0 +1,34 @@
+/*
+  simple tag element
+*/
+
+
+
+/* normal state
+============================================================================ */
+@layer utilities {
+  .tag {
+    @apply
+      px-2
+      inline-flex
+      rounded
+      bg-panel-highlight;
+  }
+}
+
+
+/* selected tag
+============================================================================ */
+@layer utilities {
+  .tag-selected {
+    @apply
+      text-content-inverted
+      bg-content
+      transition-colors;
+  }
+
+  .tag-selected:hover {
+    @apply
+      bg-opacity-80;
+  }
+}

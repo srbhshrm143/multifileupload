@@ -1,0 +1,37 @@
+{% comment %}PARTIAL INPUT{% endcomment %}
+{% assign passphrase = "p@$$w0rd52431!" %}
+{% parse_json payload %}
+  {
+    "username": "user name",
+    "first_name": "name",
+    "last_name": "name",
+    "email": {{ '' | uuid | split: '-' | first | append: '@example.com' | json }},
+    "password": {{ "password" | json }},
+    "agreed": "true"
+  }
+{% endparse_json %}
+{% parse_json profile %}
+  {
+    "first_name": "first name",
+    "last_name": "last name",
+    "phone": "1234234"
+  }
+{% endparse_json %}
+
+
+{% comment %}LOAD TESTED PARTIAL/FUNCTION{% endcomment %}
+{% liquid
+  function user = 'lib/commands/users/create', object: payload, profile: profile
+  function contract = 'test/assertions/valid_object', contract: contract, object: user, field_name: 'created-user'
+%}
+
+{% liquid
+  function password = 'lib/commands/users/verify_password', object: payload
+  function contract = 'test/assertions/valid_object', contract: contract, object: password, field_name: 'password'
+%}
+
+{% liquid
+  hash_assign payload['password'] = 'wrong'
+  function password = 'lib/commands/users/verify_password', object: payload
+  function contract = 'test/assertions/invalid_object', contract: contract, object: password, field_name: 'password'
+%}

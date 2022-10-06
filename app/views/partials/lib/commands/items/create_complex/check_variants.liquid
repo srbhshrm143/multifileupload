@@ -1,0 +1,41 @@
+{% liquid
+  for variant in object.variants
+    assign cv = '{ "errors": {}, "valid": true }' | parse_json
+    function cv = 'lib/validations/presence', c: cv, object: variant, field_name: 'uuid'
+    function cv = 'lib/validations/number', c: cv, object: variant, field_name: 'return_days', gte: 0
+    function cv = 'lib/validations/price', c: cv, object: variant, field_name: 'price', minimal_price: MINIMAL_PRICE, maximal_price: MAXIMAL_PRICE, currency: variant.currency
+    if variant.original_price != blank
+      function cv = 'lib/validations/price', c: cv, object: variant, field_name: 'original_price', minimal_price: variant.price, currency: variant.currency
+    endif
+
+    function cv = 'lib/validations/presence', c: cv, object: variant, field_name: 'currency'
+    if variant.currency != blank
+      assign variant_currency = variant.currency | downcase
+      assign allowed_currency = context.constants.CURRENCY | downcase
+      function cv = 'lib/validations/equal', c: cv, given: variant_currency, expected: allowed_currency
+    endif
+    if variant.category == blank
+      function cv = 'lib/register_error', contract: cv, field_name: 'category', key: 'app.errors.blank'
+    else
+      function category = 'lib/queries/categories/find', key: variant.category
+      unless category
+        function cv = 'lib/register_error', contract: cv, field_name: 'category', key: 'app.errors.disallowed'
+      endunless
+    endif
+
+    for url in variant._photo_urls
+      function is_url = 'is_url', url: url
+      unless is_url
+        function cv = 'lib/register_error', contract: cv, field_name: '_photo_urls', key: 'app.errors.not_url'
+      endunless
+    endfor
+
+    hash_assign variant['errors'] = cv.errors
+    hash_assign variant['valid'] = cv.valid
+    if cv.valid != true
+      hash_assign c['valid'] = false
+    endif
+  endfor
+
+  return c
+%}

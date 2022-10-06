@@ -1,0 +1,21 @@
+{% liquid
+  case process.command
+  when 'items/publish_version'
+    assign payload = process.payload | parse_json
+    function new_items = 'lib/queries/items/search', ids: payload.new_item_ids, withAllLangs: true
+    function old_items = 'lib/queries/items/search', ids: payload.old_item_ids, withAllLangs: true
+    hash_assign process['new_items'] = new_items.results
+    hash_assign process['old_items'] = old_items.results
+  when 'organizations/update'
+    assign payload = process.payload | parse_json
+    function old_organization = 'lib/queries/organizations/find', id: payload.id
+    hash_assign process['new_organization'] = payload
+    hash_assign process['old_organization'] = old_organization
+  when 'bulk_operations/trigger_import'
+    assign payload = process.payload | parse_json
+    function operation = 'lib/queries/bulk_operations/find', id: payload.operation_id
+    hash_assign process['operation'] = operation
+  endcase
+
+  return process
+%}

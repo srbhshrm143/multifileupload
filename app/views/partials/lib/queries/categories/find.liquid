@@ -1,0 +1,19 @@
+{% liquid
+  if id == blank and key == blank
+    return null
+  endif
+
+  if context.category_list == blank
+    graphql r  = 'categories/search', limit: 1000
+    assign category_list = r.categories.results | group_by: 'key'
+    hash_assign context['category_list'] = category_list
+  endif
+
+  if key
+    return context.category_list[key].first
+  else
+    graphql r  = 'categories/search', id: id, key: key, limit: 1, withAllLangs: withAllLangs
+
+    return r.categories.results.first
+  endif
+%}

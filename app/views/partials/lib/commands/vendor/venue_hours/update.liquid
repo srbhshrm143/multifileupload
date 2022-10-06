@@ -1,0 +1,11 @@
+{% liquid
+  function object = 'lib/commands/vendor/venue_hours/update/build', object: object, profile: profile
+  function object = 'lib/commands/vendor/venue_hours/update/check', object: object
+
+  if object.valid
+    function object = 'lib/commands/execute', object: object, mutation_name: 'venue/update/update_menu_hours', selection: 'record_update'
+    return object 
+  else
+    return object
+  endif
+%}

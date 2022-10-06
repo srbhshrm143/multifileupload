@@ -1,0 +1,21 @@
+mutation sitemap_create(
+  $content: String!
+) {
+  record: record_create(
+    record: {
+      table: "sitemap"
+      properties: [
+        { name: "file" value_upload: {
+            acl: private
+            content: $content
+            type: plain
+          }}
+      ]
+    }) {
+    id
+    file: property_upload(name: "file", expires_in: 5) {
+      url
+    }
+  }
+}
+

@@ -1,0 +1,14 @@
+name: form_media_testing
+properties:
+  - name: testing_media
+    type: upload
+    options:
+      versions:
+      - name: version1
+      
+  - name: origin_url
+    type: string
+  - name: media_uuid
+    type: string
+  - name: media_type
+    type: string

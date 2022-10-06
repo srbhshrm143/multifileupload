@@ -1,0 +1,5 @@
+{% liquid
+  graphql r = 'statuses/search', limit: limit, page: 1
+
+  return r.statuses
+%}

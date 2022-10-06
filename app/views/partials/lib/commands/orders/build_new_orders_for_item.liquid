@@ -1,0 +1,14 @@
+{% liquid
+  assign orders = '{"results": []}' | parse_json
+  assign line_item = '{}' | parse_json
+  hash_assign line_item['item'] = item
+  hash_assign line_item['quantity'] = 1
+  hash_assign line_item['currency'] = item.currency
+  hash_assign line_item['total_price_cents'] = item.price | times: line_item.quantity
+  assign order = '{}' | parse_json
+  hash_assign order['line_items'] = '[]' | parse_json | add_to_array: line_item
+  hash_assign orders['results'] = orders.results | add_to_array: order
+  function orders = 'lib/commands/orders/recalculate/build', object: orders
+
+  return orders
+%}

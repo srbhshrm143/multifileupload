@@ -1,0 +1,27 @@
+---
+slug: groups/:id
+method: put
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, membership: true
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  assign group_id = context.params.id | split: '-' | last
+  function group = 'lib/queries/groups/find', id: group_id, with_owner: true, current_profile: current_profile
+  include 'lib/can_do_or_unauthorized', object: group, do: "edit", actor: current_profile
+
+  function object = 'lib/commands/groups/update', object: context.params.group
+  if object.valid
+    if object.approve_request == "anonymous" and group.approve_request != "anonymous"
+      function _ = 'lib/commands/relationships/update_group_members', group: object
+    endif
+
+    function url = 'link_to', object: group
+    include 'redirect_to', url: url, notice: 'app.models.shared.updated'
+  else
+    function photos = 'lib/queries/photos/search', object_uuid: group.uuid
+    hash_assign object['main_photo'] = photos.results | first
+    function _ = 'lib/extend_context', group: group, tags: true, post_templates: true, group_templates: true
+    render 'theme/simple/groups/edit', object: object, context: context, current_profile: current_profile
+  endif
+%}

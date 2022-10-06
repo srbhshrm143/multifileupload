@@ -1,0 +1,27 @@
+<div class="card-lg text-center">
+  <a href="/profile/{{ user.slug }}" class="inline-block">
+    {% render 'theme/simple/ui/avatar', profile: user, size: 192, class: 'w-24 md:w-48 h-24 md:h-48 mx-auto text-2xl md:text-4xl', alt: post.creator.name %}
+  </a>
+
+  {% if follow_toggle != false %}
+    <div class="-mt-6 min-h-[2rem]">
+      {% render 'theme/simple/follow_button', current_profile: current_profile, profile: user %}
+    </div>
+  {% endif %}
+
+  <div class="mt-4">
+    <a href="/profile/{{ user.slug }}">
+      {% liquid
+        if user.first_name
+          assign name = user.first_name | append: ' ' | append: user.last_name
+        elsif user.name
+          assign name = user.name
+        else
+          assign name = user.slug
+        endif
+      %}
+
+      {{ name }}
+    </a>
+  </div>
+</div>

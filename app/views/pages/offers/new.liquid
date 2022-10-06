@@ -1,0 +1,12 @@
+---
+slug: offers/new
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function project = 'lib/queries/projects/find', id: context.params.project_id
+  function _ = 'lib/extend_context', photo_presign: true
+
+  render 'theme/simple/project_offers/form', project: project, context: context, current_profile: current_profile
+%}

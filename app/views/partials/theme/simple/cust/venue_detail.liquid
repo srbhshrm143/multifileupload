@@ -1,0 +1,881 @@
+<style>
+  .selectAll {
+    display: none;
+  }
+</style>
+{%liquid
+     assign current_user = current_profile
+     graphql venues_main = 'venue/customers/venue_details', id:context.params.venue_id, limit: 100
+   %}
+<!-- {{ venues_main.data.results }}<br><br> -->
+{% if venues_main.data.total_entries > 0  %}
+  {% for venues in venues_main.data.results %}
+    {% if venues.venue_features[0] and venues.venue_features[0].properties.space_features %}
+      {% assign event_features = venues.venue_features[0].properties.space_features | parse_json %}
+    {% endif %}
+    {%- comment -%}
+      {{ venues.venue_payments }}<br>
+    {%- endcomment -%}
+
+    <!-- Banner start -->
+    <section class="bg-venue-detail_new1 bg-no-repeat bg-cover sm:pb-4 sm:pt-10 md:pb-10 md:pt-40 xl:pb-16 xl:pt-80 bg-blend-multiply bg-PrimaryOverlay">
+      <div class="container mx-auto max-md:px-10 max-lg:max-w-full max-lg:px-5">
+        <div class="text-left">
+          <h2 class="text-white max-md:text-2xl xl:text-5xl max-xl:text-3xl text-5xl max-xxl:text-4xl font-Work font-semibold pb-2">
+            <!-- The Sunshine Hotel -->
+            {{ venues.properties.event_space_name }}
+          </h2>
+          <p class="flex text-white font-Work font-semibold sm:text-sm md:text-2xl flex items-center mb-1">
+            <img src="{{ 'images/event-hound/bank.svg' | asset_url }}" class="sm:w-3 sm:h-4 md:w-5 md:h-6 mr-2">
+            <!-- The Wedding Banquet -->
+            {{ venues.properties.event_type }}
+          </p>
+          <div class=" max-md:block ">
+            <ul class="flex max-sm:block">
+              <li class="border-r-1 border-borderColor mr-4 max-sm:mb-2">
+                <p class="flex items-center text-white max-sm:text-sm font-Work xl:text-base max-xxl:text-base"><img src="{{ 'images/event-hound/location.svg' | asset_url }}" class="sm:w-3 sm:h-4 md:w-5 md:h-6 mr-2 ">{{ venues.venue_details[0].properties.venue_address }}
+                </p>
+              </li>
+            </ul>
+            <ul class="flex items-center justify-between sm:pt-3 md:pt-5 relative">
+              <li>
+                <p class="flex text-white items-center text-sm font-Work">
+                  <img src="{{ 'images/event-hound/star.svg' | asset_url }}" class="mr-1 ">
+                  (1319 Review)
+                </p>
+              </li>
+              <li class="border-r-1 border-borderColor mr-4">
+                {% if current_user.id %}
+                  {% render 'theme/simple/wishlists/button', profile_id: current_profile.id, item_id: context.params.venue_id  %}
+                {% endif %}
+                {%- comment -%}
+                  <a href="#" class="text-white font-Work xl:text-base max-xxl:text-base  flex">
+                  <img
+                  src="{{ 'images/event-hound/white_heart.svg' | asset_url }}" class="mr-1 max-md:w-4">
+                  Favourite
+                  </a>
+                {%- endcomment -%}
+              </li>
+              <!-- <li class="border-r-1 border-borderColor mr-4">
+              <button type="submit" class="whitespace-nowrap inline-flex items-center justify-center px-7 py-3 border border-white rounded-full text-sm font-medium text-white bg-transparent hover:text-white hover:bg-themeBlue uppercase max-md:px-4 max-md:py-2 max-md:text-xs">SUBMIT REVIEW</button>
+              </li> -->
+            </ul>
+          </div>
+
+
+        </div>
+      </div>
+    </section>
+    <!-- Banner end -->
+
+    <!-- details start -->
+    <section class="px-6 md:my-16 sm:my-5 max-sm:py-5 max-sm:px-5">
+      <div class="container mx-auto max-sm:px-1 max-md:px-10 max-xl:max-w-full ">
+        <div class="md:flex sm:block">
+          <div class="w-3/4 pr-5 max-md:w-full max-md:pr-0 max-lg:w-8/12">
+            <!--slider-->
+            <div class="slider-venue">
+              <div class="slider-for">
+                {% for media in venues.venue_media %}
+                  <div><img src="{{ media.testing_media.url }}" class=""></div>
+                {% endfor %}
+                {%- comment -%}
+                  <div><img src="{{ 'images/event-hound/slider-img.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div><img src="{{ 'images/event-hound/slider-img.png' | asset_url }}" class=""></div>
+                {%- endcomment -%}
+              </div>
+              <div class="slider-nav mt-6 ">
+                {% for media in venues.venue_media %}
+                  <div><img src="{{ media.testing_media.url }}" class=""></div>
+                {% endfor %}
+                {%- comment -%}
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                  <div class=""><img src="{{ 'images/event-hound/slider-nav1.png' | asset_url }}" class=""></div>
+                {%- endcomment -%}
+              </div>
+            </div>
+            <!--slider-end-->
+            <!--venue-des-->
+            <div class="p-5 shadow-box mt-7">
+              <div class="pb-6">
+                <h2 class=" font-semibold text-lg text-black pb-1 max-xxl:text-lg max-xl:text-md font-Railway max-md:text-base">
+                  Venue Description
+                </h2>
+                <p class="text-sm block mt-2 text-PrimaryLightBlue leading-6 font-Work max-xl:text-sm ">
+                  {{ venues.properties.write_about_event-space }}
+                </p>
+              </div>
+              <div class="pb-2">
+                <h2 class=" font-semibold text-lg text-black pb-1 max-xxl:text-lg max-xl:text-md font-Railway max-md:text-base">
+                  {{ "Services Offered" }}
+                </h2>
+                <div class="columns-3 max-lg:columns-2 max-md:columns-1">
+                  <div>
+                    <ul>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3  max-sm:mr-2">Decoration
+                      </li>
+                      <li class="flex text-sm items-center text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Rooms Available
+                        <img class="pr-1 h-4 w-5 ml-2" data-tooltip-target="tooltip-animation" data-tooltip-placement="bottom" type="button" src="/assets/images/event-hound/icon-1.png"/>
+                      </li>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3  max-sm:mr-2">Chaat & indian street food
+                      </li>
+                    </ul>
+                    <div id="tooltip-animation" role="tooltip" class="max-w-xs inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium font-Work text-primaryFieldBlue bg-white rounded-lg border border-gray-200 shadow-sm duration-300 opacity-0 tooltip">
+                      This Venue has rooms available that can be booked outside our platform after booking confirmation
+                      <div class="tooltip-arrow " data-popper-arrow></div>
+                    </div>
+                  </div>
+                  <div>
+                    <ul>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Decoration
+                      </li>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Dj
+                      </li>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Chaat & indian street food
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <ul>
+                      <li class="flex text-sm  text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Decoration
+                      </li>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Dj
+                      </li>
+                      <li class="flex text-sm text-PrimaryLightBlue pb-2.5 leading-6 font-Work max-xl:text-sm">
+                        <img src="{{ 'images/event-hound/check1.svg' | asset_url }}" class="mr-3 max-sm:w-3 max-sm:mr-2">Chaat & indian street food
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+            <!--venue-des-end-->
+            <!--capacity-->
+            <div class="p-5 shadow-box mt-7">
+
+              <div class="pb-3 border-b flex justify-between max-md:block">
+                <h2 class=" font-bold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway max-md:text-base">
+                  {{ "Max Capacity" }}
+                </h2>
+                <a href="javascript:void(0)" class="font-Work flex text-primaryGrey underline	">
+                  <!-- 600 -->
+                  {{ venues.properties.maximum_event_capacity }}
+                </a>
+              </div>
+              <div class="py-3 border-b flex justify-between max-md:block">
+                <h2 class=" font-bold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway max-md:text-base">
+                  {{ "Menu Details" }}
+                </h2>
+                <a href="/venue_menu?venue_id={{venues.id}}" class="font-Work flex text-primaryGrey underline">
+                  {{ "Click here to view" }}
+                </a>
+              </div>
+              <div class="py-3 border-b flex justify-between max-md:block">
+                <div class="md:w-2/4 sm:w-full">
+                  <h2 class=" font-bold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway max-md:text-base">
+                    Payment Schedule
+                  </h2>
+                  <p class="sm:text-xs md:text-sm font-medium text-paragraphTextColor font-Work">(Customer needs to pay,the rest of the deposit on his own directly to the vendor outside the platform)</p>
+                </div>
+                <ul class="md:w-2/4 sm:w-full text-right">
+                  <li class="sm:text-xs md:text-sm font-medium text-paragraphTextColor font-Work mb-3.5">
+                    Initial Deposit to be paid 15%</li>
+                  <li class="sm:text-xs md:text-sm font-medium text-paragraphTextColor font-Work mb-3.5">35% to be paid 30 days before</li>
+                  <li class="sm:text-xs md:text-sm font-medium text-paragraphTextColor font-Work mb-3.5">50% to be paid 15 days before</li>
+                  <li class="sm:text-xs md:text-sm font-medium text-paragraphTextColor font-Work mb-3.5">Security Deposit - Null</li>
+                </ul>
+              </div>
+              <div class="pt-3 pb-2 mb-3 border-b flex justify-between max-md:block">
+                <h2 class="flex items-center font-bold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway max-md:text-base">
+                  Contract
+                  <img class="pr-1 h-4 w-5 ml-2" data-tooltip-target="tooltip-animation" data-tooltip-placement="bottom" type="button" src="/assets/images/event-hound/icon-1.png"/>
+                </h2>
+                <a href="/venue_contract?venue_id={{venues.id}}" class="font-Work flex text-primaryGrey underline">
+                  {{ "Click here to view" }}
+                </a>
+              </div>
+              <div id="tooltip-animation" role="tooltip" class="max-w-xs inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium font-Work text-primaryFieldBlue bg-white rounded-lg border border-gray-200 shadow-sm duration-300 opacity-0 tooltip">
+                This Venue has rooms available that can be booked outside our platform after booking confirmation
+                <div class="tooltip-arrow " data-popper-arrow></div>
+              </div>
+              {%- comment -%}
+                <div class="">
+                <h2 class=" font-bold text-lg text-black  flex items-center max-xxl:text-base max-xl:text-md font-Railway max-md:text-base">
+                Confirmation
+                </h2>
+                <p class="text-sm block mt-2 text-PrimaryLightBlue  leading-6  font-Work
+                max-xl:text-sm ">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                took.
+                </p>
+                </div>
+              {%- endcomment -%}
+            </div>
+            <!--capacity-end-->
+            <!--Event Space-->
+            <div class="font-medium text-2xl mt-3 font-Work">
+              {{ "Venue Features" }}
+            </div>
+            <div class="p-5 shadow-box mt-4">
+              {% for venue_features in venues.venue_features %}
+                {% assign features = venue_features.properties.space_features | parse_json %}
+                <div x-data="{ currentTab: 'tab1' }">
+                  <button x-bind:class="{ 'active border-b-4 border-themeBlue ': currentTab ==='tab1' }" x-on:click="currentTab= 'tab1'" class="font-semibold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway mr-16 py-4 max-md:text-base max-md:pr-7">Event  Space</button>
+
+                  <button x-bind:class="{ 'active border-b-4 border-themeBlue ': currentTab === 'tab2' }" x-on:click="currentTab= 'tab2'" class="font-semibold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway mr-16 py-4 max-md:text-base max-md:pr-7">Food</button>
+                  <button x-bind:class="{ 'active border-b-4 border-themeBlue ': currentTab === 'tab3' }" x-on:click="currentTab= 'tab3'" class="font-semibold text-lg text-black pb-1 max-xxl:text-base max-xl:text-md font-Railway mr-16 py-4 max-md:text-base max-md:pr-7">Bar</button>
+
+                  <button x-bind:class="{ 'active border-b-4 border-themeBlue ': currentTab ===  'tab4' }" x-on:click="currentTab= 'tab4'" class="font-semibold text-lg text-themeBlue pb-1 max-xxl:text-base max-xl:text-md font-Railway  active:text-themeBlue py-4 max-md:text-base max-md:pr-7">Extras</button> 
+                  
+                  <div class="tab-content border p-4 rounded-md">
+                    <div x-bind:class="{ 'hidden': currentTab !== 'tab1' }">
+                      <div class="overflow-x-auto relative">
+                        <table class=" w-full">
+                          <thead class="bg-tableBlue ">
+                            <tr>
+                              <th class="flex items-center font-medium text-base text-black   max-xl:text-base font-Work text-left p-4 max-md:p-2 max-md:text-sm">
+                                <div class="form-check">
+                                  <input class="form-check-input mt-0 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer selectAll" type="checkbox" value="" id="flexCheckDefault">
+                                </div>
+                                Feature Name
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Available As
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Total Fee
+                              </th>
+                              {%- comment -%}
+                                <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Price Per Guest
+                                </th>
+                              {%- endcomment -%}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for venue_features in event_features.features_space %}
+                              <tr>
+                                <td class="flex items-center font-medium text-sm text-PrimaryLightBlue font-Work text-left p-4  max-md:p-2">
+                                  <div class="form-check">
+                                    <input class="form-check-input mt-0 max-md:h-3.5 max-md:w-3.5 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer featurePrice" type="checkbox" name="features_space" value="{{ venue_features.feature_price }}" id="flexCheckDefault">
+                                  </div>
+                                  <!-- Room Rental Fee -->
+                                  {{ venue_features.feature_name }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- Flat Rat -->
+                                  {{ venue_features.feature_available }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- $5.55 (Flat Price) -->
+                                  {{ venue_features.feature_price }}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="hidden" x-bind:class="{ 'hidden': currentTab !== 'tab2' }">
+                      <div class="overflow-x-auto relative">
+                        <table class=" w-full">
+                          <thead class="bg-tableBlue ">
+                            <tr>
+                              <th class="flex items-center font-medium text-base text-black   max-xl:text-base font-Work text-left p-4 max-md:p-2 max-md:text-sm">
+                                <div class="form-check">
+                                  <input class="form-check-input mt-0 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer selectAll" type="checkbox" value="" id="flexCheckDefault">
+                                </div>
+                                Feature Name
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Available As
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Total Fee
+                              </th>
+                              {%- comment -%}
+                                <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Price Per Guest
+                                </th>
+                              {%- endcomment -%}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for venue_features in event_features.features_food %}
+                              <tr>
+                                <td class="flex items-center font-medium text-sm text-PrimaryLightBlue font-Work text-left p-4  max-md:p-2">
+                                  <div class="form-check">
+                                    <input class="form-check-input mt-0 max-md:h-3.5 max-md:w-3.5 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer featurePrice" type="checkbox" name="features_food" value="{{ venue_features.feature_price }}" id="flexCheckDefault">
+                                  </div>
+                                  <!-- Room Rental Fee -->
+                                  {{ venue_features.feature_name }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- Flat Rat -->
+                                  {{ venue_features.feature_available }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- $5.55 (Flat Price) -->
+                                  {{ venue_features.feature_price }}
+                                </td>
+                              </tr>
+                            {% endfor %}
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="hidden" x-bind:class="{ 'hidden': currentTab !== 'tab3' }">
+                      <div class="overflow-x-auto relative">
+                        <table class=" w-full">
+                          <thead class="bg-tableBlue ">
+                            <tr>
+                              <th class="flex items-center font-medium text-base text-black   max-xl:text-base font-Work text-left p-4 max-md:p-2 max-md:text-sm">
+                                <div class="form-check">
+                                  <input class="form-check-input mt-0 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer featurePrice selectAll" type="checkbox" value="" id="flexCheckDefault">
+                                </div>
+                                Feature Name
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Available As
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Total Fee
+                              </th>
+                              {%- comment -%}
+                                <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Price Per Guest
+                                </th>
+                              {%- endcomment -%}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for venue_features in event_features.features_bar %}
+                              <tr>
+                                <td class="flex items-center font-medium text-sm text-PrimaryLightBlue font-Work text-left p-4  max-md:p-2">
+                                  <div class="form-check">
+                                    <input class="form-check-input mt-0 max-md:h-3.5 max-md:w-3.5 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer featurePrice" type="checkbox" name="features_bar" value="{{ venue_features.feature_price }}" id="flexCheckDefault">
+                                  </div>
+                                  <!-- Room Rental Fee -->
+                                  {{ venue_features.feature_name }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- Flat Rat -->
+                                  {{ venue_features.feature_available }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- $5.55 (Flat Price) -->
+                                  {{ venue_features.feature_price }}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="hidden" x-bind:class="{ 'hidden':currentTab !== 'tab4' }">
+                      <div class="overflow-x-auto relative">
+                        <table class=" w-full">
+                          <thead class="bg-tableBlue ">
+                            <tr>
+                              <th class="flex items-center font-medium text-base text-black   max-xl:text-base font-Work text-left p-4 max-md:p-2 max-md:text-sm">
+                                <div class="form-check">
+                                  <input class="form-check-input mt-0 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer selectAll" type="checkbox" value="" id="flexCheckDefault">
+                                </div>
+                                Feature Name
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Available As
+                              </th>
+                              <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Total Fee
+                              </th>
+                              {%- comment -%}
+                                <th class=" font-medium text-base text-black max-xl:text-base font-Work  text-left p-4  max-md:p-2 max-md:text-sm">
+                                Price Per Guest
+                                </th>
+                              {%- endcomment -%}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for venue_features in event_features.features_extrass %}
+                              <tr>
+                                <td class="flex items-center font-medium text-sm text-PrimaryLightBlue font-Work text-left p-4  max-md:p-2">
+                                  <div class="form-check">
+                                    <input class="form-check-input mt-0 max-md:h-3.5 max-md:w-3.5 h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 align-middle bg-no-repeat bg-center bg-contain float-left mr-2 mt-1.5 cursor-pointer featurePrice" type="checkbox" name="features_extrass" value="{{ venue_features.feature_price }}" id="flexCheckDefault">
+                                  </div>
+                                  <!-- Room Rental Fee -->
+                                  {{ venue_features.feature_name }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- Flat Rat -->
+                                  {{ venue_features.feature_available }}
+                                </td>
+                                <td class="font-medium text-sm text-PrimaryLightBlue  max-xl:text-sm font-Work text-left p-4  max-md:p-2">
+                                  <!-- $5.55 (Flat Price) -->
+                                  {{ venue_features.feature_price }}
+                                </td>
+                              </tr>
+                            {% endfor %}
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            <!--Event Space-end-->
+            <!--reviews-->
+            <div class="p-5 shadow-box mt-7">
+              <h2 class=" font-semibold text-lg text-black pb-3 max-xl:text-md font-Railway max-md:text-base">Reviews</h2>
+              <ul>
+                <li class="border-b pb-8">
+                  <div class="flex max-sm:block">
+                    <div class=" rounded-full mr-4  inline-block w-12 h-12">
+                      <img src="{{ 'images/event-hound/review_img.png' | asset_url }}" class="rounded-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex justify-between">
+                        <div class="mb-3">
+                          <h2 class="font-bold text-base text-stone-600 pb-1 max-xl:text-md font-Railway">Cole Harris</h2>
+                          <ul class="flex">
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                          </ul>
+                        </div>
+                        <p class=" font-medium text-sm pb-3  font-Work text-stone-400">2 Months Ago</p>
+                      </div>
+                      <p class="text-sm block  text-PrimaryLightBlue  leading-6  font-Work max-xl:text-sm ">" Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled."
+                      </p>
+                    </div>
+                  </div>
+                </li>
+                <li class="border-b py-8">
+                  <div class="flex flex max-sm:block">
+                    <div class=" rounded-full mr-4  inline-block w-12 h-12">
+                      <img src="{{ 'images/event-hound/review_img.png' | asset_url }}" class="rounded-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex justify-between">
+                        <div class="mb-3">
+                          <h2 class="font-bold text-base text-stone-600 pb-1 max-xl:text-md font-Railway">Cole Harris</h2>
+                          <ul class="flex">
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                          </ul>
+                        </div>
+                        <p class=" font-medium text-sm pb-3  font-Work text-stone-400">2 Months Ago</p>
+                      </div>
+                      <p class="text-sm block  text-PrimaryLightBlue  leading-6  font-Work max-xl:text-sm ">" Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled."
+                      </p>
+                    </div>
+                  </div>
+                </li>
+                <li class=" py-5">
+                  <div class="flex flex max-sm:block">
+                    <div class=" rounded-full mr-4  inline-block w-12 h-12">
+                      <img src="{{ 'images/event-hound/review_img.png' | asset_url }}" class="rounded-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex justify-between">
+                        <div class="mb-3">
+                          <h2 class="font-bold text-base text-stone-600 pb-1 max-xl:text-md font-Railway">Cole Harris</h2>
+                          <ul class="flex">
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                            <li><img src="{{ 'images/event-hound/start1.svg' | asset_url }}" class="mr-1"></li>
+                          </ul>
+                        </div>
+                        <p class=" font-medium text-sm pb-3  font-Work text-stone-400">2 Months Ago</p>
+                      </div>
+                      <p class="text-sm block  text-PrimaryLightBlue  leading-6  font-Work  max-xl:text-sm ">" Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled."
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!--reviews-end-->
+          <!--write-review-->
+            <!-- <div class="p-5 shadow-box mt-7">
+            <h2 class=" font-semibold text-lg text-black pb-2 max-xl:text-md font-Railway max-md:text-base">Rate & Write
+            Reviews</h2>
+            <p class="text-sm block  text-PrimaryLightBlue  leading-6  font-Work  ">You must Logged to coment</p>
+            <ul class="flex mt-2">
+            <li><img src="/assets/images/event-hound/star_big.svg" class="mr-1 max-md:w-4"></li>
+            <li><img src="/assets/images/event-hound/star_big.svg" class="mr-1 max-md:w-4"></li>
+            <li><img src="/assets/images/event-hound/star_big.svg" class="mr-1 max-md:w-4"></li>
+            <li><img src="/assets/images/event-hound/star_big.svg" class="mr-1 max-md:w-4"></li>
+            </ul>
+            <div class="flex">
+            <div class="mb-3 w-full mt-4">
+            <label for="exampleFormControlTextarea1"
+            class="form-label inline-block mb-2 text-base text-black font-Work font-medium">Write Review</label>
+            <textarea class="
+            rounded-lg                     
+            block
+            w-full
+            px-3
+            py-1.5
+            text-base
+            font-normal
+            text-gray-700
+            bg-white bg-clip-padding
+            border border-solid border-gray-300
+            rounded
+            transition
+            ease-in-out
+            m-0
+            focus:text-gray-700 focus:bg-white focus:border focus:outline-none
+            " id="exampleFormControlTextarea1" rows="3" placeholder="Your message"></textarea>
+
+            </div>
+
+            </div>
+            <button type="submit" class=" m-1  whitespace-nowrap font-Work inline-flex items-center justify-center px-7 py-2 border-2 border-themeBlue rounded-full text-sm font-medium text-white 
+            bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-md:px-4 max-md:py-2 max-md:text-xs">Submit
+            </button>
+
+            </div> -->
+            <!--write-review-end-->
+          </div>
+          <!--right-section-->
+          <div class="w-1/4  max-md:w-full max-md:mt-5 max-lg:w-4/12">
+            {% assign venue_pricing = venues.venue_pricing | map: 'properties' | map: 'weekdays_day' %}
+            {% assign venue_price = venue_pricing | join: '[]' %}
+            <form action="/orders/new" method="post">
+              {% render 'authenticity_token', authenticity_token: authenticity_token %}
+              <input type="hidden" name="item_id" value="{{ venues.id }}">
+              <input type="hidden" name="item[quantity]" value="1">
+              <input type="hidden" name="item[item_id]" value="{{ venues.id }}">
+
+              <!--booking-start-->
+              <div class="p-5 shadow-box">
+                <h3 class="md:text-lg lg:text-1xl xl:text-3xl sm:text-md font-semibold xl:text-3xl pb-2 ">Book a Reservation
+                </h3>
+                <p class="text-paragraphTextColor font-Work max-xxl:text-sm  flex max-md:pb-0">{{ venues.venue_details[0].properties.venue_address }}</p>
+                <p class=" text-primaryBlack font-semibold font-Work py-1.5 sm:text-md md:text-lg lg:text-1xl xl:text-2xl">
+                  <!-- $290.00 -->
+                  ${{ venue_price }}
+                </p>
+                <div class="flex mb-3 mr-2 items-center">
+                  <label for="exampleText0" class="form-label inline-block font-medium sm:text-sm lg:text-base text-primaryBlack mr-3">Add Guest:</label>
+                  <input type="text" class=" form-control block px-3 md:w-32 sm:w-full py-1.5 text-base font-normal text-primaryFieldBlue bg-white bg-clip-padding border border-solid border-gray-300 rounded-full transition ease-in-out font-Work m-0 text-center text-base focus:text-gray-700 focus:bg-white focus:border-themeBlue focus:outline-none text-sm" id="exampleText0" placeholder="500" name="item[guest]" required>
+                </div>
+
+                <div>
+                  <input datepicker datepicker-format="mm/dd/yyyy" type="text" class="rounded-3xl bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-3 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="07/23/2022" name="item[booking_date]" required>
+                </div>
+                <div inline-datepicker data-date="02/25/2022" class="w-full venue-date-picker font-Work"></div>
+
+                <div class="flex items-center sm:items-start mb-2">
+                  <input id="remember-me" name="remember-me" type="checkbox" class="sm:mt-1 h-4 w-4 text-badgeGreen text-badgeGreen-600 focus:outline-none border-badgeGreen-300 rounded">
+                  <label for="remember-me" class="ml-2 block sm:text-sm lg:text-base text-colorBlack font-medium text-gray-900 font-Work">Select Multiple Days</label>
+                </div>
+
+                {%- comment -%} <div class=" flex mb-2">
+                  <div class="sm:text-sm lg:text-base text-colorBlack font-Work font-medium whitespace-nowrap pr-2">
+                    Selected Date :
+                  </div>
+                  <p class="sm:text-sm lg:text-base text-paragraphTextColor font-Railway font-medium sm:text-xs md:font-lg">
+                    07/23/2022</p>
+                </div> {%- endcomment -%}
+
+                <div class="flex mb-3 mr-2 items-center">
+                  <label for="exampleText0" class="form-label inline-block md:w-28 sm:w-full font-medium text-primaryBlack text-sm">Time Slot</label>
+                  <select class="h-10 appearance-none bg-transparent px-2 py-1 w-full font-Work lg:text-base text-textLightPurple sm:text-sm border border-borderColor  rounded-full text-placeholderColor placeholder-placeholderColor::placeholder focus:outline-themeBlue max-xxl:px-3 max-sm:py-2.5 max-sm:h-10" name="item[selected_time]" id="form_selected__time" onchange="selected_booking_time();">
+                    {% for venue_hours in venues.venue_hours %}
+                      <option value="{{ venue_hours.properties.day_time_starts }} - {{ venue_hours.properties.day_time_ends }}" class="text-textLightPurple">
+                        {{ venue_hours.properties.day_time_starts }}
+                        -
+                        {{ venue_hours.properties.day_time_ends }}
+                      </option>
+                      <option value="{{ venue_hours.properties.night_time_starts }} - {{ venue_hours.properties.night_time_ends }}">
+                        {{ venue_hours.properties.night_time_starts }}
+                        -
+                        {{ venue_hours.properties.night_time_ends }}
+                      </option>
+                      <option value="{{ venue_hours.properties.all_day_time_starts }} - {{ venue_hours.properties.all_day_time_ends }}">
+                        {{ venue_hours.properties.all_day_time_starts }}
+                        -
+                        {{ venue_hours.properties.all_day_time_ends }}
+                      </option>
+                      {%- comment -%}
+                        <option value="3">8:00am - 10:00pm</option>
+                      {%- endcomment -%}
+                    {% endfor %}
+                  </select>
+                </div>
+
+                {%- comment -%} <div class="flex mb-2">
+                  <div class="sm:text-xs md:text-sm text-colorBlack font-Work font-medium pr-2">
+                    Selected Time Slot :
+                  </div>
+                  <p class="sm:text-xs md:text-sm text-textLightPurple font-Railway font-medium sm:text-xs md:font-lg" id="selected__time">
+                    Day 06:00AM - 09:00AM</p>
+                </div> {%- endcomment -%}
+                <div>
+                  <p class="font-semibold sm:text-sm lg:text-base font-Work pt-3 pb-2.5">Apply Discount Code</p>
+                  <div class="mb-3 w-full mr-2 relative">
+                    <input type="text" class="max-md:h-11 h-12 form-control block w-full px-3 py-1.5 text-base font-normal text-primaryFieldBlue bg-white bg-clip-padding border border-solid border-gray-300 rounded-full transition ease-in-out font-Work text-base focus:text-gray-700 focus:bg-white  focus:border-themeBlue focus:outline-none text-sm" id="exampleText0"/>
+                    <button type="button" class="font-Work absolute m-1 right-0 top-0 whitespace-nowrap inline-flex items-center justify-center px-7 py-2 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-md:px-4 max-md:py-2 max-md:text-xs">
+                      {{ "APPLY" }}
+                    </button>
+                  </div>
+                </div>
+                <div class="priceCalculation" id="priceCalculation">
+                  <ul class="border-b pb-2">
+                    <li class="flex justify-between font-Work mb-1">
+                      <span class="font-semibold sm:text-sm lg:text-base">Base Price :</span>
+                      <span class="text-primaryDarkGreen font-semibold sm:text-sm lg:text-base">
+                        <!-- $290 -->
+                        ${{ venue_price }}
+                      </span>
+                    </li>
+                    <div class="">
+                      <li class="flex justify-between font-Work mb-1">
+                        <span class="font-semibold text-base sm:text-sm lg:text-base">Additional Features
+                        </span>
+                      </li>
+                      {%- comment -%}
+                        <div class="flex">
+                        <div class="md:w-1/2 sm:w-full mb-3">
+                        <p
+                        class="sm:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold">
+                        Projector : </p>
+                        </div>
+                        <div class="md:w-1/2 sm:w-full mb-3">
+                        <p
+                        class="sm:text-sm lg:text-base text-right text-primaryDarkGreen font-Railway font-semibold ">
+                        $90</p>
+                        </div>
+                        </div>
+                        <div class="flex">
+                        <div class="md:w-1/2 sm:w-full mb-3">
+                        <p
+                        class="sm:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold">
+                        Coat Check($9X200) :
+                        </p>
+                        </div>
+                        <div class="md:w-1/2 sm:w-full mb-3">
+                        <p
+                        class="sm:text-sm lg:text-base text-right text-primaryDarkGreen font-Railway font-semibold">
+                        $10</p>
+                        </div>
+                        </div>
+                        <div class="flex">
+                        <div class="md:w-1/2 sm:w-full mb-3">
+                        <p
+                        class="sm:text-sm lg:text-base text-left text-paragraphTextColor font-Railway font-semibold">
+                        Security :</p>
+                        </div>
+                        <div class="md:w-1/2 sm:w-full mb-3">
+                        <p
+                        class="sm:text-sm lg:text-base text-right text-primaryDarkGreen font-Railway font-semibold">
+                        $3.82</p>
+                        </div>
+                        </div>
+                      {%- endcomment -%}
+                    </div>
+                    <li class="flex justify-between font-Work mb-1">
+                      <span class="font-semibold text-base sm:text-sm lg:text-base">Subtotal :</span>
+                      <span class="text-primaryDarkGreen font-semibold sm:text-sm lg:text-base">
+                        <!-- $290 -->
+                        ${{ venue_price }}
+                      </span>
+                    </li>
+                    <li class="flex justify-between font-Work mb-1">
+                      <span class="font-semibold text-base sm:text-sm lg:text-base">HST 13% :
+                      </span>
+                      <span class="text-primaryDarkGreen font-semibold text-base sm:text-sm lg:text-base">
+                        <!-- $10.82 -->
+                        {% assign hst_percentage = venue_price | times: 13 | divided_by: 100 %}
+                        ${{ hst_percentage }}
+                      </span>
+                    </li>
+                    {%- comment -%}
+                      <li class="flex justify-between font-Work mb-1">
+                      <span class="font-semibold text-base sm:text-sm lg:text-base">Discount :
+                      </span>
+                      <span class="text-badgeRed-500 font-semibold text-base sm:text-sm lg:text-base">-$10
+                      </span>
+                      </li>
+                    {%- endcomment -%}
+                  </ul>
+
+                  <div class="flex justify-between font-Work mb-2 border-b pt-2 pb-2">
+                    <span class="font-semibold text-base sm:text-sm lg:text-base">Total :</span>
+                    <span class="text-primaryDarkGreen font-semibold text-base sm:text-sm lg:text-base" id="total_price">
+                      <!-- $300.82 -->
+                      {% assign total_price = venue_price | plus: hst_percentage %}
+                      ${{ total_price }}
+                      {% assign initial_price = total_price | times: 15 | divided_by: 100 %}
+                    </span>
+                  </div>
+
+                  <div class="flex justify-between font-Work mb-2 border-b pt-2 pb-2">
+                    <span class="font-semibold text-base sm:text-sm lg:text-base">Initial Deposit to be paid 15%
+                    </span>
+                    <span class="text-primaryDarkGreen font-semibold text-base sm:text-sm lg:text-base">
+                      <!-- $75.00 -->
+                      ${{initial_price}}
+                    </span>
+                  </div>
+                </div>
+
+
+                <div class="mb-3 w-full mr-2 relative">
+                  <p class="text-sm  font-Work leading-6 pt-3 pb-2">Your card will be charged #200 at this time.($100.82 is amount of initial deposit taken. You will be responsible for paying the remaining amountto the venue directly according to the venue's payment schedule).
+                  </p>
+                  <div class="form-check pb-2">
+                    <input class="form-check-input  h-4 w-4 border border-themeBlue rounded-sm bg-white checked:bg-themeBlue checked:border-themeBlue focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckDefault">
+                    <p class="font-Railway text-sm">I have read and accept the
+                      <a href="#" class="text-themeBlue font-medium">terms of use</a>
+                      and
+                      <a href="#" class="text-themeBlue font-medium">privacy policy</a>.
+                    </p>
+                  </div>
+                  <input type="hidden" value="{{total_price}}" name="item[item_price]" id="priceTotal">
+                  <input type="hidden" value="{{venue_price}}" name="item[base_price]" id="base_price">
+                  <input type="hidden" value="{{venue_price}}" name="item[base_price]" id="amountpaid">
+                  <input type="hidden" value="0" name="item[featured_price]" id="featured_price">
+                  <button type="submit" class=" m-1 w-full whitespace-nowrap font-Work inline-flex items-center justify-center px-7 py-2 border-2 border-themeBlue rounded-full text-sm font-medium text-white bg-themeBlue hover:text-white hover:bg-themeBlue uppercase max-md:px-4 max-md:py-2 max-md:text-xs">
+                    BOOK NOW
+                  </button>
+                </div>
+
+              </div>
+              <!--book-end-->
+              <!--opening-hours-->
+              <!-- <div class="p-5 shadow-box mt-5">
+              <h3 class="text-sm font-semibold font-Work text-themeBlue flex"><img src="/assets/images/event-hound/clock.svg"
+              class="mr-1 pb-5">OPENING HOURS</h3>
+
+              <ul>
+              <li class="flex justify-between  pb-6 font-Work text-PrimaryLightBlue text-sm max-md:pb-3">
+              <span>Monday</span><span>8:00am -
+              10:00pm</span>
+              </li>
+              <li class="flex justify-between  pb-6 font-Work text-PrimaryLightBlue text-sm max-md:pb-3"><span>
+              Tuesday</span><span>8:00am -
+              10:00pm</span>
+              </li>
+              <li class="flex justify-between  pb-6 font-Work text-PrimaryLightBlue text-sm max-md:pb-3"><span>
+              Wednesday</span><span>8:00am
+              - 10:00pm</span>
+              </li>
+              <li class="flex justify-between  pb-6 font-Work text-PrimaryLightBlue text-sm max-md:pb-3"><span>
+              Thursday</span><span>8:00am
+              - 10:00pm</span>
+              </li>
+              <li class="flex justify-between  pb-6 font-Work text-PrimaryLightBlue text-sm max-md:pb-3">
+              <span>Friday</span><span>8:00am -
+              10:00pm</span>
+              </li>
+              <li class="flex justify-between  pb-6 font-Work text-PrimaryLightBlue text-sm max-md:pb-3">
+              <span>Saturday</span><span>closed</span>
+              </li>
+              <li class="flex justify-between   font-Work text-PrimaryLightBlue text-sm max-md:pb-3">
+              <span>Sunday</span><span>closed</span>
+              </li>
+              </ul>
+              </div> -->
+              <!--opening-hours-end-->
+              <!--direction-->
+                <div class="p-5 shadow-box mt-5"> <iframe class="h-72" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3432.2134209217543!2d76.7245890146088!3d30.65611819637309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390f9320783a7095%3A0x58bf1af2e6bc3ef1!2sTrigma%20Solutions!5e0!3m2!1sen!2sin!4v1660719368709!5m2!1sen!2sin" width="100%" height="100%" style="border:0;max-height:296px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <ul class="mt-5">
+                  <li class="border-b mr-4 pb-2">
+                    <p class=" items-center font-Work sm:text-sm lg:text-base flex items-start text-black">
+                      <img src="/assets/images/event-hound/location.svg " class="mr-4">
+                      {{ venues.venue_details[0].properties.venue_address }}
+                    </p>
+                    <a href="#" class="text-themeBlue font-medium flex ml-7 sm:text-sm lg:text-base">Get Directions
+                      <img src="/assets/images/event-hound/arrow_r8t.svg " class="ml-2"></a>
+                  </li>
+                  <!-- <li class="pt-2">
+                  <p class=" font-Work xl:text-base max-xxl:text-base  flex text-black max-md:font-sm"><img
+                  src="/assets/images/event-hound/mobile.svg " class="mr-4 max-md:font-sm">567-9876-123</p>
+                  </li> -->
+                </ul>
+              </div>
+              <!--direction-end-->
+            </form>
+          </div>
+          <!--right-section-->
+        </div>
+      </div>
+    </section>
+    <!-- details end-->
+
+  {% endfor %}
+{% else %}
+  {%
+   render 'theme/simple/404', status: 404
+   break
+ %}
+{% endif %}
+
+<script>
+  $('.slider-for').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: true,
+    asNavFor: '.slider-nav'
+  });
+  $('.slider-nav').slick({
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    asNavFor: '.slider-for',
+    dots: false,
+    centerMode: true,
+    focusOnSelect: true
+  });
+
+
+    $(".featurePrice").click(function() {
+      var basePrice = Number($("#base_price").val());
+      var featured_price = Number($("#featured_price").val());
+      var slectedValue = Number($(this).val());
+      var fPrice = Number(featured_price + slectedValue);
+    
+      var totalBaseValue = Number(fPrice + basePrice);
+     // var calculateGst = Number((100 * 13) / totalBaseValue);
+      var calculateGst = (totalBaseValue/100)*13;
+      var totalValue = Number(basePrice + calculateGst + fPrice);
+      //var calculatePercentage = Number((100 * 15) / totalValue);
+      var calculatePercentage = (totalValue/100)*15;
+      $("#featured_price").val(fPrice.toFixed(2));
+      $("#priceTotal").val(totalValue);
+      // $("#total_price").text("$"+totalValue);
+      var priceData = '<ul class="border-b pb-2"><li class="flex justify-between font-Work mb-1"><span class="font-semibold sm:text-sm lg:text-base">Base Price :</span><span class="text-primaryDarkGreen font-semibold sm:text-sm lg:text-base">$' + basePrice.toFixed(2) + '</span></li><div class=""><li class="flex justify-between font-Work mb-1"><span class="font-semibold text-base sm:text-sm lg:text-base">Additional Features</span></li></div><li class="flex justify-between font-Work mb-1"><span class="font-semibold text-base sm:text-sm lg:text-base">Subtotal :</span><span class="text-primaryDarkGreen font-semibold sm:text-sm lg:text-base">$' + fPrice.toFixed(2) + '</span></li><li class="flex justify-between font-Work mb-1"><span class="font-semibold text-base sm:text-sm lg:text-base">HST 13% :</span><span class="text-primaryDarkGreen font-semibold text-base sm:text-sm lg:text-base">$' + calculateGst.toFixed(2) +'</span></li></ul><div class="flex justify-between font-Work mb-2 border-b pt-2 pb-2"><span class="font-semibold text-base sm:text-sm lg:text-base">Total :</span><span class="text-primaryDarkGreen font-semibold text-base sm:text-sm lg:text-base" id="total_price">$' + totalValue.toFixed(2) + '</span></div><div class="flex justify-between font-Work mb-2 border-b pt-2 pb-2"><span class="font-semibold text-base sm:text-sm lg:text-base">Initial Deposit to be paid 15%</span><span class="text-primaryDarkGreen font-semibold text-base sm:text-sm lg:text-base">$' + calculatePercentage.toFixed(2)+ '</span></div>';
+
+      $("#priceCalculation").html(priceData);
+    });
+
+</script>>

@@ -1,0 +1,10 @@
+{% liquid
+  function item = 'test/fixtures/item', quantity: 5, contract: contract
+  assign payload = '{"step": 2}' | parse_json
+  hash_assign payload['id'] = item.id
+
+  function object = 'lib/commands/call', command: 'items/decrement_quantity', object: payload
+
+  function contract = 'test/assertions/valid_object', contract: contract, object: object, field_name: 'object'
+  function contract = 'test/assertions/equal', contract: contract, field_name: 'quantity', given: object.quantity, expected: 3
+%}

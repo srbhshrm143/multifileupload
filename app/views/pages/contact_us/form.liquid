@@ -1,0 +1,27 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+%}
+ 
+<h1 class="pagetitle"> Contact Us Form </h1>
+
+<div class="card-lg w-full md:w-96 mx-auto">
+  <form action="form_submit" method="POST">
+    <div class="mt-3">
+      <label for="form_subject"> Subject : </label>
+      <input type="text" name="form_subject" id="form_subject" class="form_subject w-full">
+    </div>
+    <div class="mt-3">
+      <label for="form_booking_id"> Booking Id : </label>
+      <input type="number" name="form_booking_id" id="form_booking_id" class="form_booking_id w-full">
+    </div>
+    <div class="mt-3">
+      <label for="form_text_content"> Content : </label>
+      <input type="text" name="form_text_content" id="form_text_content" class="form_text_content w-full">
+    </div>
+    <!-- <div class="mt-3">
+      <label for="file_file"> File </label>
+      <input type="file" name="file_file" id="file_file" class="file_file" accept="image/*,.pdf">
+    </div> -->
+    <button class="button button-small mt-3"> Submit </button>
+  </form>
+</div>

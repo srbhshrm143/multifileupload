@@ -1,0 +1,9 @@
+{% liquid
+  function object = 'lib/commands/payments/zero/pay/build', object: transaction
+  function object = 'lib/commands/payments/zero/pay/check', object: object
+  if object.valid
+    function object = 'lib/commands/transactions/update_status', object: object, transaction: transaction
+  endif
+
+  return object
+%}

@@ -1,0 +1,23 @@
+{%  liquid
+  function object = 'lib/commands/processes/wrap/build', object: object, command: command, current_profile: current_profile
+  function object = 'lib/commands/processes/wrap/check', object: object, require_acceptance: require_acceptance, current_profile: current_profile
+
+  if object.valid
+    assign command = 'lib/commands/' | append: object.command
+    if require_acceptance
+      function command_object = command, object: object.payload, skip_execution: true, current_profile: object.current_profile
+      if command_object.valid
+        function object = 'lib/commands/processes/create', payload: object.payload, command: object.command, profile: object.current_profile, run_in_background: run_in_background
+        function object = 'lib/commands/processes/create_event', name: 'process_approval_requested', current_profile: current_profile, object: object
+
+        hash_assign object['require_acceptance'] = true
+      else
+        assign object = command_object
+      endif
+    else
+      function object = command, object: object.payload, current_profile: current_profile
+    endif
+  endif
+
+  return object
+%}

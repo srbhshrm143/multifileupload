@@ -1,0 +1,19 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, allow_anonymous: true
+  include 'lib/profile_present_or_redirect', profile: current_profile, allow_anonymous: true
+
+  function item = 'lib/queries/items/find', id: context.params.item_id
+  function can_purchase = "lib/can", actor: current_profile, do: "purchase", object: item.item_inventory
+  if can_purchase.valid
+    if item.quantity > 0
+      function orders = 'lib/commands/orders/build_new_orders_for_item', item: item
+
+      include 'theme/simple/dashboard/orders/review_and_confirm', orders: orders, profile: current_profile
+    else
+      function item_url = 'link_to', object: item
+      include 'redirect_to', url: item_url, error: 'app.orders.line-items.errors.quantity-no-items'
+    endif
+  else
+    include 'redirect_to', url: '/', error: 'app.orders.line-items.errors.cant-purchase-item'
+  endif
+%}

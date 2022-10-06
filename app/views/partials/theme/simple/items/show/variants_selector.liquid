@@ -1,0 +1,53 @@
+{% liquid
+  for itemel in item.item_inventory.items
+    for el in itemel.attributes_json
+      assign attr = el
+      assign attr_name = attr.name | downcase
+      hash_assign attr['name'] = attr.name | t: scope: 'app.item_attributes'
+
+      assign value_slug = attr.value | slugify
+      assign value = attr_name | append: '_' | append: value_slug
+      hash_assign attr['value'] = value | t: scope: 'app.item_attributes'
+    endfor
+  endfor
+%}
+<script type="text/javascript">
+  window.attrsToObject = (array) => array.reduce(function (all, attr) { all[attr.name] = attr.value; return all }, {});
+</script>
+
+<div class="w-full flex items-end flex-wrap"
+  x-data='{ variants: {{ item.item_inventory.items }}, attributes: {}, selectedOptions: {}, selected: {{ item }}  }'
+  x-init='attributes = groupBy(uniqBy(variants.flatMap(variant => variant.attributes_json), "value"), x => x.name);
+          selectedOptions = attrsToObject(selected.attributes_json);
+          selected: variants.find(attr => isEqual(attrsToObject(attr.attributes_json), selectedOptions)) || {}'
+>
+  <template x-for='[name, attrs] in Object.entries(attributes)'>
+    <div>
+      <label x-text="name" x-bind:for="`attr-${name}`" class="sidenote mb-1 block capitalize"></label>
+      <select
+        class="me-4 capitalize"
+        x-bind:id="`attr-${name}`"
+        x-model='selectedOptions[name]'
+        x-on:change='selected = variants.find(attr => isEqual(attrsToObject(attr.attributes_json), selectedOptions)) || {}; $dispatch("item-variant-changed", { ...selected })'
+      >
+        <template x-for='attr in attrs'>
+          <option x-text='attr.value' class="capitalize"
+            x-bind:value='attr.value'
+            x-bind:selected='selectedOptions[name] == attr.value'
+          ></option>
+        </template>
+      </select>
+    </div>
+  </template>
+
+  <input type="hidden" name="line_item[item_id]"
+    x-bind:value="(selected || variants[0]).id">
+
+  <div class="ms-auto">
+    {% for variant in item.item_inventory.items %}
+      <div x-show='(selected || variants[0]).id == {{variant.id | json}}' x-cloak>
+        {% render 'theme/simple/items/show/buy_box', item: variant, item_inventory: item.item_inventory, can_purchase: can_purchase %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

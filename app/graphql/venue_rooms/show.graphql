@@ -1,0 +1,44 @@
+query search( $Id: ID
+  ) {
+  records(
+    per_page: 1000
+    filter: {
+      table: {
+        value: "venue_rooms"
+      },
+      id: {
+        value: $Id
+      }
+    }
+    sort: {
+      created_at: {
+        order: DESC
+      }
+    }
+  ) {
+    results {
+      id
+      properties
+      # media_ids :property_array(name: "media_ids")
+      room_media: related_records(
+        table: "form_media_testing"
+        join_on_property: "media_ids"
+        foreign_property: "id"
+        ) {
+        id
+        media_type: property(name: "media_type")
+        media_uuid: property(name: "media_uuid")
+        origin_url: property(name: "origin_url")
+        testing_media: property_upload(name: "testing_media") {
+          # File Url Link
+          url
+          # File Name
+          file_name
+          # File Extension
+          extension
+        }
+      }
+      
+    }
+  }
+}

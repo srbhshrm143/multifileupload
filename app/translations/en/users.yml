@@ -1,0 +1,116 @@
+en:
+  app:
+    account:
+      locked: Account locked
+      locked_until: Account locked until %{date}
+      created: Your account has been created
+      reset_password:
+        title: Reset password
+        description: >-
+          Please provide your registered email address and we will send you a
+          link that will enable you to reset the password.
+        send_link: Reset password
+        expired_link: The reset password link you’ve entered is invalid or has expired.
+    login: Log in
+    logout: 'Log out %{user}'
+    login_form:
+      log_in: Log In
+      email: E-mail
+      password: Password
+      register: Register
+      reset: Reset
+      anonymous: Don't have an account?
+      password_lost: Lost your password?
+    organizations:
+      new: Start selling items right now
+      new_desc: In order to start, you need to upgrade your account to an organization.
+      create: Create organization
+      start_selling: You can start selling
+      already_have_organization: You are already in a organization
+    passwords:
+      edit: Change password
+      updated: Your new password has been set successfully.
+      password: Password
+      password_confirmation: Password Confirmation
+      password_update: Update Password
+    profiles:
+      edit: Profile Edit
+      username: Username
+      first_name: First Name
+      last_name: Last Name
+      profile_photo: Profile Photo
+      incomplete: Fill your profile
+      bio: Short Bio
+      nav:
+        activity: Activity feed
+        groups: My groups
+        projects: My projects
+        following: Following
+        followers: Followers
+        products: Products
+        tags: Hashtags
+      suggested_profiles: Suggested users to follow
+    users:
+      new: new user
+      list: Users
+      follow: Follow
+      unfollow: Unfollow
+      create_account: Create an Account
+      form:
+        id: ID
+        first_name: First Name
+        last_name: Last Name
+        email: E-mail
+        password: Password
+        signup: Sign Up
+        agreed: >-
+          I understand and agree to <a href="/terms-of-service">Terms of
+          Service</a> and <a href="/privacy-policy">Privacy Policy</a>
+      attr:
+        id: ID
+        created_at: Created at
+        email: Email
+        first_name: First name
+        last_name: Last Name
+        list_id: List ID
+        slug: slug
+        followers: Followers
+        profile: Profile
+        name: Name
+        locked_at: Locked At
+        attempts: Login attempts
+    sessions:
+      created: Logged in
+      destroyed: Logged out
+    2fa:
+      attr:
+        password: Password
+        otp_code: OTP Code
+      errors:
+        password: The password you’ve entered is invalid.
+        otp_code: The code you’ve entered is not valid. Please retry or try again if the code has expired.
+      new:
+        enter_password: Please enter your password as a first authentication step.
+        your_password: 'Your password:'
+        next: Next
+        back: Back
+        confirm_and_enable: Confirm and Enable Two Factor
+        two_factor_authentication: Two-factor authentication
+        scan_qr_code: Scan QR Code
+        2fa_info: >-
+          To be able to log in you need to scan this QR Code with your authentication app.
+
+
+          You can use [Authy](https://authy.com) or [any other authentication tool](https://www.lastpass.com/two-factor-authentication).</a>
+        if_you_cannot_scan: 'Or enter the following code manually in the app:'
+        confirm_otp_code: Confirm code
+        please_confirm: Enter 6-digit code from your two-factor authenticator app.
+      create:
+        success: Successfully enabled two factor authentication.
+      session:
+        login: Log in
+
+    owner_profile: 
+      venue_owner:  Venue Owner Account
+      owner_account_reg:  Register
+      owner_account_login:  Login

@@ -1,0 +1,18 @@
+mutation create_promo_Code_detail(
+  $promo_code_id: String!
+  $lang: String!
+  $description: String!
+) {
+  record: record_create(
+    record: {
+      table: "promo_code_detail"
+      properties: [
+        { name: "promo_code_id", value: $promo_code_id }
+        { name: "lang", value: $lang }
+        { name: "description", value: $description }
+      ]
+    }
+  ) {
+    id
+  }
+}

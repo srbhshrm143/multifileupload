@@ -1,0 +1,10 @@
+---
+layout: ""
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_not_authenticated', profile: current_profile
+
+  function response = 'lib/queries/users/search', limit: 10, query: context.params.query, profile: true, skip_profile_ids: context.params.skip
+  render 'theme/json/users/index', users: response
+%}

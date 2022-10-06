@@ -1,0 +1,11 @@
+{% liquid
+  if project_id == blank
+    log "ERROR: project ID, you must pass one"
+    return null
+  endif
+
+  graphql r = 'project_offers/count', limit: 1, project_id: project_id, model: model
+  include 'lib/handle_graphql_response', r: r, name: 'queries/project_offers/count'
+
+  return r.records
+%}

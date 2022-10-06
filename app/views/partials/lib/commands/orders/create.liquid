@@ -1,0 +1,10 @@
+{% liquid
+  function object = 'lib/commands/orders/create/build', object: object, item: item, current_profile: current_profile, params: params
+  function object = 'lib/commands/orders/create/check', object: object
+
+  function object = 'lib/commands/execute', object: object, mutation_name: 'orders/create'
+  if object.valid
+  endif
+
+  return object
+%}

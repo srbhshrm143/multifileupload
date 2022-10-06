@@ -1,0 +1,9 @@
+{% graphql r %}
+mutation {
+  max_cart_value: constant_set(name: "ORDER_PAYMENT_LOCK_MINUTES", value: "5"){
+    name
+    value
+  }
+}
+{% endgraphql %}
+{% log r, type: 'migrations/order_payment_lock_minutes' %}

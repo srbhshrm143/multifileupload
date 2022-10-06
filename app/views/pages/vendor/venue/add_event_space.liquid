@@ -1,0 +1,32 @@
+---
+  slug: venue/event_create/create
+  method: post
+---
+
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  
+  function object = 'lib/commands/vendor/event_space/create', object: context.params.event_space, profile: current_profile.user
+  assign venue_id = object.properties.venue_id
+  
+  include 'redirect_to', event_space: context.params.event_space, venue_id: venue_id, notice: 'event space created'
+
+  comment
+
+  if object.valid == true
+    include 'redirect_to', event_space: "/vendor/add_venue?venue_id=10151&currentTab=tab3", notice: 'event space created'
+  else
+    include 'redirect_to', event_space: "/vendor/add_venue?venue_id=10151&currentTab=tab2", notice: 'event space created'
+  endif
+  include 'redirect_to', event_space: context.params.event_space, notice: 'event space created'
+
+  assign context.params.venue_id = object.id
+  assign venue_idid = object.id
+  include 'redirect_to', event_space: context.params.event_space, notice: 'venue created'
+  endcomment
+%}
+
+{{ context.params }}
+<br><br>
+{{ object }}
+<br><br>

@@ -1,0 +1,89 @@
+{% liquid
+  function actor = 'lib/commands/activities/header', payload: payload, namespace: namespace, role: role, current_profile: current_profile
+
+  assign new_post = post | default: '{}' | parse_json
+  hash_assign new_post['type'] = 'post'
+
+  function can_edit = "lib/can", actor: actor, do: "edit", object: new_post
+  function can_remove = "lib/can", actor: actor, do: "delete", object: new_post
+
+  if can_edit.valid or can_remove.valid
+    assign show_dropdown = true
+  endif
+%}
+
+<header class="mb-3 last:mb-0 flex items-center gap-4">
+  {% if actor.url %}
+    <a href="{{ actor.url }}" class="flex-shrink-0">
+  {% endif %}
+    {% render 'theme/simple/ui/avatar', profile: payload.actor, actor: actor, size: 48, class: 'w-12 h-12' %}
+  {% if actor.url %}
+    </a>
+  {% endif %}
+
+  <div class="w-full flex justify-between items-start gap-6">
+    <div>
+      {% if actor.url %}
+        {%- capture info -%}[{{ payload.type }}] [{{ payload.actor.type }}#{{ payload.actor.id }}][{{ payload.object.type }}#{{ payload.object.id }}][{{ payload.target.type }}#{{ payload.target.id }}]{%- endcapture -%}
+        <a href="{{ actor.url }}" title="{{ info | escape }}" class="font-semibold text-content">{{ actor.name }}</a>
+      {% else %}
+        {{ actor.name }}
+      {% endif %}
+
+      {% liquid
+        case payload.type
+
+        when 'login_failed', 'account_locked', 'account_unlocked'
+          render 'theme/simple/activities/feed_unit/type/login_failed', payload: payload, namespace: namespace
+
+        when 'item_inventory_updated'
+          render 'theme/simple/activities/feed_unit/type/item_inventory_updated', payload: payload, namespace: namespace
+
+        when 'post_created'
+          if payload.target.name == 'PROFILE_GROUP'
+            assign internal_group = true
+          endif
+          unless internal_group
+            render 'theme/simple/activities/feed_unit/type/default', payload: payload, namespace: namespace, role: role
+          endunless
+
+        else
+          render 'theme/simple/activities/feed_unit/type/default', payload: payload, namespace: namespace, role: role
+        endcase
+      %}
+
+      {% render 'theme/simple/activities/feed_unit/date', payload: payload %}
+    </div>
+
+    <div>
+      {% if payload.type == 'post_created' and show_dropdown %}
+        {% capture 'dropdown_content' %}
+          <ul class="whitespace-nowrap">
+            {% if can_edit %}
+              <li>
+                <a href="{% render 'link_to', object: post, action: 'edit' %}?return_to={{context.location.href}}" class="block py-3 px-7 hover:bg-interaction text-content hover:text-content-inverted transition-colors md:rounded-t">{{ 'app.models.shared.edit' | t }}</a>
+              </li>
+            {% endif %}
+            {% if can_remove %}
+              <li>
+                <form action="{% render 'link_to', object: post %}/remove" method="post" onSubmit="if(!confirm('{{ 'app.confirm-delete' | t }}')){ return false; }" >
+                  {% render 'authenticity_token', context: context %}
+                  <input type="hidden" name="_method" value="delete">
+                  <input type="hidden" name="id" value="{{ post.id }}">
+                  <input type="hidden" name="return_to" value="{{ context.location.href }}">
+
+                  <button class="w-full block py-3 px-7 hover:bg-danger-hover text-content hover:text-content-inverted transition-colors md:rounded-b text-start">{{ 'app.models.shared.delete' | t }}</button>
+                </form>
+              </li>
+            {% endif %}
+          </ul>
+        {% endcapture %}
+
+        {% capture dropdown_label %}
+          {% render 'theme/simple/ui/icon', icon: 'menuHorizontal' %}
+        {% endcapture %}
+
+        {% render 'theme/simple/ui/dropdown', class: 'ms-auto -me-4 -mt-4', toggle_class: 'p-4 text-content-sidenote hover:text-interaction-hover' label: dropdown_label, content: dropdown_content %}
+      {% endif %}
+  </div>
+</header>

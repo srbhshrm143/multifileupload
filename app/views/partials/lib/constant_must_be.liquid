@@ -1,0 +1,6 @@
+{% liquid
+  if context.constants[constant_name] != constant_value
+    render 'theme/simple/404', status: 404
+    break
+  endif
+%}

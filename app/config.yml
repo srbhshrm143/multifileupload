@@ -1,0 +1,98 @@
+---
+do_not_add_return_to_to_authorization_policies: true
+escape_output_instead_of_sanitize: true
+liquid_raise_mode: true
+require_table_for_record_delete_mutation: true
+safe_translate: true
+slug_exact_match: true
+skip_elasticsearch: true
+search_indexes:
+- items:
+    properties:
+      main_variant:
+        type: boolean
+      created_at:
+        type: date
+      status:
+        type: keyword
+      type:
+        type: keyword
+      price:
+        type: integer
+      original_price:
+        type: integer
+      currency:
+        type: keyword
+      category:
+        type: keyword
+
+      de:
+        type: object
+        properties:
+          name:
+            type: text
+            analyzer: german
+            fields:
+              raw:
+                type: keyword
+          description:
+            type: text
+            analyzer: german
+          inventory_attributes:
+            type: text
+            analyzer: german
+          category:
+            type: text
+            analyzer: german
+            fields:
+              raw:
+                type: keyword
+      en:
+        type: object
+        properties:
+          name:
+            type: text
+            analyzer: english
+            fields:
+              raw:
+                type: keyword
+          description:
+            type: text
+            analyzer: english
+          inventory_attributes:
+            type: text
+            analyzer: english
+          category:
+            type: text
+            analyzer: english
+            fields:
+              raw:
+                type: keyword
+
+      owner:
+        type: object
+        properties:
+          id:
+            type: integer
+          type:
+            type: keyword
+          name:
+            type: keyword
+          slug:
+            type: keyword
+
+      photo:
+        type: object
+        properties:
+          width:
+            type: integer
+          height:
+            type: integer
+          m:
+            type: keyword
+          lg:
+            type: keyword
+          m_avif:
+            type: keyword
+          lg_avif:
+            type: keyword

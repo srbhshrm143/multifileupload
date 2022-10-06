@@ -1,0 +1,38 @@
+{% parse_json data %}
+  {
+    "id": {{ object.id | json }},
+    "uuid": {{ object.uuid | json }},
+    "name": {{ object.name | json }},
+    "deadline": {{ object.deadline | json }},
+    "promoted": {{ object.promoted | matches: 'on' | json }},
+    "summary": {{ object.summary | json }},
+    "award": {{ object.award | json }},
+    "description": {{ object.description | json }},
+    "terms_and_conditions": {{ object.terms_and_conditions | json }},
+    "offer_info": {{ object.offer_info | json }},
+    "commentable": {{ object.commentable | matches: 'on' | json }},
+    "development_partners": {{ object.development_partners | json }},
+    "sent_by": {{ object.sent_by | json }},
+    "group_id": {{ object.group_id | json }},
+    "video_urls": {{ object.video_urls | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  function slugged_tags = 'lib/slugify_tags', tags: object.tags
+  hash_assign data['tags'] = slugged_tags
+  if object.status == 'open'
+    hash_assign data['status'] = 'app.statuses.projects.open'
+  else
+    hash_assign data['status'] = 'app.statuses.projects.draft'
+  endif
+
+  if object.steps
+    hash_assign data['steps'] = object.steps
+  else
+    hash_assign data['steps'] = '' | split: ','
+  endif
+  hash_assign data['steps_json'] = data.steps | json
+
+  return data
+%}

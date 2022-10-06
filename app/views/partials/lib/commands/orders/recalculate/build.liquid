@@ -1,0 +1,61 @@
+{% liquid
+  function default_currency = 'lib/queries/constants/find' name: "CURRENCY"
+
+  assign orders = object.results
+  for order in orders
+    for ll in order.line_items
+      assign line = ll
+      hash_assign line['total_price_cents'] = line.quantity | times: line.item.price
+      hash_assign line['price_cents'] = line.item.price
+    endfor
+
+    function shipping_cost_cents = 'lib/commands/orders/recalculate/shipping_cost', order: order
+    hash_assign order['currency'] = order['currency'] | default: order.line_items[0].currency | default: default_currency
+    hash_assign order['products_price_cents'] = order.line_items | map: 'total_price_cents' | sum_array
+    hash_assign order['total_price_cents'] = order['products_price_cents'] | plus: shipping_cost_cents
+    hash_assign order['total_shipping_cost_cents'] = shipping_cost_cents
+    hash_assign order['total_quantity'] = order.line_items | map: 'quantity' | sum_array
+    hash_assign order['subtotal_price_cents'] = order['total_price_cents']
+  endfor
+
+  for order in orders
+    assign promo_code = order.promo_code
+    if promo_code and order.promo_code_discount == null
+      assign upper_limit = promo_code.upper_limit | to_positive_integer: 0 | amount_to_fractional: order.currency
+      if promo_code.code_type == 'global'
+        assign total_products_price_cents = orders | select: promo_id: promo_code.id | map: 'products_price_cents' | sum_array
+        assign global_discount_value = total_products_price_cents | times: promo_code.total_discount | plus: 0.0 | divided_by: 100
+        if global_discount_value <= upper_limit
+          assign discount_value = order.products_price_cents | times: promo_code.total_discount | plus: 0.0 | divided_by: 100
+          assign discount = discount_value
+        else
+          assign price_ratio = order.products_price_cents | plus: 0.0 | divided_by: total_products_price_cents
+          assign upper_limit = upper_limit | times: price_ratio | round
+          assign discount = upper_limit
+        endif
+      else
+        assign discount_value = order.products_price_cents | times: order.promo_code.total_discount | plus: 0.0 | divided_by: 100
+        if discount_value <= upper_limit
+          assign discount = discount_value
+        else
+          assign discount = upper_limit
+        endif
+      endif
+      hash_assign order['promo_code_discount'] = discount | round
+    endif
+    hash_assign order['total_price_cents'] =  order['total_price_cents'] | minus: order.promo_code_discount
+  endfor
+  hash_assign object['total_promo_code_discount'] = orders | map: 'promo_code_discount' | compact | sum_array | round
+  if object.total_promo_code_discount == 0
+    hash_assign object['total_promo_code_discount'] = null
+  endif
+
+  hash_assign object['total_price_cents'] = orders | map: 'total_price_cents' | sum_array
+  hash_assign object['total_shipping_cost_cents'] = orders | map: 'total_shipping_cost_cents' | sum_array
+  hash_assign object['products_price_cents'] = orders | map: 'products_price_cents' | sum_array
+  hash_assign object['currency'] = orders[0].currency | default: default_currency
+  hash_assign object['total_quantity'] = orders | map: 'total_quantity' | sum_array
+  hash_assign object['subtotal_price_cents'] = orders | map: 'subtotal_price_cents' | sum_array
+
+  return object
+%}

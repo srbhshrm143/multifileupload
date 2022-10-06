@@ -1,0 +1,16 @@
+---
+slug: dashboard/sell/promo_codes
+method: post
+---
+{% liquid
+  function current_profile = 'lib/current_organization_profile', user_id: context.current_user.id
+  include 'lib/profile_organization_present_or_redirect', profile: current_profile
+
+  function object = 'lib/commands/promo_codes/create', object: context.params.promo_code, profile: current_profile
+  if object.valid
+    include 'redirect_to', url: '/dashboard/sell/promo_codes'
+  else
+    function _ = 'lib/extend_context', available_languages: true, default_currency: true
+    render 'theme/simple/promo_codes/new', object: object, context: context, profile: current_profile, namespace: 'dashboard/sell'
+  endif
+%}

@@ -1,0 +1,9 @@
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id, followships: true
+
+  function filters = 'lib/queries/projects/filters', params: context.params
+  function projects = 'lib/queries/projects/search_for_owner', limit: 20, page: filters.page, tag: filters.tag, sort: filters.sort, keyword: filters.keyword, owner_id: current_profile.id
+  function _ = 'lib/extend_context', tags: true, photo_presign: true
+
+  render 'theme/simple/projects/manage', projects: projects, page: page, filters: filters, current_profile: current_profile, context: context
+%}

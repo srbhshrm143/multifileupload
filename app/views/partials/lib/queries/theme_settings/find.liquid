@@ -1,0 +1,9 @@
+{% liquid
+  if name == blank
+    return null
+  endif
+
+  graphql r  = 'theme_settings/search', name: name
+
+  return r.records.results.first
+%}

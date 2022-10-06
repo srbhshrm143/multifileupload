@@ -1,0 +1,22 @@
+{% parse_json new_object %}
+  {
+    "name": {{ object.name | json }}
+  }
+{% endparse_json %}
+
+{% liquid
+  comment
+    Update colors and merge with original metadata
+  endcomment
+
+  assign colors = '[]' | parse_json
+  for color in object.colors
+    assign default_color_settings = default_settings.colors | detect: name: color[0]
+    assign color_object = '{}' | parse_json | hash_merge: name: color[0], value: color[1], isEditable: default_color_settings.isEditable
+    assign colors = colors | add_to_array: color_object
+  endfor
+
+  hash_assign new_object['colors'] = colors | json | append: ''
+
+  return new_object
+%}

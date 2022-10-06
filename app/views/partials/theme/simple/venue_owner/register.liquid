@@ -1,0 +1,57 @@
+<h1 class="pagetitle"> {{ "Venue Owner Register Form" }} </h1>
+<section class="container">
+  <div class="card-lg w-full md:w-96 mx-auto">
+    <form action="create" method="post">
+      <div class="mt-3">
+        <label for="owner_fname"> First Name : </label>
+        <input type="text" name="owner_fname" id="owner_fname" class="w-full" placeholder="First Name">
+      </div>
+      <div class="mt-3">
+        <label for="owner_lname"> Last Name : </label>
+        <input type="text" name="owner_lname" id="owner_lname" class="w-full" placeholder="Last Name">
+      </div>
+
+      {%- comment -%}
+      <div class="mt-3">
+        <label for="owner_gender"> Last Name : </label>
+        <div class="gender_boxes">
+          <label for=""> Male : </label>
+          <input type="radio" name="owner_gender" id="owner_gender" value="Male">
+        </div>
+        <div class="gender_boxes">
+          <label for=""> Female : </label>
+          <input type="radio" name="owner_gender" id="owner_gender" value="Female">
+        </div>
+      </div>
+      {%- endcomment -%}
+
+      <div class="mt-3">
+        <label for="owner_mobile_no"> Mobile Number : </label>
+        <input type="tel" name="owner_mobile_no" id="owner_mobile_no" class="w-full" placeholder="Mobile Number">
+      </div>
+      <div class="mt-3">
+        <label for="owner_email_id"> Email Id : </label>
+        <input type="email" name="owner_email_id" id="owner_email_id" class="w-full" placeholder="Email Id">
+      </div>
+      <div class="mt-3">
+        <label for="owner_password"> Password : </label>
+        <input type="password" name="owner_password" id="owner_password" class="w-full" placeholder="Password">
+      </div>
+      <button class="button mt-3">Submit Owner</button>
+      <a href="/venue_owner/show" class="button mt-3">Show</a>
+    </form>
+  </div>
+</section>
+
+<style>
+  .gender_boxes {
+    position: relative;
+  }
+  input#owner_gender {
+    position: absolute;
+    left: 80px;
+    top: 0px;
+    transform: translate(50%, 25%);
+  }
+
+</style>

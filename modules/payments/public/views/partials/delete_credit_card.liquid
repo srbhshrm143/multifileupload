@@ -1,0 +1,27 @@
+
+{% graphql cc = 'modules/payments/get_credit_card_by_id', id: id %}
+{% assign credit_card = cc.customizations.results.first %}
+{% graphql cu = 'modules/payments/get_customer', id: credit_card.properties.customer_id %}
+{% assign customer = cu.customizations.results.first %}
+
+{%- parse_json 'data' -%}
+  {
+    "id": "{{ credit_card.id }}",
+    "customer_id": "{{ customer.gateway_id }}",
+    "gateway_id": "{{ credit_card.properties.gateway_id }}"
+  }
+{%- endparse_json -%}
+{%- parse_json 'config' -%}
+  {
+    "request_type": "delete_credit_card",
+    "button": "Delete",
+    "redirect_to": "{{ redirect_to | default: context.location.href }}"
+  }
+{%- endparse_json -%}
+
+{%-
+  include_form 'modules/payments/gateway_request_form',
+  config: config,
+  data: data
+%}
+

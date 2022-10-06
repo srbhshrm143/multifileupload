@@ -1,0 +1,7 @@
+---
+from: "{{ data.from }}"
+layout: mailer
+subject: "{{ data.subject }}"
+to: "{{ data.to }}"
+---
+{% include 'theme/simple/emails/orders/cancelled_by_seller_notify_seller', data: data %}

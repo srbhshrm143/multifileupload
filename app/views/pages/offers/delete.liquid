@@ -1,0 +1,18 @@
+---
+slug: offers/:id
+method: delete
+---
+{% liquid
+  function current_profile = 'lib/current_profile', user_id: context.current_user.id
+  include 'lib/profile_present_or_redirect', profile: current_profile
+
+  function project_offer = 'lib/queries/project_offers/find', id: context.params.id
+  include 'lib/can_do_or_unauthorized', object: project_offer, do: "delete", actor: current_profile
+
+  function object = 'lib/commands/project_offers/delete', object: project_offer
+  if object.valid
+    include 'redirect_to', url: '/offers/manage', notice: 'app.models.shared.deleted'
+  else
+    include 'redirect_to', url: '/offers/manage', error: 'app.models.shared.delete_failed'
+  endif
+%}

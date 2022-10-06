@@ -1,0 +1,7 @@
+{% background 'auto-unlock-account', delay: event.object.lock_time, actor_id: event.actor.id, default_login_attempts: event.object.default_login_attempts %}
+{% liquid
+  function profile = 'lib/queries/profiles/find', id: actor_id
+  function reset = 'lib/commands/users/reset_login_attempts', object: profile.user, default_login_attempts: default_login_attempts
+  function evt = 'lib/commands/events/create', type: 'account_unlocked', actor_id: profile.id, object: reset, delay: 0
+%}
+{% endbackground %}
