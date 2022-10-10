@@ -21,7 +21,7 @@
   data-s3-uppy-photo-type="{{ photo__type }}"
   data-s3-uppy-max-number-of-files="{{ max__files }}"
   hidden
-  id="uppy_custom_media_upload">
+  class="uppy_custom_media_upload">
   {% for field in data.upload_url_payload %}
     <input type="hidden" name="{{ field[0] }}" value='{{ field[1] }}'>
   {% endfor %}
